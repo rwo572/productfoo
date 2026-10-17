@@ -14,26 +14,26 @@ function fixture() {
   git('config', 'user.name', 'Release fixture');
   git('config', 'user.email', 'fixture@example.invalid');
   git('config', 'core.hooksPath', '/dev/null');
-  writeFileSync(path.join(cwd, 'package.json'), JSON.stringify({ name: 'productfoo', version: '1.0.0' }));
-  writeFileSync(path.join(cwd, 'package-lock.json'), JSON.stringify({ version: '1.0.0', packages: { '': { version: '1.0.0' } } }));
+  writeFileSync(path.join(cwd, 'package.json'), JSON.stringify({ name: 'productfoo', version: '1.0.1' }));
+  writeFileSync(path.join(cwd, 'package-lock.json'), JSON.stringify({ version: '1.0.1', packages: { '': { version: '1.0.1' } } }));
   git('add', '.'); git('commit', '-qm', 'Public root');
   const root = git('rev-parse', 'HEAD');
   mkdirSync(path.join(cwd, '.github'));
-  const manifest = { package: 'productfoo', version: '1.0.0', payload_root: root,
-    tarball: 'productfoo-1.0.0.tgz', tarball_sha256: createHash('sha256').update('fixture package').digest('hex') };
+  const manifest = { status: 'approved', package: 'productfoo', version: '1.0.1', payload_root: root,
+    tarball: 'productfoo-1.0.1.tgz', tarball_sha256: createHash('sha256').update('fixture package').digest('hex') };
   writeFileSync(path.join(cwd, '.github/release-candidate.json'), JSON.stringify(manifest));
   git('add', '.github'); git('commit', '-qm', 'Release configuration');
-  git('tag', 'v1.0.0');
+  git('tag', 'v1.0.1');
   const env = { GITHUB_REPOSITORY: 'rwo572/productfoo', GITHUB_EVENT_NAME: 'workflow_dispatch',
-    GITHUB_REF: 'refs/tags/v1.0.0', GITHUB_SHA: git('rev-parse', 'HEAD'), EXPECTED_SHA: git('rev-parse', 'HEAD') };
+    GITHUB_REF: 'refs/tags/v1.0.1', GITHUB_SHA: git('rev-parse', 'HEAD'), EXPECTED_SHA: git('rev-parse', 'HEAD') };
   return { cwd, git, env, manifest, close: () => rmSync(cwd, { recursive: true, force: true }) };
 }
 
 test('accepts the exact public payload, approved tag and exact package bytes', () => {
   const f = fixture();
   try {
-    assert.equal(verifyRelease(f.cwd, 'source', {}).version, '1.0.0');
-    assert.equal(verifyRelease(f.cwd, 'release', f.env).version, '1.0.0');
+    assert.equal(verifyRelease(f.cwd, 'source', {}).version, '1.0.1');
+    assert.equal(verifyRelease(f.cwd, 'release', f.env).version, '1.0.1');
     writeFileSync(path.join(f.cwd, f.manifest.tarball), 'fixture package');
     assert.equal(verifyRelease(f.cwd, 'package', f.env).tarball_sha256, f.manifest.tarball_sha256);
   } finally { f.close(); }
@@ -46,7 +46,7 @@ test('rejects wrong repository, trigger, tag, expected commit, and tag target', 
       GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', EXPECTED_SHA: '0'.repeat(40), GITHUB_SHA: '1'.repeat(40) })) {
       assert.throws(() => verifyRelease(f.cwd, 'release', { ...f.env, [key]: value }));
     }
-    f.git('tag', '-f', 'v1.0.0', f.manifest.payload_root);
+    f.git('tag', '-f', 'v1.0.1', f.manifest.payload_root);
     assert.throws(() => verifyRelease(f.cwd, 'release', f.env), /tag/);
   } finally { f.close(); }
 });
@@ -57,7 +57,7 @@ test('rejects dirty tracked files, unexpected untracked files, and changed produ
     writeFileSync(path.join(f.cwd, 'private-notes.txt'), 'synthetic private fixture');
     assert.throws(() => verifyRelease(f.cwd, 'source', {}), /untracked/);
     rmSync(path.join(f.cwd, 'private-notes.txt'));
-    writeFileSync(path.join(f.cwd, 'package.json'), JSON.stringify({ name: 'productfoo', version: '1.0.1' }));
+    writeFileSync(path.join(f.cwd, 'package.json'), JSON.stringify({ name: 'productfoo', version: '1.0.2' }));
     assert.throws(() => verifyRelease(f.cwd, 'source', {}));
     f.git('add', '.'); f.git('commit', '-qm', 'Alter product');
     assert.throws(() => verifyRelease(f.cwd, 'source', {}), /payload/);
@@ -113,5 +113,16 @@ test('rejects a payload pin that is not a full ancestor commit', () => {
       f.git('add', '.github'); f.git('commit', '-qm', 'Invalid pin');
       assert.throws(() => verifyRelease(f.cwd, 'source', {}));
     }
+  } finally { f.close(); }
+});
+
+
+test('rejects an unapproved candidate even when source and package match', () => {
+  const f = fixture();
+  try {
+    f.manifest.status = 'pending';
+    writeFileSync(path.join(f.cwd, '.github/release-candidate.json'), JSON.stringify(f.manifest));
+    f.git('add', '.github'); f.git('commit', '-qm', 'Pending candidate');
+    assert.throws(() => verifyRelease(f.cwd, 'source', {}), /approved/);
   } finally { f.close(); }
 });

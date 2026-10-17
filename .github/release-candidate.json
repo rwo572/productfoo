@@ -1,10 +1,9 @@
 {
   "package": "productfoo",
-  "version": "1.0.0",
-  "status": "approved",
-  "reason": "Maintainer authorized replacement of the pre-fix release tag and publication. Linux artifact independently reproduced from the approved payload; its complete uncompressed tar is byte-identical to the tested Mac artifact.",
-  "payload_root": "2626b968f17edd87890cbb8d983cc56e67539517",
-  "payload_commit": "4d3827b8b9272c5c5d6d6d6f6e89047ce55ddc44",
-  "tarball": "productfoo-1.0.0.tgz",
-  "tarball_sha256": "d118a8de7ec33833f52bc6de67eca5ecc04579cd265f5b1c50a9501f765e609f"
+  "version": "1.0.1",
+  "status": "pending",
+  "reason": "Fresh repository patch release; exact package verification is pending.",
+  "payload_root": "8ce924e5ce0740c2b03c07f4215786b927c77f0a",
+  "tarball": "productfoo-1.0.1.tgz",
+  "tarball_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
 }

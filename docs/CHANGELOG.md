@@ -3,7 +3,14 @@
 This changelog covers the public productfoo distribution. Pre-public development
 records are not part of the public release history.
 
-## 1.0.0 — pending publication
+## 1.0.1 — October 17, 2026
+
+Patch release from the fresh public repository. Includes updated README setup
+guidance and section order, plus current installation documentation. CLI commands,
+library exports, bundled skills, packet formats, and runtime requirements are
+unchanged from 1.0.0.
+
+## 1.0.0 — October 17, 2026
 
 The initial release candidate includes the local CLI, bundled product-management
 skills, spec workflows, research and discovery helpers, validation, reconciliation,
@@ -22,5 +29,4 @@ checks cannot guarantee correctness or safety. Read
 [project status and responsible use](https://github.com/rwo572/productfoo#project-status-and-responsible-use)
 before getting started.
 
-Release verification must be renewed for the final source and package before
-publication. This candidate entry is not a release approval.
+Each published release is verified against its exact source and package bytes.
