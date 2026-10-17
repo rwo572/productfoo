@@ -82,3 +82,25 @@ The release workflow checks repository identity, the approved commit and tag,
 source history, clean contents, version fields, and package bytes before it can
 publish. Do not weaken these checks or treat green CI as release authorization.
 Do not include credentials or raw private context in preparation records.
+
+## Keep current-version documentation aligned with npm
+
+After publication, read the registry's `latest` dist-tag with
+`npm view productfoo dist-tags --json --prefer-online`. Update the current-release
+labels and npm version links in `README.md` and `docs/getting-started.md`.
+Refresh `docs/runtime-support.md` only from verification evidence for that exact
+release. Development package versions and unpublished GitHub tags are not proof
+that a version is available on npm.
+
+An hourly Codex automation checks this repository for drift and opens or updates
+a focused documentation pull request. It may merge documentation-only corrections
+after required checks pass and a final registry check confirms the version.
+Each run is limited to ten minutes, two registry observations, one pull request,
+and one merge. Pending checks carry over to the next run. It reports completed
+updates, failed verification, or required human action; unchanged runs stay quiet.
+
+Keep historical changelog entries and dated release/security records accurate to
+the events they describe. Do not replace every old version string indiscriminately.
+The automation does not publish packages, change runtime code or package versions,
+move tags, rewrite release pins, or weaken repository protections. GitHub docs can
+change independently of the README bundled in an already-published npm tarball.

@@ -23,6 +23,8 @@ for the full notice.
 
 ## Install productfoo
 
+Current npm release: [1.0.1](https://www.npmjs.com/package/productfoo/v/1.0.1).
+
 Install the release tagged `latest` on npm:
 
 ```bash
