@@ -1,9 +1,10 @@
 {
   "package": "productfoo",
   "version": "1.0.1",
-  "status": "pending",
-  "reason": "Fresh repository patch release; exact package verification is pending.",
+  "status": "approved",
+  "reason": "User authorized publication from the fresh repository; runtime compatibility and Linux release artifact verified.",
   "payload_root": "8ce924e5ce0740c2b03c07f4215786b927c77f0a",
   "tarball": "productfoo-1.0.1.tgz",
-  "tarball_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16",
+  "payload_commit": "cb025c28f6b882154e6dbde5a9e7742aae848700"
 }
