@@ -1,6 +1,6 @@
 {
   "version": "1.0.1",
-  "status": "prepared",
+  "status": "verified",
   "scope": "Non-breaking patch from a fresh public repository; only package version and packaged README/changelog differ from 1.0.0.",
   "root_commit": "8ce924e5ce0740c2b03c07f4215786b927c77f0a",
   "verification": {
@@ -17,7 +17,13 @@
     "generated_files": "passed",
     "installed_cli_and_library_smoke": "passed",
     "contract_boundaries": "passed",
-    "command_contract": "passed"
+    "command_contract": "passed",
+    "runtime_matrix": "passed: Linux and macOS, Node 18.0.0, 18, 20, 22, 24, 26.5.0",
+    "ci_run": "https://github.com/rwo572/productfoo/actions/runs/39061952862",
+    "network_denied_workflows": {
+      "passed": 19,
+      "failed": 0
+    }
   },
   "compatibility": {
     "version": "1.0.1",
@@ -38,8 +44,8 @@
   ],
   "approval": "User authorized fresh public repository, replacement npm release, compatibility preservation, and unpublishing 1.0.0 after its replacement.",
   "pending": [
-    "Linux package digest from the exact candidate CI run",
-    "Final source and package pins",
     "Publishing and installed-registry verification"
-  ]
+  ],
+  "payload_commit": "cb025c28f6b882154e6dbde5a9e7742aae848700",
+  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16"
 }

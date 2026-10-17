@@ -1,6 +1,6 @@
 {
   "version": "1.0.1",
-  "status": "prepared",
+  "status": "verified",
   "checks": {
     "tests": {
       "passed": 1329,
@@ -15,7 +15,13 @@
     "generated_files": "passed",
     "installed_cli_and_library_smoke": "passed",
     "contract_boundaries": "passed",
-    "command_contract": "passed"
+    "command_contract": "passed",
+    "runtime_matrix": "passed: Linux and macOS, Node 18.0.0, 18, 20, 22, 24, 26.5.0",
+    "ci_run": "https://github.com/rwo572/productfoo/actions/runs/39061952862",
+    "network_denied_workflows": {
+      "passed": 19,
+      "failed": 0
+    }
   },
   "compatibility": {
     "version": "1.0.1",
@@ -31,5 +37,7 @@
     "new_file_count": 498,
     "local_tarball_sha256": "4473154e12173f638a4ca29d81baba9d8f5c681a5095019bd9817a477bd6f34f"
   },
-  "publication": "pending"
+  "publication": "pending",
+  "payload_commit": "cb025c28f6b882154e6dbde5a9e7742aae848700",
+  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16"
 }
