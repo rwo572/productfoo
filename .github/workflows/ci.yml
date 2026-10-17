@@ -25,6 +25,10 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run verify:public
+      - name: Record the reproducible Linux package digest
+        run: |
+          npm pack --ignore-scripts
+          sha256sum productfoo-1.0.1.tgz
       - run: node bin/foo self check
       - run: node bin/foo commands validate
       - run: git diff --exit-code

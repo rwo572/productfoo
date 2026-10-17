@@ -1,6 +1,6 @@
 {
   "name": "productfoo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Product-management workflows, specs, and verification for coding agents.",
   "keywords": [
     "cli",

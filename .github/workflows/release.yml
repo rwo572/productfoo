@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       expected_sha:
-        description: 'Full approved commit SHA; select the protected v1.0.0 tag above'
+        description: 'Full approved commit SHA; select the protected v1.0.1 tag above'
         required: true
         type: string
 permissions:
@@ -39,4 +39,4 @@ jobs:
       - run: npm pack --ignore-scripts
       - run: node .github/scripts/verify-release.mjs package
       - name: Publish the verified tarball with OIDC and provenance
-        run: npm publish ./productfoo-1.0.0.tgz --ignore-scripts --access public --provenance
+        run: npm publish ./productfoo-1.0.1.tgz --ignore-scripts --access public --provenance
