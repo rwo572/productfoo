@@ -1,6 +1,6 @@
 {
   "version": "1.0.1",
-  "status": "verified",
+  "status": "published-and-verified",
   "checks": {
     "tests": {
       "passed": 1329,
@@ -37,7 +37,30 @@
     "new_file_count": 498,
     "local_tarball_sha256": "4473154e12173f638a4ca29d81baba9d8f5c681a5095019bd9817a477bd6f34f"
   },
-  "publication": "pending",
+  "publication": {
+    "status": "verified",
+    "version": "1.0.1",
+    "tag": "v1.0.1",
+    "commit": "e3ea2d02e6ca298cfc1b59eaa3c71da11e413c26",
+    "repository_id": 1423662336,
+    "workflow_run": "https://github.com/rwo572/productfoo/actions/runs/39062393069",
+    "release": "https://github.com/rwo572/productfoo/releases/tag/v1.0.1",
+    "registry": "https://www.npmjs.com/package/productfoo/v/1.0.1",
+    "registry_tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16",
+    "registry_signatures": "verified",
+    "provenance": "verified against the fresh repository ID and release commit",
+    "installed_network_denied_workflows": {
+      "passed": 19,
+      "failed": 0
+    },
+    "latest": "1.0.1"
+  },
   "payload_commit": "cb025c28f6b882154e6dbde5a9e7742aae848700",
-  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16"
+  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16",
+  "superseded_release": {
+    "version": "1.0.0",
+    "status": "unpublished",
+    "registry_metadata_http_status": 404,
+    "registry_tarball_http_status": 404
+  }
 }
