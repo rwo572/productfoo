@@ -30,17 +30,26 @@ builds with Node 26.5.0/npm 11.17.0, then installs and runs the resulting tarbal
 using its target runtime. A configured matrix is not evidence that a particular
 CI run passed; inspect that run's logs for exact versions and architecture.
 
-The October 16, 2026 local cleanup check passed all 17 checks above against one
-installed `productfoo@1.0.0` candidate on **macOS ARM64**, using Node **18.0.0,
-18.20.8, 20.20.2, 22.23.3, 24.22.0, and 26.5.0**. The test runner also proved its
-network-denial control fired before running the workflows. Provisioning used
-Node 26.5.0/npm 11.17.0; installing with each older runtime's npm is scheduled
-in CI and was not part of that local run.
+## Verified current release
 
-Native Windows, WSL, macOS x64, and Linux ARM64 have not been rerun for this
-cleanup. Historical checks of earlier packages are not evidence for this
-candidate. The final release must rerun compatibility against its exact package;
-preparing or testing a local package does not publish it.
+The published npm release is
+[`productfoo@1.0.1`](https://www.npmjs.com/package/productfoo/v/1.0.1).
+On October 17, 2026, its [release-candidate CI run](https://github.com/rwo572/productfoo/actions/runs/39062257427)
+passed the installed-package matrix on Ubuntu and macOS with Node 18.0.0,
+18.x, 20.x, 22.x, 24.x, and 26.5.0. Each job installed the package with the
+target runtime's npm and exercised it with network access denied.
+
+After publication, the downloaded registry tarball matched the approved SHA-256,
+npm verified its registry signatures and provenance, and all 19 installed
+workflows passed with network access denied. The
+[release verification record](../.github/release-verification.json) contains the
+exact artifact digest, release commit, workflow link, and results. Runtime files
+are byte-identical to the previous release; only the README, changelog, and
+package version changed in the npm tarball.
+
+These results do not establish native Windows, WSL, macOS x64, or Linux ARM64
+compatibility. See the linked run for the precise runner architectures and
+resolved Node versions. A later release needs its own verification evidence.
 
 ## Contributor test tools
 

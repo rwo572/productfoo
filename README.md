@@ -68,6 +68,8 @@ For the CLI, you need Node.js 18 or newer, npm, Git, and a configured coding age
 
 ### 1. Install productfoo
 
+Current npm release: [1.0.1](https://www.npmjs.com/package/productfoo/v/1.0.1).
+
 ```bash
 npm install -g productfoo
 cd /path/to/your/project
