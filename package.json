@@ -1,0 +1,73 @@
+{
+  "name": "productfoo",
+  "version": "1.0.0",
+  "description": "Product-management workflows, specs, and verification for coding agents.",
+  "keywords": [
+    "cli",
+    "product-management",
+    "specifications",
+    "coding-agents",
+    "ai-agents"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rwo572/productfoo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rwo572/productfoo/issues"
+  },
+  "homepage": "https://github.com/rwo572/productfoo#readme",
+  "type": "module",
+  "bin": {
+    "foo": "bin/foo.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist-public/src/index.d.ts",
+      "default": "./dist-public/src/index.js"
+    },
+    "./cli": {
+      "types": "./dist-public/src/cli.d.ts",
+      "default": "./dist-public/src/cli.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "foo": {
+    "brandUrl": "https://github.com/rwo572/productfoo"
+  },
+  "files": [
+    "bin",
+    "docs/CHANGELOG.md",
+    "commands",
+    "dist-public/src",
+    "config/pricing.yaml",
+    "config/routing-policy.yaml",
+    "schemas",
+    "skills",
+    "skills-lock.json",
+    "docs/THIRD_PARTY_NOTICES.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc && node scripts/bundle-vendor.mjs",
+    "build:public": "node scripts/build-public.mjs",
+    "verify:public": "npm run build && npm run check:generated && npm run build:public && node scripts/verify-public-package.mjs && node scripts/verify-public-git-manifest.mjs && node scripts/smoke-public-package.mjs",
+    "prepack": "npm run build:public",
+    "prepublishOnly": "npm run build:public",
+    "test": "rm -rf dist && npm run build && find dist -name '*.test.js' -print0 | xargs -0 env NODE_ENV=test node --test",
+    "test:packetindex": "npm run build && env NODE_ENV=test node --test dist/test/packetIndexGolden.test.js dist/test/packetIndex.test.js",
+    "generate": "npm run build && node scripts/build-swarm-skills.mjs && node scripts/skill-tree-anchor.mjs && node scripts/build-anthropic-plugin.mjs && node scripts/gen-cli-reference.mjs && node scripts/gen-third-party-notices.mjs && node scripts/gen-cheatsheet.mjs",
+    "check:generated": "node scripts/build-swarm-skills.mjs --verify && node scripts/skill-tree-anchor.mjs --check && node scripts/build-anthropic-plugin.mjs --check && node scripts/gen-cli-reference.mjs --check && node scripts/gen-third-party-notices.mjs --check && node scripts/gen-cheatsheet.mjs --check"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.3.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}

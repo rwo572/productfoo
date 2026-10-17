@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Initiative Tracker"
+  short_description: "Draft a local initiative digest; scheduling and delivery stay blocked."
+  default_prompt: "Use $initiative-tracker for the relevant workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capture External Artifact"
+  short_description: "Draft a local capture outline without fetching or publishing."
+  default_prompt: "Use $capture-external-artifact to prepare a safe local outline from approved sanitized evidence."

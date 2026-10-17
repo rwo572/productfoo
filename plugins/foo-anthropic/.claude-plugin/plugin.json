@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "foo",
+  "displayName": "productfoo",
+  "version": "0.1.0",
+  "description": "productfoo: Spec-first product development toolkit. Adaptive spec packets, expert swarms, governed loops, and agent-native workflows for Claude Code.",
+  "author": {
+    "name": "productfoo",
+    "url": "https://github.com/rwo572/productfoo"
+  },
+  "homepage": "https://github.com/rwo572/productfoo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rwo572/productfoo.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "spec",
+    "product",
+    "development",
+    "workflow",
+    "governance",
+    "research",
+    "testing",
+    "adaptive-spec-packet",
+    "expert-swarm",
+    "loop-control"
+  ]
+}

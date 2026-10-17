@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Tech Lead"
+  short_description: "Ask engineering execution questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-technical-lead to ask the 2-3 technical lead questions this spec needs."

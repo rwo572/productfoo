@@ -1,0 +1,7 @@
+# setup guide — placeholder-shaped docs, no live-shaped values
+Set STRIPE_SECRET_KEY to the key from your dashboard (starts with sk_live_).
+Your GitHub token is created at Settings > Developer settings (ghp_ prefix).
+Export ANTHROPIC_API_KEY before running the agent.
+Connection strings embed credentials as user, then password, then the host.
+Never paste an AKIA-prefixed access key into chat.
+Commit hashes look like d6f3bc253ef4 and are not secrets.

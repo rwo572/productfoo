@@ -1,0 +1,212 @@
+schema_version: "0.1"
+spec_id: agentic_todo_app_v1
+spec_ref: examples/agentic-todo-app/spec.md
+updated: "2026-06-18T00:00:00-07:00"
+
+defaults:
+  autonomy: human-in-loop
+  stale_after_days:
+    suggested: 7
+    discovered: 7
+
+ledger:
+  segment_order:
+    - events.jsonl
+
+freshness:
+  external_observations:
+    max_age_seconds: 3600
+
+codebase:
+  root: .
+  baseline: git:HEAD
+  require_task_for_changes: true
+  unmatched_change: conflict
+
+tasks:
+  - id: T-001
+    title: Build the local task inbox
+    status: todo
+    agreement: agreed
+    stage: shaping
+    refs: [R-001, R-004]
+    depends_on: []
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - app/
+      - examples/agentic-todo-app/spec.md
+    do:
+      - Create a local web app surface for task creation and task list review.
+      - Represent the visible statuses Inbox, Scoped, Running, Needs Review, Done, and Blocked.
+      - Preserve enough state to explain why a task changed status.
+    done_when:
+      - id: C-001
+        text: A user can create and inspect tasks in the local web app.
+        done: false
+        proof: null
+      - id: C-002
+        text: The visible lifecycle statuses are represented in the UI and persisted state.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-002
+    title: Define and persist dispatch packets
+    status: todo
+    agreement: agreed
+    stage: shaping
+    refs: [R-002, R-003, R-006, R-008]
+    depends_on: [T-001]
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - app/
+      - data/
+      - examples/agentic-todo-app/spec.md
+    do:
+      - Define the dispatch packet shape for objective, allowed tools/connectors, scoped files/accounts, out-of-scope actions, and required proof.
+      - Persist dispatch packets and scope/permission decisions locally.
+      - Keep Codex/runtime-specific details behind an adapter boundary.
+    done_when:
+      - id: C-001
+        text: A task can move from Inbox to Scoped only after a dispatch packet is approved.
+        done: false
+        proof: null
+      - id: C-002
+        text: The dispatch packet can represent prohibited irreversible actions.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-003
+    title: Add agent run and review result flow
+    status: todo
+    agreement: agreed
+    stage: shaping
+    refs: [R-005, R-009]
+    depends_on: [T-002]
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - app/
+      - data/
+      - examples/agentic-todo-app/spec.md
+    do:
+      - Model Running and Needs Review states for dispatched agent work.
+      - Show returned summary, artifacts, action log, tool/source links, validation checks, confidence, and unresolved risks.
+      - Provide approve and reject controls for the user.
+      - Flag missing proof or out-of-scope actions during review.
+    done_when:
+      - id: C-001
+        text: A fixture agent run can return a review result with required evidence fields.
+        done: false
+        proof: null
+      - id: C-002
+        text: The review flow can mark results approved, rejected, or blocked.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-004
+    title: Control suggested follow-up tasks
+    status: todo
+    agreement: agreed
+    stage: shaping
+    refs: [R-007]
+    depends_on: [T-003]
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - app/
+      - data/
+      - examples/agentic-todo-app/spec.md
+    do:
+      - Allow an agent result to include suggested follow-up tasks.
+      - Keep suggestions out of the active inbox until the user accepts them.
+      - Preserve rejected or ignored suggestions as review context without cluttering the inbox.
+    done_when:
+      - id: C-001
+        text: Suggested follow-ups appear in review without entering the active inbox automatically.
+        done: false
+        proof: null
+      - id: C-002
+        text: The user can accept a suggested follow-up into the inbox.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-005
+    title: Prove rendered flow and Codex dogfood
+    status: todo
+    agreement: agreed
+    stage: learning
+    refs: [R-010]
+    depends_on: [T-001, T-002, T-003, T-004]
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - app/
+      - data/
+      - examples/agentic-todo-app/spec.md
+      - examples/agentic-todo-app/events.jsonl
+    do:
+      - Run the local web app and verify create, scope, dispatch, review, and approve/reject behavior.
+      - Use fixture dispatch packets for workspace, research/synthesis, and life-admin preparation tasks.
+      - Dispatch and review one real Codex task through the app.
+      - Record validation evidence in the task ledger or packet event ledger.
+    done_when:
+      - id: C-001
+        text: Rendered local flow is verified end to end.
+        done: false
+        proof: null
+      - id: C-002
+        text: One real Codex dogfood task is dispatched and reviewed through the app.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}

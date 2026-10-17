@@ -1,0 +1,4 @@
+interface:
+  display_name: "Firecrawl Research Papers"
+  short_description: "Research papers with Firecrawl"
+  default_prompt: "Use $firecrawl-research-papers to find public research papers with a required Firecrawl search via the available plugin or direct API, preserving host-reported versus executor-verified assurance."

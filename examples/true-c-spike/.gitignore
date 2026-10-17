@@ -1,0 +1,4 @@
+wire-log.jsonl
+client-egress.jsonl
+canaries.json
+.foo/

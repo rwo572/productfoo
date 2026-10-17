@@ -1,0 +1,8 @@
+# cloud console paste — synthetic values with splice markers
+AZURE_STORAGE_CONNECTION=DefaultEndpointsProtocol=https;AccountName=devstore;AccountKey=%%Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1Ab1==;EndpointSuffix=core.windows.net
+
+service account json dropped into chat:
+{"type": "service_%%account", "project_id": "demo-project", "private_key_id": "notreal"}
+
+deploy script had this inline:
+  API_SEC%%RET=q7Xp2Vn9mK4wRt8Yz3Lb6Fd1Hs5Gc0Ja

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Finance"
+  short_description: "Ask CFO and capital-allocation questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-finance-cfo to ask the 2-3 finance/CFO questions this spec needs."

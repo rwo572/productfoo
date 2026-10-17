@@ -1,0 +1,4 @@
+interface:
+  display_name: "Strategy Check"
+  short_description: "Run the Strategy Check workflow."
+  default_prompt: "Use $strategy-check for the relevant workflow."

@@ -1,0 +1,62 @@
+schema_version: "0.1"
+spec_id: public_alpha_cleanup_v1
+spec_ref: specs/public-alpha-cleanup-v1/spec.md
+updated: 2026-10-16T00:00:00Z
+defaults:
+  autonomy: human-in-loop
+ledger:
+  segment_order: [events.jsonl]
+tasks:
+  - id: T-001
+    title: Remove alpha coupling and verify the complete public product
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-001
+      - R-002
+      - R-003
+      - R-004
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - src/
+      - test/
+      - examples/mcp-widget-probe/
+      - bin/
+      - commands/
+      - skills/
+      - scripts/
+      - config/
+      - docs/
+      - README.md
+      - AGENTS.md
+      - package.json
+      - package-lock.json
+      - .github/
+      - specs/public-alpha-cleanup-v1/
+      - plugins/
+    do:
+      - Remove private service coupling
+      - correct claims
+      - verify full public release.
+    done_when:
+      - id: C-001
+        text: Full public workflows pass without private alpha services and release remains unarmed.
+        done: true
+        proof: verification.md; 1323 passing tests; installed package controls; six runtime versions; final exact artifact receipt in .github/release-preparation.json
+    completed:
+      at: "2026-10-17T00:41:29.810Z"
+      by: human
+      summary: Implemented and locally verified approved cleanup; final committed artifact rehearsal and CI precede merge.
+      event: "01M53MX0EMAHDQQ1H8B42931WE"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}

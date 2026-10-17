@@ -1,0 +1,4 @@
+interface:
+  display_name: "Update CLI Spec"
+  short_description: "Keep CLI behavior and spec artifacts aligned"
+  default_prompt: "Use $update-cli-spec after changing CLI commands or runtime workflow behavior."

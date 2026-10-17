@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gong Quotes"
+  short_description: "Extract traceable quotes only from approved sanitized evidence."
+  default_prompt: "Use $gong-quotes for the relevant workflow."

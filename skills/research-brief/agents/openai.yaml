@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Brief"
+  short_description: "Plan a decision-oriented study from approved context."
+  default_prompt: "Use $research-brief for the relevant workflow."

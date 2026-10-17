@@ -1,0 +1,40 @@
+{
+  "schema_version": "bug-capsule-fault-corpus/0.1",
+  "scenario_id": "dedupe-true-duplicate-across-versions",
+  "cases": [
+    {
+      "case_id": "duplicate-v0124-001",
+      "input": {
+        "foo_version": "0.1.24",
+        "error_class": "io_error",
+        "error_code": "E_IO",
+        "message": "EACCES reading spec.md",
+        "stack": "Error: EACCES\n    at readSpec (cli.js:400:11)",
+        "causal_field": "spec.md"
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": ["duplicate-v0125-001"],
+      "expected_cluster_state": "candidate_occurrence",
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-007", "V-008"]
+    },
+    {
+      "case_id": "duplicate-v0125-001",
+      "input": {
+        "foo_version": "0.1.25",
+        "error_class": "io_error",
+        "error_code": "E_IO",
+        "message": "EACCES reading spec.md",
+        "stack": "Error: EACCES\n    at readSpec (cli.js:400:11)",
+        "causal_field": "spec.md"
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": ["duplicate-v0124-001"],
+      "expected_cluster_state": "candidate_occurrence",
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-007", "V-008"]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ThisProduct Design"
+  short_description: "Use when designing or generating ThisProduct-branded interfaces, visual assets, prototypes, mocks, UI kits, or production U"
+  default_prompt: "Use $design-system for the relevant workflow."

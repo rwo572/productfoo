@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rwo572.github.io/schemas/rehearsal-receipt.schema.json",
+  "title": "productfoo public rehearsal receipt",
+  "description": "Evidence from a public source checkout and its exact npm artifact, with installed workflows run offline. Provisioning may use the npm registry. No release approval is implied.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "runner",
+    "mode",
+    "candidate",
+    "network",
+    "phases",
+    "workflows",
+    "digests",
+    "result",
+    "toolchain"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "0.1"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "foo_public_rehearsal_receipt"
+      ]
+    },
+    "runner": {
+      "enum": [
+        "scripts/smoke-public.mjs"
+      ]
+    },
+    "mode": {
+      "description": "Full mode checks out the requested public commit in a local clone and provisions it. Surface mode verifies and installs the supplied tarball.",
+      "enum": [
+        "full",
+        "surface"
+      ]
+    },
+    "candidate": {
+      "type": "object",
+      "required": [
+        "source_commit",
+        "history_commit",
+        "baseline_version",
+        "computed_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source_commit": {
+          "description": "Observed public source commit, or null if the source cannot be resolved. Surface mode separately hashes working-tree bytes.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$|^$"
+        },
+        "history_commit": {
+          "description": "Full mode checkout commit, identical to source_commit; no history is rewritten. Null in surface mode.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$|^$"
+        },
+        "baseline_version": {
+          "description": "Observed source package.json version.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$|^$"
+        },
+        "computed_version": {
+          "description": "The approved expected stable release version asserted against actual artifacts (default 1.0.0); field name retained for receipt compatibility.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d+\\.\\d+\\.\\d+$|^$"
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "required": [
+        "posture",
+        "preload"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "posture": {
+          "description": "The posture the product-surface phase ran under. Provisioning phases (npm ci, install) may use the registry; the surface itself never does.",
+          "enum": [
+            "deny"
+          ]
+        },
+        "preload": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "phases": {
+      "description": "Provisioning phases. A skipped phase must carry the reason.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail",
+              "skipped"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "workflows": {
+      "description": "One entry per smoke workflow executed against the installed product. Every entry records its argv and exit code.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "argv",
+          "exit_code",
+          "pass"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+          },
+          "argv": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exit_code": {
+            "type": "integer"
+          },
+          "pass": {
+            "type": "boolean"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "digests": {
+      "description": "SHA-256 digests of reviewed public inventories, current source bytes, and exact artifact. Failed runs may carry only digests available before failure; the runner refuses passing evidence without the complete set.",
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "git_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$|^$"
+        },
+        "npm_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$|^$"
+        },
+        "tarball_name": {
+          "type": "string"
+        },
+        "tarball_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$|^$"
+        },
+        "tarball_tar_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$|^$"
+        },
+        "source_tree_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "toolchain": {
+      "description": "#882: the toolchain that produced this receipt's digests (process.version, npm --version, process.platform, process.arch).",
+      "type": "object",
+      "required": [
+        "node",
+        "npm",
+        "platform",
+        "arch"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "node": {
+          "type": "string",
+          "pattern": "^v\\d+\\.\\d+\\.\\d+"
+        },
+        "npm": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "arch": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

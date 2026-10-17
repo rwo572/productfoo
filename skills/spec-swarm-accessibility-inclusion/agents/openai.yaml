@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Accessibility"
+  short_description: "Ask accessibility and inclusion questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-accessibility-inclusion to ask the 2-3 accessibility questions this spec needs."

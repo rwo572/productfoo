@@ -1,0 +1,4 @@
+interface:
+  display_name: "PMM Release Briefing"
+  short_description: "Draft a local PMM briefing; external delivery stays blocked."
+  default_prompt: "Use $pmm-release-briefing for the relevant workflow."

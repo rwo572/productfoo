@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Data Science"
+  short_description: "Ask measurement questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-data-science to ask the 2-3 data science questions this spec needs."

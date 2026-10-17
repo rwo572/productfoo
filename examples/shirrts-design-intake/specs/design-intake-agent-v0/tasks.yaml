@@ -1,0 +1,211 @@
+schema_version: "0.1"
+spec_id: dia_v0
+spec_ref: specs/design-intake-agent-v0/spec.md
+updated: "2026-07-12T16:00:00Z"
+
+defaults:
+  autonomy: human-in-loop
+  stale_after_days:
+    suggested: 7
+    discovered: 7
+
+ledger:
+  segment_order:
+    - events.jsonl
+
+tasks:
+  - id: T-001
+    title: The five cut-critical questions the agent must land
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - src/questions.ts
+      - src/types.ts
+      - test/interview.test.ts
+      - R-002
+    touches:
+      - src/questions.ts
+      - src/types.ts
+      - test/interview.test.ts
+    depends_on: []
+    owner: shop-owner
+    autonomy: human-in-loop
+    do:
+      - Name the five things fabric-cutting depends on — garment, size run, placement, colors, quantity — as one ordered question set.
+      - Give each question its own answer parser, so a wrong answer fails on that question and not on the whole interview.
+    done_when:
+      - id: C-001
+        text: One module declares exactly the five cut-critical questions in ask order, each with a parser that accepts a usable answer and rejects an unusable one.
+        done: true
+        proof: "src/questions.ts CUT_CRITICAL_FIELDS + QUESTIONS (one parser per question); test/interview.test.ts 'the five cut-critical questions are declared in ask order, each with a parser' — passes"
+    completed:
+      at: "2026-07-12T17:05:00Z"
+      by: shop-owner
+      summary: Declared the five cut-critical questions in ask order with a parser each; parseSizeRun/parseColors reject an unusable answer on that question alone.
+      event: evt_dia_002
+    blocked: null
+    review: null
+    extensions: {}
+
+  - id: T-002
+    title: Reject a vague design answer and re-ask it
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - src/vagueness.ts
+      - test/interview.test.ts
+      - R-001
+    touches:
+      - src/vagueness.ts
+    depends_on:
+      - T-001
+    owner: shop-owner
+    autonomy: human-in-loop
+    do:
+      - Detect a non-answer ("something cool", "you decide", "surprise me") and refuse to advance on it.
+      - Return a concrete follow-up question, not a hint — the interview loops on that question until the answer is usable.
+    done_when:
+      - id: C-002
+        text: "\"something cool\" is rejected as a design answer and the agent re-asks with a concrete follow-up; a specific answer advances."
+        done: true
+        proof: "src/vagueness.ts judgeDesignAnswer (NON_ANSWERS + empty-adjective check), routed from src/interviewAgent.ts before the artwork answer can advance; test/interview.test.ts '\"something cool\" is rejected and re-asked; a specific answer advances' — passes"
+    completed:
+      at: "2026-07-12T17:20:00Z"
+      by: shop-owner
+      summary: A non-answer is rejected and the interview loops on that question with a concrete follow-up; a specific answer advances.
+      event: evt_dia_003
+    blocked: null
+    review: null
+    extensions: {}
+
+  - id: T-003
+    title: Refuse copyrighted characters and trademarked logos, and escalate them
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - src/refusals.ts
+      - test/refusals.test.ts
+      - R-003
+    touches:
+      - src/refusals.ts
+      - test/refusals.test.ts
+    depends_on:
+      - T-001
+    owner: shop-owner
+    autonomy: human-in-loop
+    do:
+      - Keep the refusal list as data the owner can extend without a code change.
+      - A refusal states the rule it hit, what the customer can do instead, and escalates to the shop owner rather than declining silently.
+    done_when:
+      - id: C-003
+        text: A named copyrighted character and a named trademarked logo each produce a refusal that escalates to the owner and names the rule; an ordinary design produces none.
+        done: true
+        proof: "src/refusals.ts REFUSAL_LIST (owner-editable data) + checkRights; test/refusals.test.ts — 4 tests pass: a named character and a named brand each refuse, name the rule, and escalate to shop-owner; an ordinary design produces none"
+    completed:
+      at: "2026-07-12T17:35:00Z"
+      by: shop-owner
+      summary: Rights refusals ship as an owner-editable list; a hit names the rule, offers an alternative, and escalates to the owner instead of declining silently.
+      event: evt_dia_004
+    blocked: null
+    review: null
+    extensions: {}
+
+  - id: T-004
+    title: The interview loop — cannot finish with a cut-critical field open
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - src/interviewAgent.ts
+      - test/interview.test.ts
+      - R-001
+      - R-002
+    touches:
+      - src/interviewAgent.ts
+      - test/interview.test.ts
+    depends_on:
+      - T-001
+      - T-002
+      - T-003
+    owner: shop-owner
+    autonomy: human-in-loop
+    do:
+      - Drive the question set, route every answer through the vagueness check and the refusal check.
+      - Refuse to report finished while any of the five cut-critical fields is still open, and name which one.
+    done_when:
+      - id: C-004
+        text: The interview reports not-finished and names the open field while any cut-critical field is unanswered, and reports finished only when all five are landed.
+        done: true
+        proof: "src/interviewAgent.ts InterviewAgent.stillOpen/isFinished — finished only when no cut-critical field is open AND the artwork landed; test/interview.test.ts 'the interview cannot finish while a cut-critical field is open, and names it' — passes"
+    completed:
+      at: "2026-07-12T17:50:00Z"
+      by: shop-owner
+      summary: The interview drives the question set through the vagueness and rights checks and refuses to report finished while any cut-critical field is open, naming which one.
+      event: evt_dia_005
+    blocked: null
+    review: null
+    extensions: {}
+
+  - id: T-005
+    title: Emit the design brief the shop cuts from
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - src/designBrief.ts
+      - test/interview.test.ts
+      - R-004
+    touches:
+      - src/designBrief.ts
+    depends_on:
+      - T-004
+    owner: shop-owner
+    autonomy: human-in-loop
+    do:
+      - Build a structured brief carrying every cut-critical field, the customer's own words for the artwork, and any refusals raised.
+      - Emit a brief only from a finished interview; an unfinished one yields the list of what is still open, never a half-brief.
+    done_when:
+      - id: C-005
+        text: A finished interview emits a brief carrying all five cut-critical fields plus the customer's own artwork words; an unfinished interview emits no brief and lists what is still open.
+        done: true
+        proof: "src/designBrief.ts buildDesignBrief returns {complete:false, brief:null, stillOpen} for an unfinished interview and a full brief otherwise; test/interview.test.ts 'a finished interview emits a brief; an unfinished one emits none and lists what is open' — passes"
+    completed:
+      at: "2026-07-12T18:05:00Z"
+      by: shop-owner
+      summary: The brief carries all five cut-critical fields plus the customer's own artwork words; an unfinished interview yields the open list, never a half-brief.
+      event: evt_dia_006
+    blocked: null
+    review: null
+    extensions: {}
+
+  - id: T-006
+    title: Printable customer-confirmation summary
+    status: todo
+    agreement: agreed
+    stage: building
+    refs:
+      - src/customerSummary.ts
+      - test/customerSummary.test.ts
+      - R-005
+    touches:
+      - src/customerSummary.ts
+      - test/customerSummary.test.ts
+    depends_on:
+      - T-005
+    owner: shop-owner
+    autonomy: human-in-loop
+    do:
+      - Render the brief as a printable plain-language summary in the customer's words, not the shop's field names.
+      - Carry a confirm-or-change prompt the customer answers before the shop cuts.
+    done_when:
+      - id: C-006
+        text: A finished brief renders a printable summary with no internal field names and a confirm-or-change prompt; covered by a test.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review: null
+    extensions: {}

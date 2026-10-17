@@ -1,0 +1,11 @@
+agent transcript: user pasted a private key while debugging TLS
+
+-----BEGIN RSA%% PRIVATE KEY-----
+MIIEpAIBAAKCAQEA7examplekeymaterialnotreal
+-----END RSA%% PRIVATE KEY-----
+
+session token from the browser devtools:
+  eyJ%%hbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N
+
+and the database url from config:
+  DATABASE_URL=postgres%%://admin:s3cr3tpw@db.internal.example.com:5432/app

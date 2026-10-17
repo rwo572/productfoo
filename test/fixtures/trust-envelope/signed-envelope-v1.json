@@ -1,0 +1,41 @@
+{
+  "vector_version": "1",
+  "description": "Published deterministic Foo signed-envelope vector. The signing key is test-only and derived from the public label in test_key_derivation.",
+  "test_key_derivation": {
+    "algorithm": "SHA-256 seed to RFC 8410 Ed25519 PKCS#8",
+    "label": "foo trust envelope published test key v1"
+  },
+  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAHeZojlp+Z5S8VmSEhPxfUuFP56F+Z8Jli6JJm27f2OY=\n-----END PUBLIC KEY-----\n",
+  "canonical_unsigned_json": "{\"artifact_id\":\"foo-roast@0.1.25\",\"artifact_kind\":\"canonical-skill\",\"expires_at\":\"2027-07-19T10:00:00.000Z\",\"issued_at\":\"2026-07-19T10:00:00.000Z\",\"key_id\":\"foo-vector-2026-01\",\"namespace\":\"foo\",\"not_before\":\"2026-07-19T10:00:00.000Z\",\"payload\":{\"message\":\"Iñtërnâtiônàlizætiøn ☃ 💩\",\"nested\":{\"a\":[null,\"雪\"],\"z\":false},\"numbers\":[1,1.5,42]},\"previous_hash\":null,\"schema_version\":\"1\",\"sequence\":1,\"signature_algorithm\":\"Ed25519\"}",
+  "signing_bytes_base64": "Zm9vLnNpZ25lZC1lbnZlbG9wZS52MQBmb28AY2Fub25pY2FsLXNraWxsAHsiYXJ0aWZhY3RfaWQiOiJmb28tcm9hc3RAMC4xLjI1IiwiYXJ0aWZhY3Rfa2luZCI6ImNhbm9uaWNhbC1za2lsbCIsImV4cGlyZXNfYXQiOiIyMDI3LTA3LTE5VDEwOjAwOjAwLjAwMFoiLCJpc3N1ZWRfYXQiOiIyMDI2LTA3LTE5VDEwOjAwOjAwLjAwMFoiLCJrZXlfaWQiOiJmb28tdmVjdG9yLTIwMjYtMDEiLCJuYW1lc3BhY2UiOiJmb28iLCJub3RfYmVmb3JlIjoiMjAyNi0wNy0xOVQxMDowMDowMC4wMDBaIiwicGF5bG9hZCI6eyJtZXNzYWdlIjoiScOxdMOrcm7DonRpw7Ruw6BsaXrDpnRpw7huIOKYgyDwn5KpIiwibmVzdGVkIjp7ImEiOltudWxsLCLpm6oiXSwieiI6ZmFsc2V9LCJudW1iZXJzIjpbMSwxLjUsNDJdfSwicHJldmlvdXNfaGFzaCI6bnVsbCwic2NoZW1hX3ZlcnNpb24iOiIxIiwic2VxdWVuY2UiOjEsInNpZ25hdHVyZV9hbGdvcml0aG0iOiJFZDI1NTE5In0=",
+  "envelope_hash": "d8d6dcf8a3f3ef3523b142115eb6ce56bdfc5bc4cbd77b5306384277b104e767",
+  "envelope": {
+    "schema_version": "1",
+    "namespace": "foo",
+    "artifact_kind": "canonical-skill",
+    "artifact_id": "foo-roast@0.1.25",
+    "payload": {
+      "message": "Iñtërnâtiônàlizætiøn ☃ 💩",
+      "nested": {
+        "z": false,
+        "a": [
+          null,
+          "雪"
+        ]
+      },
+      "numbers": [
+        1,
+        1.5,
+        42
+      ]
+    },
+    "key_id": "foo-vector-2026-01",
+    "issued_at": "2026-07-19T10:00:00.000Z",
+    "not_before": "2026-07-19T10:00:00.000Z",
+    "expires_at": "2027-07-19T10:00:00.000Z",
+    "sequence": 1,
+    "previous_hash": null,
+    "signature_algorithm": "Ed25519",
+    "signature": "fUUxpyOGDFUMuSl7dzQFF5w+N+Ysv1V2pc3NXgFZWhRWZ/EAmdj7VzJoH8BvDj8Yc948zkPQ4BxV5rnmldm+AQ=="
+  }
+}

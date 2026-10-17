@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Shape Interview"
+  short_description: "Shape one artifact before generation."
+  default_prompt: "Use $product-shape-interview on this spec packet before generating an artifact."

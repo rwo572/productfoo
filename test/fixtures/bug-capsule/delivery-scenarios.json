@@ -1,0 +1,76 @@
+{
+  "schema_version": "bug-capsule-delivery-scenarios/0.1",
+  "scenario_id": "preview-consent-and-receipt-faults",
+  "scenarios": [
+    {
+      "case_id": "preview-bytes-digest-transmit-001",
+      "validation_ids": ["V-003"],
+      "operation": "preview_and_send",
+      "input": { "capsule_fixture": "capsule.valid.json", "approval_digest": "sha256:defac21a1751a02986cc455be278f9abe1bf09a0e8874c6ccd51aad40b72ee26" },
+      "expected": { "exercised": true, "preview_matches_canonical": true, "transmitted_matches_preview": true, "preview_digest_matches_approval": true, "transmitted_digest_matches_approval": true, "relay_calls": 1 }
+    },
+    {
+      "case_id": "preview-edit-invalidates-consent-001",
+      "validation_ids": ["V-003"],
+      "operation": "edit_after_preview",
+      "input": { "capsule_fixture": "capsule.valid.json", "edit": { "failure.message.value": "EACCES after reporter edit" }, "approval_digest": "sha256:defac21a1751a02986cc455be278f9abe1bf09a0e8874c6ccd51aad40b72ee26" },
+      "expected": { "exercised": true, "capsule_id_changed": true, "payload_digest_changed": true, "fresh_consent_required": true, "relay_calls": 0 }
+    },
+    {
+      "case_id": "receipt-replay-original-001",
+      "validation_ids": ["V-006"],
+      "operation": "ingress_replay",
+      "input": { "capsule_fixture": "capsule.valid.json", "attempts": 2 },
+      "expected": { "exercised": true, "occurrences": 1, "receipt_count": 2, "original_receipt_reused": true }
+    },
+    {
+      "case_id": "receipt-digest-conflict-001",
+      "validation_ids": ["V-006"],
+      "operation": "ingress_conflict",
+      "input": { "capsule_fixture": "capsule.valid.json", "edit": { "failure.message.value": "same id different bytes" } },
+      "expected": { "exercised": true, "occurrences": 1, "accepted": 1, "conflicts": 1 }
+    },
+    {
+      "case_id": "receipt-malformed-001",
+      "validation_ids": ["V-006"],
+      "operation": "send",
+      "input": { "capsule_fixture": "capsule.valid.json", "relay_response": { "kind": "response", "status": 202, "body": "not-json" } },
+      "expected": { "exercised": true, "status": "retryable", "relay_calls": 1, "retained_calls": 1, "archive_calls": 0 }
+    },
+    {
+      "case_id": "receipt-partial-001",
+      "validation_ids": ["V-006"],
+      "operation": "send",
+      "input": { "capsule_fixture": "capsule.valid.json", "relay_response": { "kind": "response", "status": 202, "body": { "schema_version": "0.1", "capsule_id": "018f05d4-54fb-72aa-aa2a-2a2a2a2a2a2a", "status": "accepted" } } },
+      "expected": { "exercised": true, "status": "retryable", "relay_calls": 1, "retained_calls": 1, "archive_calls": 0 }
+    },
+    {
+      "case_id": "receipt-response-loss-001",
+      "validation_ids": ["V-006"],
+      "operation": "send",
+      "input": { "capsule_fixture": "capsule.valid.json", "relay_response": { "kind": "loss" } },
+      "expected": { "exercised": true, "status": "retryable", "relay_calls": 1, "retained_calls": 1, "archive_calls": 0 }
+    },
+    {
+      "case_id": "receipt-uncertainty-retains-local-001",
+      "validation_ids": ["V-006"],
+      "operation": "send",
+      "input": { "capsule_fixture": "capsule.valid.json", "relay_response": { "kind": "response", "status": 503, "body": { "status": "retryable" } } },
+      "expected": { "exercised": true, "status": "retryable", "relay_calls": 1, "retained_calls": 1, "archive_calls": 0 }
+    },
+    {
+      "case_id": "receipt-mismatch-never-archives-001",
+      "validation_ids": ["V-006"],
+      "operation": "send",
+      "input": { "capsule_fixture": "capsule.valid.json", "relay_response": { "kind": "response", "status": 202, "body": { "schema_version": "0.1", "receipt_id": "018f05d4-54fc-72ab-aa2a-2a2a2a2a2a2a", "capsule_id": "018f05d4-54fb-72aa-aa2a-2a2a2a2a2a2a", "payload_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "accepted_at": "2026-07-19T00:00:01.000Z", "destination": "foo-private-relay", "status": "accepted", "error": null } } },
+      "expected": { "exercised": true, "status": "retryable", "relay_calls": 1, "retained_calls": 1, "archive_calls": 0 }
+    },
+    {
+      "case_id": "receipt-match-archives-001",
+      "validation_ids": ["V-006"],
+      "operation": "send",
+      "input": { "capsule_fixture": "capsule.valid.json", "relay_response": { "kind": "response", "status": 202, "body_fixture": "receipt.accepted.json" } },
+      "expected": { "exercised": true, "status": "accepted", "relay_calls": 1, "retained_calls": 0, "archive_calls": 1 }
+    }
+  ]
+}

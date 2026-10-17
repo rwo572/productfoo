@@ -1,0 +1,4 @@
+interface:
+  display_name: "RFC From Research"
+  short_description: "Draft an RFC from research whose exact paper bytes validate."
+  default_prompt: "Use $rfc-from-research to turn this opportunity into a sourced RFC."

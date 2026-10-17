@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interview Me"
+  short_description: "Run a one-question-at-a-time product interview before writing a spec."
+  default_prompt: "Interview me before writing the spec."

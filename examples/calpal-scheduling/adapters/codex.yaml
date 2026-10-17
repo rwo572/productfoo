@@ -1,0 +1,34 @@
+schema_version: "0.1"
+agent:
+  provider: codex
+  name: Codex
+  adapter_version: "0.1"
+
+capabilities:
+  session_start: true
+  user_prompt: true
+  assistant_message: partial
+  tool_call: partial
+  tool_result: partial
+  session_end: false
+  transcript_path: true
+  raw_transcript_import: true
+  mcp_tool_names: unknown
+
+correlation:
+  session_id: native
+  turn_id: derived
+  trace_id: generated
+  workspace_root: native
+
+privacy:
+  redacts_by_default: true
+  stores_raw_payloads: false
+  raw_payload_ref_supported: true
+
+known_gaps:
+  - Tool hook coverage may be partial depending on available Codex hooks.
+  - Stop may represent a turn boundary rather than a full session end.
+  - Transcript import may be needed to reconstruct assistant messages.
+
+extensions: {}

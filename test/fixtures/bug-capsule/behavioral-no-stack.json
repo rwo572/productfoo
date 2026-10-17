@@ -1,0 +1,23 @@
+{
+  "schema_version": "bug-capsule-fault-corpus/0.1",
+  "scenario_id": "manual-behavioral-no-stack",
+  "cases": [
+    {
+      "case_id": "behavioral-no-stack-001",
+      "input": {
+        "argv": ["report", "add", "--expected", "status lists the active packet", "--actual", "status says no packet", "--reproduction", "run foo asp status specs/bug-capsule-v0"],
+        "expected": "status lists the active packet",
+        "actual": "status says no packet",
+        "reproduction": "run foo asp status specs/bug-capsule-v0",
+        "stack": null,
+        "interactive": false
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "expected_evidence_kind": "user_report",
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-010", "V-014"]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: User Research"
+  short_description: "Ask research questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-user-research to ask the 2-3 user research questions this spec needs."

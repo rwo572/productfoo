@@ -1,0 +1,193 @@
+schema_version: "0.1"
+spec_id: public_contributor_cleanup_v1
+spec_ref: specs/public-contributor-cleanup-v1/spec.md
+updated: 2026-10-16T21:46:39.205Z
+defaults:
+  autonomy: human-in-loop
+  stale_after_days:
+    suggested: 7
+    discovered: 7
+ledger:
+  segment_order:
+    - events.jsonl
+tasks:
+  - id: T-001
+    title: Public verification and generated maintenance tooling
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-001
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - scripts/
+      - config/
+      - src/skillClientPolicy.ts
+      - package.json
+      - .github/workflows/ci.yml
+    do:
+      - Public verification and generated maintenance tooling
+    done_when:
+      - id: C-001
+        text: Public verification and generated maintenance tooling is implemented and verified.
+        done: true
+        proof: "npm run verify:public; test/publicDistribution.test.ts; verification.md"
+    completed:
+      at: "2026-10-16T21:59:16.177Z"
+      by: human
+      summary: Marked T-001 done.
+      event: "01M53BKYYJBF0CSSRPY2RYGZTP"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+  - id: T-002
+    title: Current documentation and canonical plugin instructions
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-002
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - docs/
+      - plugins/
+      - AGENTS.md
+      - README.md
+      - .github/CONTRIBUTING.md
+      - .github/SECURITY.md
+      - commands/
+      - skills/
+    do:
+      - Current documentation and canonical plugin instructions
+    done_when:
+      - id: C-002
+        text: Current documentation and canonical plugin instructions is implemented and verified.
+        done: true
+        proof: "npm test; npm run check:generated; foo commands validate; verification.md"
+    completed:
+      at: "2026-10-16T21:59:16.243Z"
+      by: human
+      summary: Marked T-002 done.
+      event: "01M53BKZ0M4EZ252RZNP27DVNT"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+  - id: T-003
+    title: Consolidated truthful guidance and printable reference
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-003
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - docs/
+      - scripts/gen-cheatsheet.mjs
+    do:
+      - Consolidated truthful guidance and printable reference
+    done_when:
+      - id: C-003
+        text: Consolidated truthful guidance and printable reference is implemented and verified.
+        done: true
+        proof: docsLinks tests; generated checks; Chromium desktop/mobile review in verification.md
+    completed:
+      at: "2026-10-16T21:59:16.310Z"
+      by: human
+      summary: Marked T-003 done.
+      event: "01M53BKZ2QW9MB8GVZ4CE1A5NJ"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+  - id: T-004
+    title: Self-contained examples and preserved fixtures
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-004
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - examples/
+      - test/exampleEgressAnalysis.test.ts
+    do:
+      - Self-contained examples and preserved fixtures
+    done_when:
+      - id: C-004
+        text: Self-contained examples and preserved fixtures is implemented and verified.
+        done: true
+        proof: examples index coverage and exampleEgressAnalysis tests in npm test; verification.md
+    completed:
+      at: "2026-10-16T21:59:16.373Z"
+      by: human
+      summary: Marked T-004 done.
+      event: "01M53BKZ4P3BHDAP5XZS0WTSA1"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}
+  - id: T-005
+    title: Contributor proof and unapproved release preparation
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-005
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - test/
+      - specs/public-contributor-cleanup-v1/
+      - .github/release-preparation.json
+    do:
+      - Contributor proof and unapproved release preparation
+    done_when:
+      - id: C-005
+        text: Contributor proof and unapproved release preparation is implemented and verified.
+        done: true
+        proof: verification.md; full suite and 19 installed workflows pass; immutable source/package evidence is recorded separately in .github/release-preparation.json
+    completed:
+      at: "2026-10-16T22:03:28.176Z"
+      by: human
+      summary: Marked T-005 done.
+      event: "01M53BVN1HQFZHDDTZ57PY6ERN"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}

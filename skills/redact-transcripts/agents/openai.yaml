@@ -1,0 +1,4 @@
+interface:
+  display_name: "Redact Transcripts"
+  short_description: "Plan redaction without observing a private transcript file."
+  default_prompt: "Use $redact-transcripts for the relevant workflow."

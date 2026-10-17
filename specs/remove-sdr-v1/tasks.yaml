@@ -1,0 +1,58 @@
+schema_version: "0.1"
+spec_id: remove_sdr_v1
+spec_ref: specs/remove-sdr-v1/spec.md
+updated: 2026-10-16T23:32:37.578Z
+defaults:
+  autonomy: human-in-loop
+  stale_after_days:
+    suggested: 7
+    discovered: 7
+ledger:
+  segment_order:
+    - events.jsonl
+tasks:
+  - id: T-001
+    title: Remove SDR, preserve core journeys, and refresh preparation
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-001
+      - R-002
+      - R-003
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - src/
+      - test/
+      - commands/sdr.md
+      - config/
+      - scripts/
+      - package.json
+      - package-lock.json
+      - docs/
+      - .github/
+      - specs/remove-sdr-v1/
+      - specs/public-contributor-cleanup-v1/verification.md
+    do:
+      - Remove exclusive code and dependencies; verify core workflows and regenerate distribution evidence.
+    done_when:
+      - id: C-001
+        text: Core suite and installed workflows pass without SDR or PostgreSQL; release preparation refreshed without publication.
+        done: true
+        proof: "verification.md; npm test 1319/1319; verify:public;19 installed workflows; independent review; final immutable evidence in .github/release-preparation.json"
+    completed:
+      at: "2026-10-16T23:38:07.344Z"
+      by: human
+      summary: Marked T-001 done.
+      event: "01M53H8Z3R8SXVSCM6F2AXMFMD"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}

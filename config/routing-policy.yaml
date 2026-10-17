@@ -1,0 +1,171 @@
+# foo routing policy — the dated, committed decision data for which model tier
+# does which work (model-orchestrator-v0 R-001).
+#
+# The rule this file exists to keep: routing is not a feature shipped once, it is
+# a POLICY that is maintained. Model identities, prices, and tier membership move
+# weekly, so every tier boundary, task-type mapping, difficulty threshold, and
+# escalation limit lives HERE as data. `src/routingPolicy.ts` holds the decision
+# logic and zero routing constants — adding a provider, renaming a model, or
+# moving a tier boundary is a data-only diff (V-003 / C-001).
+#
+# Where the numbers come from, and what they are not:
+#   - Tier definitions and the task-type map are read from the committed research
+#     paper named in `evidence` (§6 model tiers, §7 decision framework).
+#   - The difficulty thresholds and escalation limits are DEFAULT POLICY CHOICES,
+#     not measurements. They carry `basis: unvalidated_default` and R-009
+#     (prove-vs-oracle, owned by orchestrator-evals-v0) is what can falsify them.
+#     productfoo does not dress a chosen number as a measured one.
+#   - Per-model tier membership is NOT here. It lives on the roster in
+#     pricing.yaml (`models.<id>.routing.tier`), so one file owns model identity.
+#     A model the roster does not place resolves to `conservative_tier` with a
+#     worded finding — never a silent guess (R-013).
+schema_version: "0.1"
+date: "2026-07-20"
+# A routing policy that is not refreshed is wrong within a month (RISK-002). Past
+# this age productfoo surfaces a staleness signal; the L-001 routine (R-010) is what
+# keeps the date current.
+stale_after_days: 30
+evidence: research/2026-07-12-model-routing-orchestration.md
+
+# Where anything unresolvable lands: an unknown model, an unmapped task type, a
+# stale price table (R-013). Deliberately the strong end of the ladder — the
+# conservative direction is *up*, never down to the cheap tier.
+conservative_tier: frontier
+
+tiers:
+  # Ordered weakest -> strongest. Difficulty moves a task along THIS list and
+  # nowhere else, so a new tier between two existing ones is a data-only change.
+  # Tiers outside the ladder (long_context) are reachable by task type but are
+  # never a +1/-1 destination — they are a different axis, not a stronger rung.
+  ladder: [cheap, generalist, frontier]
+  definitions:
+    cheap:
+      purpose: search, classification, routing decisions, bulk mechanical edits, first-pass filtering
+      task_types: [search, classify, bulk_edit]
+    generalist:
+      purpose: day-to-day implementation from an agreed plan
+      task_types: [implement]
+    frontier:
+      purpose: planning, architecture, cross-cutting and API-consistency reasoning, hardest bugs
+      task_types: [plan]
+    long_context:
+      purpose: whole-repo reasoning and large-document synthesis
+      task_types: [long_context]
+
+# Task type -> tier. Step 1 of the decision framework: every routed unit of work
+# is classified before a model is chosen (R-002).
+task_types:
+  plan: frontier
+  implement: generalist
+  search: cheap
+  classify: cheap
+  bulk_edit: cheap
+  # The evidence names no tier for review — it constrains the FAMILY (see
+  # `review` below), not the strength. So review takes the conservative tier by
+  # deliberate choice rather than by inference. Moving it is a one-line data diff.
+  review: frontier
+  long_context: long_context
+
+difficulty:
+  # Step 2: cheap signals first, and they may move a task at most one rung along
+  # the ladder from its type default.
+  basis: unvalidated_default
+  signals:
+    cross_file_spread: 0.35
+    api_surface_breadth: 0.25
+    prior_failure: 0.25
+    input_size: 0.15
+  escalate_at: 0.70
+  downgrade_at: 0.25
+  max_tier_moves: 1
+  # Reasoning models get a difficulty-adaptive thinking budget, never a fixed one
+  # (R-003): easy work must not be over-thought, hard work must not be
+  # under-thought. Bands, in tokens.
+  thinking_budget_tokens:
+    low: 2000
+    medium: 8000
+    high: 24000
+
+escalation:
+  # Step 3: two modes, never conflated (R-004). The orchestrator records which
+  # one it was in.
+  basis: unvalidated_default
+  quality:
+    # Retries come first, always. Never switch models eagerly.
+    retries_same_model: 3
+    then: up_one_tier
+    max_tier_moves: 1
+  resilience:
+    trigger: provider_unavailable
+    direction: across_then_down
+    max_tier_moves: 1
+
+review:
+  # The highest-ROI multi-model pattern in the evidence: a reviewer from a
+  # different family catches blind spots, hallucinated APIs, and sycophancy
+  # (R-005). Same-family review is allowed but is a recorded finding, never a
+  # silent default.
+  require_different_family: true
+  on_same_family: finding
+
+panel:
+  # Decorrelated review is the default multi-model mode; the panel is opt-in
+  # (D-002). Mixing unequal candidates LOWERS quality, so a panel runs only when
+  # candidates sit within `comparability_max_rank_gap` rungs of each other; below
+  # that it degrades to the single best model and says why (R-006).
+  default: off
+  require_comparable_candidates: true
+  comparability_max_rank_gap: 0
+  on_incomparable: single_best
+  # Plain majority vote is forbidden — it collapses once half the panel is wrong
+  # (R-007). Weights derive from measured per-task-type track record.
+  adjudication: credibility_weighted
+
+# Workflow lanes are separate from model tiers. A lane decides how much
+# orchestration a request earns; the tier policy above decides which model is
+# eligible inside a lane. Keeping the two axes separate prevents a "cheap
+# model" decision from silently becoming a "spawn more agents" decision.
+workflow:
+  basis: unvalidated_default
+  # R-007: the router may recommend a cheaper lane and expose that decision, but
+  # it cannot change the historical executable default until paired,
+  # same-harness evaluation clears the quality/cost/latency gate.
+  rollout: observe_only
+  default_lane: shape-fast
+  conservative_lane: shape-fast
+  lane_order: [direct, shape-fast, review-targeted, deep-explicit]
+  executable_lanes: [direct, shape-fast, deep-explicit]
+  targeted_min_domains: 2
+  depth_lanes:
+    fast: shape-fast
+    standard: review-targeted
+    deep: deep-explicit
+  ambiguity_terms:
+    - help me decide
+    - not sure
+    - something
+    - whatever
+    - explore options
+    - what should
+    - figure out
+  domain_signals:
+    product: [product, user, workflow, onboarding, pricing]
+    engineering: [api, schema, architecture, migration, platform]
+    security: [security, privacy, secret, permission, auth]
+    finance: [billing, payment, charge, refund, revenue]
+    external: [webhook, email, publish, customer, outbound]
+  limitations:
+    review-targeted: targeted execution is unavailable until the three-relevant-lens plus verifier adapter exists
+    deep-explicit: deep work still requires an explicit request or agreed budget and all B1-B5 boundaries
+
+forbidden_inputs:
+  # Usage share encodes price and free tiers, not capability: the most-used
+  # coding models are not the most capable (R-011). Listing the keys here means
+  # the loader can REFUSE one if it ever appears in this file or on a roster
+  # entry, rather than relying on nobody adding it.
+  - popularity
+  - usage_popularity
+  - usage_share
+  - token_volume
+  - token_volume_rank
+  - download_rank

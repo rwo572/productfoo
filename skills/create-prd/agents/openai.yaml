@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create PRD"
+  short_description: "Draft a PRD outline without private-file reads or external publishing."
+  default_prompt: "Use $create-prd for the relevant workflow."

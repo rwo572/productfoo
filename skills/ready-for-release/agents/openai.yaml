@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ready For Release"
+  short_description: "Make an evidence-backed release-readiness decision."
+  default_prompt: "Use $ready-for-release for the relevant workflow."

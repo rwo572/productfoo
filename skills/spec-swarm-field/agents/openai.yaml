@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Field"
+  short_description: "Ask Sales/CS/Support questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-field to ask the 2-3 field-readiness questions this spec needs."

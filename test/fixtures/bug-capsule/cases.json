@@ -1,0 +1,175 @@
+{
+  "schema_version": "bug-capsule-fault-corpus/0.1",
+  "corpus_id": "bug-capsule-v0-detection-truth-set",
+  "cases": [
+    {
+      "case_id": "detect-success-001",
+      "label": "successful invocation",
+      "input": {
+        "argv": ["asp", "status", "specs/bug-capsule-v0"],
+        "environment": "development",
+        "exit_code": 0,
+        "error_class": "none",
+        "error_code": null,
+        "message": null,
+        "stack": null,
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": false
+      },
+      "expected_detector_count": 0,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-002", "V-005"]
+    },
+    {
+      "case_id": "detect-usage-001",
+      "label": "usage mistake",
+      "input": {
+        "argv": ["spec"],
+        "environment": "development",
+        "exit_code": 1,
+        "error_class": "usage_error",
+        "error_code": "E_SPEC_WORK_MISSING",
+        "message": "work missing — usage: foo spec <work>",
+        "stack": null,
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": false
+      },
+      "expected_detector_count": 0,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": ["work missing"],
+      "validation_ids": ["V-002"]
+    },
+    {
+      "case_id": "detect-gate-001",
+      "label": "expected boundary refusal",
+      "input": {
+        "argv": ["self", "gate"],
+        "environment": "development",
+        "exit_code": 1,
+        "error_class": "gate_block",
+        "error_code": "E_GATE_B1_SECRET",
+        "message": "B1 refused a staged private value",
+        "stack": null,
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": false
+      },
+      "expected_detector_count": 0,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": ["private value"],
+      "validation_ids": ["V-002", "V-012"]
+    },
+    {
+      "case_id": "detect-not-found-001",
+      "label": "missing packet",
+      "input": {
+        "argv": ["asp", "status", "specs/does-not-exist"],
+        "environment": "development",
+        "exit_code": 1,
+        "error_class": "not_found",
+        "error_code": "E_PACKET_NOT_FOUND",
+        "message": "packet not found: specs/does-not-exist",
+        "stack": null,
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": false
+      },
+      "expected_detector_count": 0,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": ["specs/does-not-exist"],
+      "validation_ids": ["V-002"]
+    },
+    {
+      "case_id": "detect-io-001",
+      "label": "genuine filesystem failure",
+      "input": {
+        "argv": ["asp", "validate", "specs/bug-capsule-v0"],
+        "environment": "development",
+        "exit_code": 1,
+        "error_class": "io_error",
+        "error_code": "E_IO",
+        "message": "EACCES: permission denied, open '/Users/example/private/foo/spec.md'",
+        "stack": "Error: EACCES\n    at readSpec (/Users/example/private/foo/dist/src/cli.js:400:11)",
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": false
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": ["/Users/example/private/foo", "example"],
+      "validation_ids": ["V-002", "V-003", "V-004", "V-005"]
+    },
+    {
+      "case_id": "detect-command-001",
+      "label": "genuine command failure",
+      "input": {
+        "argv": ["asp", "reconcile", "specs/bug-capsule-v0", "--git-diff"],
+        "environment": "development",
+        "exit_code": 1,
+        "error_class": "command_error",
+        "error_code": "E_UNKNOWN",
+        "message": "reconcile failed while reading a valid packet",
+        "stack": "Error: reconcile failed\n    at reconcilePacket (reconcile.js:88:5)",
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": false
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-002", "V-003", "V-005"]
+    },
+    {
+      "case_id": "detect-test-traffic-001",
+      "label": "synthetic test failure",
+      "input": {
+        "argv": ["asp", "status", "test/fixtures/packet"],
+        "environment": "test",
+        "exit_code": 1,
+        "error_class": "io_error",
+        "error_code": "E_IO",
+        "message": "fixture EACCES",
+        "stack": "Error: fixture EACCES\n    at fixture (fixture.js:1:1)",
+        "foo_version": "0.1.25",
+        "interactive": true,
+        "is_test": true
+      },
+      "expected_detector_count": 0,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": ["fixture EACCES"],
+      "validation_ids": ["V-002", "V-013"]
+    },
+    {
+      "case_id": "detect-fallback-001",
+      "label": "existing unknown fallback error",
+      "input": {
+        "argv": ["unknown-internal-path"],
+        "environment": "development",
+        "exit_code": 1,
+        "error_class": "command_error",
+        "error_code": "E_UNKNOWN",
+        "message": "unexpected internal failure",
+        "stack": "Error: unexpected internal failure\n    at main (cli.js:1499:3)",
+        "foo_version": "0.1.25",
+        "interactive": false,
+        "is_test": false,
+        "classification": "fallback"
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 0,
+      "expected_candidate_ids": [],
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-002", "V-005", "V-011"]
+    }
+  ]
+}

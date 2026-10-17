@@ -1,0 +1,2073 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CalPal Email Delegation Wired Artifact</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --surface: #ffffff;
+      --surface-warm: #fbfaf6;
+      --ink: #171819;
+      --muted: #5f6467;
+      --soft: #8a9094;
+      --line: #d9dedc;
+      --line-strong: #a8b0ad;
+      --mail: #eaf3fb;
+      --mail-strong: #275b7c;
+      --agent: #f5ecd0;
+      --agent-strong: #765816;
+      --cal: #e5f1e8;
+      --cal-strong: #2b6a45;
+      --warn: #f5e1dc;
+      --warn-strong: #9a3e32;
+      --done: #e9f4df;
+      --done-strong: #446a21;
+      --backstage: #171a1d;
+      --backstage-2: #202428;
+      --backstage-3: #2b3034;
+      --backstage-line: #4a5157;
+      --backstage-ink: #f4f1e8;
+      --backstage-muted: #bbc0bf;
+      --sim: #eef1f2;
+      --sim-strong: #4c555d;
+      --shadow: rgba(24, 26, 26, 0.08);
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.38;
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .artifact {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246, 247, 244, 0.96);
+    }
+
+    .brand strong {
+      display: block;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .top-actions,
+    .reply-actions,
+    .approve-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .button,
+    .scrub-button,
+    .reply-button,
+    .approve-button {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .button {
+      padding: 8px 11px;
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .identity-control,
+    .version-control {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .identity-control span,
+    .version-control span {
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+
+    .identity-control input,
+    .version-control select {
+      width: 92px;
+      min-height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 3px 6px;
+      background: var(--surface-warm);
+      color: var(--ink);
+      font: 13px var(--sans);
+    }
+
+    .button.primary,
+    .reply-button.active,
+    .approve-button.primary {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .button:focus-visible,
+    .scrub-button:focus-visible,
+    .reply-button:focus-visible,
+    .approve-button:focus-visible {
+      outline: 3px solid rgba(39, 91, 124, 0.22);
+      outline-offset: 2px;
+    }
+
+    [data-feedback-target] {
+      position: relative;
+      cursor: crosshair;
+    }
+
+    [data-feedback-target]:hover {
+      outline: 2px solid rgba(39, 91, 124, 0.32);
+      outline-offset: 2px;
+    }
+
+    [data-feedback-target]:focus-visible {
+      outline: 3px solid rgba(39, 91, 124, 0.45);
+      outline-offset: 3px;
+    }
+
+    [data-feedback-target].selected-feedback {
+      outline: 3px solid #1e6f95;
+      outline-offset: 3px;
+    }
+
+    [data-feedback-target].has-feedback::after {
+      content: attr(data-feedback-count);
+      position: absolute;
+      top: -9px;
+      right: -8px;
+      display: grid;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      border: 1px solid #1e6f95;
+      border-radius: 999px;
+      background: #1e6f95;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 12px;
+      z-index: 2;
+    }
+
+    .scrubber {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-warm);
+    }
+
+    .scrub-button {
+      min-height: 44px;
+      padding: 7px 8px;
+      text-align: left;
+    }
+
+    .scrub-button.active {
+      border-color: var(--agent-strong);
+      background: var(--agent);
+    }
+
+    .scrub-button strong,
+    .scrub-button span {
+      display: block;
+    }
+
+    .scrub-button strong {
+      font-size: 12px;
+    }
+
+    .scrub-button span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mobile-tabs {
+      display: none;
+    }
+
+    .mobile-tab {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .mobile-tab.active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .mobile-tab[data-mobile-tab="read"].active,
+    .mobile-tab[data-mobile-tab="calendar"].active {
+      border-color: var(--agent-strong);
+      background: var(--agent-strong);
+      color: #fff8df;
+    }
+
+    .mobile-tab:focus-visible {
+      outline: 3px solid rgba(39, 91, 124, 0.22);
+      outline-offset: 2px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) 380px;
+      gap: 0;
+      min-height: 0;
+    }
+
+    .mail {
+      min-height: 0;
+      overflow: auto;
+      border-right: 1px solid var(--line);
+      background: #f9faf8;
+    }
+
+    .inspector {
+      min-height: 0;
+      overflow: auto;
+      background: var(--backstage);
+      color: var(--backstage-ink);
+    }
+
+    .mail-head {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(249, 250, 248, 0.96);
+    }
+
+    .mail-head h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .mail-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .preview-context {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .preview-context strong {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 9px;
+    }
+
+    .pill {
+      display: inline-flex;
+      width: fit-content;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pill.mail {
+      border-color: #b7d0e2;
+      background: var(--mail);
+      color: var(--mail-strong);
+    }
+
+    .pill.agent {
+      border-color: #dcc77b;
+      background: var(--agent);
+      color: var(--agent-strong);
+    }
+
+    .pill.cal {
+      border-color: #b8d5be;
+      background: var(--cal);
+      color: var(--cal-strong);
+    }
+
+    .pill.warn {
+      border-color: #deb0a7;
+      background: var(--warn);
+      color: var(--warn-strong);
+    }
+
+    .pill.done {
+      border-color: #c1d9aa;
+      background: var(--done);
+      color: var(--done-strong);
+    }
+
+    .inspector .pill.agent {
+      border-color: #b99031;
+      background: #2b2414;
+      color: #f8d37b;
+    }
+
+    .thread {
+      display: grid;
+      gap: 10px;
+      padding: 16px 18px 22px;
+      max-width: 920px;
+    }
+
+    .message,
+    .reply-lab,
+    .receipt,
+    .translation,
+    .agent-section,
+    .calendar-strip,
+    .approval-note {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 1px 0 var(--shadow);
+    }
+
+    .message {
+      padding: 12px;
+    }
+
+    .message.taylor {
+      border-color: #b7d0e2;
+      background: var(--mail);
+    }
+
+    .message.calpal {
+      border-color: #dcc77b;
+      background: #fff9e8;
+    }
+
+    .message.daniel {
+      border-color: #b8d5be;
+      background: var(--cal);
+    }
+
+    .message.approval {
+      border-color: #deb0a7;
+      background: var(--warn);
+    }
+
+    .message-head,
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .sender {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .time,
+    .kicker {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .message .body {
+      margin: 0;
+      color: var(--ink);
+      font-size: 14px;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .translation {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: stretch;
+      padding: 10px;
+      background: #fffdf7;
+    }
+
+    .inspector .translation {
+      border-color: var(--backstage-line);
+      background: var(--backstage-2);
+      box-shadow: none;
+    }
+
+    .translation-block {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px;
+      background: var(--surface);
+    }
+
+    .inspector .translation-block {
+      border-color: var(--backstage-line);
+      background: var(--backstage);
+    }
+
+    .translation-arrow {
+      align-self: center;
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .inspector .translation-arrow {
+      color: #d6a63a;
+    }
+
+    .translation strong,
+    .translation span {
+      display: block;
+      font-size: 12px;
+    }
+
+    .translation span {
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .inspector .translation span,
+    .inspector .agent-section p,
+    .inspector .approval-note p {
+      color: var(--backstage-muted);
+    }
+
+    .translation-label {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .inspector .translation-label,
+    .inspector .kicker {
+      color: #d6c18a;
+    }
+
+    .reply-lab {
+      padding: 12px;
+      border-style: dashed;
+      border-color: var(--sim-strong);
+      background:
+        repeating-linear-gradient(135deg, rgba(76, 85, 93, 0.08), rgba(76, 85, 93, 0.08) 8px, transparent 8px, transparent 16px),
+        var(--sim);
+      box-shadow: none;
+    }
+
+    .reply-lab::before {
+      content: "Simulator control - not shown in email";
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 8px;
+      border: 1px solid var(--sim-strong);
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #f9faf8;
+      color: var(--sim-strong);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .reply-lab h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .reply-lab p,
+    .receipt p,
+    .agent-section p,
+    .approval-note p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .reply-actions {
+      justify-content: flex-start;
+      margin-top: 10px;
+    }
+
+    .reply-button,
+    .approve-button {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .reply-lab .reply-button.active {
+      border-color: var(--sim-strong);
+      background: var(--sim-strong);
+      color: var(--surface);
+    }
+
+    .receipt {
+      padding: 12px;
+      background: var(--done);
+      border-color: #c1d9aa;
+    }
+
+    .receipt h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .inspector-head {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px;
+      border-bottom: 1px solid var(--backstage-line);
+      background: rgba(23, 26, 29, 0.96);
+    }
+
+    .inspector-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .inspector-head p {
+      margin: 5px 0 0;
+      color: var(--backstage-muted);
+      font-size: 13px;
+    }
+
+    .inspector-body {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .agent-section {
+      padding: 12px;
+      border-color: var(--backstage-line);
+      background: var(--backstage-2);
+      box-shadow: none;
+    }
+
+    .context-boundary {
+      border-style: dashed;
+      border-color: #b99031;
+      background:
+        linear-gradient(90deg, rgba(185, 144, 49, 0.18), transparent 42%),
+        var(--backstage-2);
+    }
+
+    .behind-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .behind-card {
+      border: 1px solid var(--backstage-line);
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--backstage);
+    }
+
+    .behind-card strong,
+    .behind-card span {
+      display: block;
+    }
+
+    .behind-card strong {
+      color: var(--backstage-ink);
+      font-size: 13px;
+    }
+
+    .behind-card span {
+      margin-top: 4px;
+      color: var(--backstage-muted);
+      font-size: 13px;
+    }
+
+    .behind-card.primary {
+      border-color: #d6a63a;
+      background: #3a2d12;
+    }
+
+    .calendar-strip {
+      padding: 12px;
+      background: #fbfdf9;
+    }
+
+    .inspector .calendar-strip,
+    .inspector .approval-note {
+      border-color: var(--backstage-line);
+      background: var(--backstage-2);
+      box-shadow: none;
+    }
+
+    .calendar-hours {
+      position: relative;
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .calendar-block {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .calendar-time {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding-top: 7px;
+    }
+
+    .calendar-event {
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 8px;
+      background: var(--surface);
+    }
+
+    .inspector .calendar-event {
+      border-color: var(--backstage-line);
+      background: var(--backstage);
+    }
+
+    .calendar-event.private {
+      background: #eef1f2;
+      color: var(--muted);
+    }
+
+    .inspector .calendar-event.private {
+      background: #2f3438;
+      color: var(--backstage-muted);
+    }
+
+    .calendar-event.hold {
+      border-color: var(--calendar-strong);
+      background: var(--cal);
+    }
+
+    .inspector .calendar-event.hold {
+      border-color: #d6a63a;
+      background: #473612;
+    }
+
+    .calendar-event.selected {
+      border-color: var(--agent-strong);
+      background: var(--agent);
+    }
+
+    .inspector .calendar-event.selected {
+      border-color: #d6a63a;
+      background: #554017;
+    }
+
+    .calendar-event.released {
+      color: var(--soft);
+      background: #f6f5ef;
+      text-decoration: line-through;
+    }
+
+    .inspector .calendar-event.released {
+      color: #8f9699;
+      background: #24282b;
+    }
+
+    .calendar-event.warn {
+      border-color: var(--warn-strong);
+      background: var(--warn);
+    }
+
+    .inspector .calendar-event.warn {
+      border-color: #d87d68;
+      background: #4a2825;
+    }
+
+    .calendar-event strong,
+    .calendar-event span {
+      display: block;
+      font-size: 12px;
+    }
+
+    .calendar-event span {
+      margin-top: 3px;
+      color: var(--muted);
+    }
+
+    .inspector .calendar-event span,
+    .inspector .calendar-time {
+      color: var(--backstage-muted);
+    }
+
+    .approval-note {
+      padding: 12px;
+      border-color: #deb0a7;
+      background: var(--warn);
+    }
+
+    .inspector .approval-note {
+      border-color: #d87d68;
+      background: #3b2220;
+    }
+
+    .approve-actions {
+      justify-content: flex-start;
+      margin-top: 10px;
+    }
+
+    .feedback-tray {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 40;
+      display: grid;
+      gap: 10px;
+      width: min(380px, calc(100vw - 32px));
+      max-height: min(640px, calc(100vh - 32px));
+      overflow: auto;
+      border: 1px solid #1e6f95;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f8fcff;
+      box-shadow: 0 18px 50px rgba(24, 26, 26, 0.18);
+    }
+
+    .feedback-tray[hidden] {
+      display: none;
+    }
+
+    .feedback-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .feedback-head h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .feedback-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .feedback-close {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      width: 30px;
+      height: 30px;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: var(--mono);
+    }
+
+    .feedback-form {
+      display: grid;
+      gap: 8px;
+    }
+
+    .feedback-form label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .feedback-form textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--ink);
+      font: 13px var(--sans);
+    }
+
+    .feedback-form textarea {
+      min-height: 78px;
+      resize: vertical;
+      padding: 8px;
+    }
+
+    .feedback-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .feedback-actions button {
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      padding: 8px 10px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .feedback-actions .primary {
+      border-color: #1e6f95;
+      background: #1e6f95;
+      color: #fff;
+    }
+
+    .feedback-actions button:disabled,
+    .feedback-form textarea:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .feedback-list {
+      display: grid;
+      gap: 6px;
+      max-height: 190px;
+      overflow: auto;
+    }
+
+    .feedback-item {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 8px;
+      background: var(--surface);
+      font-size: 12px;
+    }
+
+    .feedback-item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #1e6f95;
+      text-transform: uppercase;
+    }
+
+    .feedback-item em {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-style: normal;
+    }
+
+    .feedback-status {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .feedback-output {
+      display: none;
+      width: 100%;
+      min-height: 92px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 8px;
+      background: #eef7fb;
+      color: var(--ink);
+      font: 11px var(--mono);
+      resize: vertical;
+    }
+
+    @media (max-width: 1120px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .mail {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .scrubber {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        position: static;
+      }
+
+      .top-actions,
+      .reply-actions,
+      .approve-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .identity-control,
+      .version-control {
+        justify-content: space-between;
+      }
+
+      .identity-control input,
+      .version-control select {
+        width: min(180px, 48vw);
+      }
+
+      #reset {
+        display: none;
+      }
+
+      .button,
+      .reply-button,
+      .approve-button {
+        width: 100%;
+        white-space: normal;
+      }
+
+      .scrubber {
+        display: none;
+      }
+
+      .mobile-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 24;
+        display: flex;
+        gap: 8px;
+        width: min(calc(100vw - 28px), 362px);
+        max-width: min(calc(100vw - 28px), 362px);
+        margin: 0 14px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+        background: rgba(246, 247, 244, 0.98);
+      }
+
+      .mobile-tab {
+        flex: 1 1 0;
+        width: 100%;
+        min-width: 0;
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+
+      .mail-head,
+      .thread,
+      .inspector-head,
+      .inspector-body {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .mail-head,
+      .thread,
+        .inspector-head,
+        .inspector-body,
+        .topbar > *,
+        .message,
+        .reply-lab,
+        .receipt,
+        .translation,
+        .agent-section,
+      .calendar-strip,
+      .approval-note {
+        width: min(calc(100vw - 28px), 362px);
+          max-width: min(calc(100vw - 28px), 362px);
+      }
+
+      .mobile-tabs {
+        width: min(calc(100vw - 28px), 362px);
+      }
+
+      .workspace {
+        display: block;
+      }
+
+      .workspace.tab-thread .mail {
+        display: block;
+      }
+
+      .workspace.tab-thread .inspector {
+        display: none;
+      }
+
+      .workspace.tab-read .mail,
+      .workspace.tab-calendar .mail {
+        display: none;
+      }
+
+      .workspace.tab-read .inspector,
+      .workspace.tab-calendar .inspector {
+        display: block;
+      }
+
+      .workspace.tab-read .panel-calendar {
+        display: none;
+      }
+
+      .workspace.tab-calendar .panel-read {
+        display: none;
+      }
+
+      .translation {
+        grid-template-columns: 1fr;
+      }
+
+      .translation-arrow {
+        text-align: center;
+      }
+
+      .behind-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-block {
+        grid-template-columns: 58px minmax(0, 1fr);
+      }
+
+      .feedback-tray {
+        left: 14px;
+        right: 14px;
+        bottom: 12px;
+        width: auto;
+        max-height: min(72vh, 620px);
+      }
+
+      p,
+      span,
+      strong,
+      h1,
+      h2,
+      h3 {
+        overflow-wrap: anywhere;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="artifact">
+    <header class="topbar">
+      <div class="brand">
+        <strong>CalPal</strong>
+        <span>Email UX with a behind-the-scenes reviewer view</span>
+      </div>
+      <div class="top-actions">
+        <label class="identity-control">
+          <span>Assistant name</span>
+          <input id="assistantName" type="text" value="Kim" maxlength="32" autocomplete="off" aria-label="Assistant name">
+        </label>
+        <label class="version-control">
+          <span>Feedback</span>
+          <select id="feedbackVersion" aria-label="Feedback version"></select>
+        </label>
+        <button class="button" type="button" id="reset">Reset</button>
+        <button class="button primary" type="button" id="jumpReply">Jump to guest reply</button>
+      </div>
+    </header>
+
+    <nav class="mobile-tabs" aria-label="Mobile preview panels">
+      <button class="mobile-tab active" type="button" data-mobile-tab="thread">Thread</button>
+      <button class="mobile-tab" type="button" data-mobile-tab="read">Behind</button>
+      <button class="mobile-tab" type="button" data-mobile-tab="calendar">Calendar</button>
+    </nav>
+
+    <nav class="scrubber" id="scrubber" aria-label="Scenario steps"></nav>
+
+    <main class="workspace tab-thread" id="workspace">
+      <section class="mail" aria-label="Email thread">
+        <header class="mail-head" data-feedback-target="thread.header" data-feedback-label="Thread header" data-feedback-kind="email" tabindex="0" role="button" aria-label="Leave feedback on thread header">
+          <h1>Product review with Daniel</h1>
+          <p id="threadIntro">Taylor cc'd Kim. The thread is the product surface.</p>
+          <div class="preview-context">
+            <strong>Preview context:</strong> email thread, disclosed assistant, Google Calendar availability.
+          </div>
+        </header>
+
+        <div class="thread" id="thread"></div>
+      </section>
+
+      <aside class="inspector" aria-label="Behind-the-scenes CalPal behavior">
+        <header class="inspector-head">
+          <h2 id="inspectorTitle">Behind the scenes</h2>
+          <p id="inspectorCopy">This is not a screen Taylor or Daniel sees. It explains why CalPal sends the next email.</p>
+          <div class="pill-row" id="inspectorMeta"></div>
+        </header>
+        <div class="inspector-body">
+          <section class="agent-section panel-read context-boundary" data-feedback-target="context.behind-scenes" data-feedback-label="Behind-the-scenes explanation" data-feedback-kind="agent-context" tabindex="0" role="button" aria-label="Leave feedback on behind-the-scenes explanation">
+            <div class="section-head">
+              <strong id="behindTitle">What CalPal knows</strong>
+              <span class="kicker" id="confidence">ready</span>
+            </div>
+            <p id="agentRead">Participant, purpose, and rough time window are present.</p>
+            <div class="behind-grid" id="behindGrid"></div>
+          </section>
+
+          <section class="translation panel-read" id="translation"></section>
+
+          <section class="calendar-strip panel-calendar">
+            <div class="section-head">
+              <strong>Taylor calendar</strong>
+              <span class="kicker">Pacific time</span>
+            </div>
+            <div class="calendar-hours" id="calendar"></div>
+          </section>
+
+          <section class="panel-read" id="approvalPanel"></section>
+        </div>
+      </aside>
+    </main>
+
+    <aside class="feedback-tray" id="feedbackTray" aria-live="polite" hidden>
+      <div class="feedback-head">
+        <div>
+          <h2 id="feedbackTitle">Feedback target</h2>
+          <p id="feedbackMeta">Leave a note on this part of the experience.</p>
+        </div>
+        <button class="feedback-close" type="button" id="closeFeedback" aria-label="Close feedback tray">x</button>
+      </div>
+      <div class="feedback-form">
+        <label>
+          Note
+          <textarea id="feedbackText" placeholder="What is confusing or should change?"></textarea>
+        </label>
+        <div class="feedback-actions">
+          <button class="primary" type="button" id="saveFeedback">Save note</button>
+          <button type="button" id="copyFeedback">Copy all feedback</button>
+        </div>
+        <div class="feedback-status" id="feedbackStatus">Notes stay in this browser until copied.</div>
+      </div>
+      <div class="feedback-list" id="feedbackList"></div>
+      <textarea class="feedback-output" id="feedbackOutput" readonly aria-label="Model-readable feedback bundle"></textarea>
+    </aside>
+  </div>
+
+  <script>
+    const steps = [
+      { id: "delegate", title: "Delegate", hint: "Taylor cc's assistant" },
+      { id: "propose", title: "Propose", hint: "Assistant offers held times" },
+      { id: "reply", title: "Guest reply", hint: "Daniel answers in thread" },
+      { id: "book", title: "Book", hint: "Accepted option is written" },
+      { id: "alternate", title: "Alternate", hint: "Taylor approval needed" },
+      { id: "unclear", title: "Clarify", hint: "Ambiguous reply recovery" }
+    ];
+
+    let activeStep = "delegate";
+    let replyMode = "accepted";
+    let activeMobileTab = ["thread", "read", "calendar"].includes(location.hash.slice(1))
+      ? location.hash.slice(1)
+      : "thread";
+    const currentArtifactVersion = {
+      id: "2026-06-20-feedback-versioning",
+      label: "Current version"
+    };
+    const legacyFeedbackVersion = {
+      id: "pre-2026-06-20-feedback-versioning",
+      label: "Previous version"
+    };
+    const feedbackVersionsStorageKey = "calpal-wired-artifact-feedback-versions-v1";
+    const legacyFeedbackStorageKey = "calpal-wired-artifact-feedback-v1";
+    const activeFeedbackVersionStorageKey = "calpal-active-feedback-version-v1";
+    const assistantStorageKey = "calpal-assistant-name-v1";
+
+    let selectedTarget = null;
+    let feedbackStore = loadFeedbackStore();
+    let activeFeedbackVersionId = loadActiveFeedbackVersionId();
+    let feedback = feedbackForVersion(activeFeedbackVersionId);
+    let assistantName = loadAssistantName();
+
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function parseStoredJson(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+      } catch {
+        return fallback;
+      }
+    }
+
+    function loadAssistantName() {
+      try {
+        return localStorage.getItem("calpal-assistant-name-v1") || "Kim";
+      } catch {
+        return "Kim";
+      }
+    }
+
+    function loadFeedbackStore() {
+      const store = parseStoredJson(feedbackVersionsStorageKey, { versions: {} });
+      if (!store.versions || typeof store.versions !== "object") store.versions = {};
+
+      if (!store.versions[currentArtifactVersion.id]) {
+        store.versions[currentArtifactVersion.id] = {
+          ...currentArtifactVersion,
+          current: true,
+          created_at: new Date().toISOString(),
+          comments: []
+        };
+      }
+
+      const legacyComments = parseStoredJson(legacyFeedbackStorageKey, []);
+      if (Array.isArray(legacyComments) && legacyComments.length) {
+        const previous = store.versions[legacyFeedbackVersion.id] || {
+          ...legacyFeedbackVersion,
+          current: false,
+          created_at: new Date().toISOString(),
+          comments: []
+        };
+        if (!Array.isArray(previous.comments)) previous.comments = [];
+        const seenIds = new Set(previous.comments.map((item) => item.id));
+        legacyComments.forEach((item) => {
+          if (!seenIds.has(item.id)) previous.comments.push({
+            ...item,
+            artifact_version_id: legacyFeedbackVersion.id,
+            artifact_version_label: legacyFeedbackVersion.label
+          });
+        });
+        store.versions[legacyFeedbackVersion.id] = previous;
+        try {
+          localStorage.removeItem(legacyFeedbackStorageKey);
+        } catch {
+          // Local file previews may not always allow storage cleanup.
+        }
+      }
+
+      persistFeedbackStore(store);
+      return store;
+    }
+
+    function persistFeedbackStore(store = feedbackStore) {
+      try {
+        localStorage.setItem(feedbackVersionsStorageKey, JSON.stringify(store));
+      } catch {
+        // Local file previews may not always allow storage.
+      }
+    }
+
+    function loadActiveFeedbackVersionId() {
+      try {
+        const stored = localStorage.getItem(activeFeedbackVersionStorageKey);
+        if (stored && feedbackStore.versions[stored]) return stored;
+      } catch {
+        // Local file previews may not always allow storage.
+      }
+      return currentArtifactVersion.id;
+    }
+
+    function feedbackForVersion(versionId) {
+      const record = feedbackStore.versions[versionId] || feedbackStore.versions[currentArtifactVersion.id];
+      return record.comments;
+    }
+
+    function activeFeedbackVersion() {
+      return feedbackStore.versions[activeFeedbackVersionId];
+    }
+
+    function isCurrentFeedbackVersion() {
+      return activeFeedbackVersionId === currentArtifactVersion.id;
+    }
+
+    function persistFeedback() {
+      feedbackStore.versions[activeFeedbackVersionId].comments = feedback;
+      persistFeedbackStore();
+    }
+
+    function setAssistantName(value) {
+      assistantName = value.trim() || "Kim";
+      try {
+        localStorage.setItem(assistantStorageKey, assistantName);
+      } catch {
+        // Local file previews may not always allow storage.
+      }
+      render();
+    }
+
+    function publicAssistantName() {
+      return assistantName.trim() || "Kim";
+    }
+
+    function feedbackVersionOptions() {
+      const versions = Object.values(feedbackStore.versions);
+      return versions
+        .filter((version) => version.id === currentArtifactVersion.id || (version.comments || []).length > 0 || version.id === activeFeedbackVersionId)
+        .sort((left, right) => {
+          if (left.id === currentArtifactVersion.id) return -1;
+          if (right.id === currentArtifactVersion.id) return 1;
+          return String(right.created_at).localeCompare(String(left.created_at));
+        });
+    }
+
+    function renderFeedbackVersions() {
+      $("feedbackVersion").innerHTML = feedbackVersionOptions().map((version) => {
+        const count = version.comments.length;
+        const label = `${version.label} (${count})`;
+        return `<option value="${escapeAttr(version.id)}">${escapeHtml(label)}</option>`;
+      }).join("");
+      $("feedbackVersion").value = activeFeedbackVersionId;
+    }
+
+    function setFeedbackVersion(versionId) {
+      if (!feedbackStore.versions[versionId]) return;
+      activeFeedbackVersionId = versionId;
+      feedback = feedbackForVersion(versionId);
+      selectedTarget = null;
+      try {
+        localStorage.setItem(activeFeedbackVersionStorageKey, versionId);
+      } catch {
+        // Local file previews may not always allow storage.
+      }
+      render();
+    }
+
+    function feedbackAttrs(id, label, kind = "wireframe") {
+      return [
+        `data-feedback-target="${escapeAttr(id)}"`,
+        `data-feedback-label="${escapeAttr(label)}"`,
+        `data-feedback-kind="${escapeAttr(kind)}"`,
+        "tabindex=\"0\"",
+        "role=\"button\"",
+        `aria-label="Leave feedback on ${escapeAttr(label)}"`
+      ].join(" ");
+    }
+
+    function stepIndex(id = activeStep) {
+      return steps.findIndex((step) => step.id === id);
+    }
+
+    function hasReached(id) {
+      return stepIndex() >= stepIndex(id);
+    }
+
+    function setStep(id) {
+      activeStep = id;
+      if (id === "alternate") replyMode = "alternate";
+      if (id === "unclear") replyMode = "unclear";
+      if (id === "book") replyMode = "accepted";
+      render();
+    }
+
+    function setReply(mode) {
+      replyMode = mode;
+      activeStep = mode === "accepted" ? "book" : mode;
+      activeMobileTab = "thread";
+      render();
+    }
+
+    function setMobileTab(tab) {
+      activeMobileTab = tab;
+      if (["thread", "read", "calendar"].includes(tab)) location.hash = tab;
+      render();
+    }
+
+    function message(sender, time, body, tone, extra = "", target = null) {
+      const targetAttrs = target ? ` ${feedbackAttrs(target.id, target.label, target.kind || "email")}` : "";
+      return `
+        <article class="message ${tone}"${targetAttrs}>
+          <div class="message-head">
+            <span class="sender">${escapeHtml(sender)}</span>
+            <span class="time">${escapeHtml(time)}</span>
+          </div>
+          <p class="body">${escapeHtml(body)}</p>
+          ${extra}
+        </article>
+      `;
+    }
+
+    function renderScrubber() {
+      $("scrubber").innerHTML = steps.map((step) => `
+        <button class="scrub-button ${step.id === activeStep ? "active" : ""}" type="button" data-step="${step.id}">
+          <strong>${step.title}</strong>
+          <span>${step.hint}</span>
+        </button>
+      `).join("");
+
+      document.querySelectorAll("[data-step]").forEach((button) => {
+        button.addEventListener("click", () => setStep(button.dataset.step));
+      });
+    }
+
+    function renderMobileTabs() {
+      $("workspace").classList.remove("tab-thread", "tab-read", "tab-calendar");
+      $("workspace").classList.add(`tab-${activeMobileTab}`);
+
+      document.querySelectorAll("[data-mobile-tab]").forEach((button) => {
+        const selected = button.dataset.mobileTab === activeMobileTab;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+    }
+
+    function replyLab() {
+      if (!hasReached("reply")) return "";
+      return `
+        <section class="reply-lab" ${feedbackAttrs("sim.reply-branch", "Simulator reply branch control", "simulator-control")}>
+          <h2>Simulate Daniel's reply</h2>
+          <p>Artifact control only. In the real UX, Daniel just replies in email and the assistant works behind the scenes.</p>
+          <div class="reply-actions">
+            <button class="reply-button ${replyMode === "accepted" ? "active" : ""}" type="button" data-reply="accepted">Accepts Tue</button>
+            <button class="reply-button ${replyMode === "alternate" ? "active" : ""}" type="button" data-reply="alternate">Suggests Fri</button>
+            <button class="reply-button ${replyMode === "unclear" ? "active" : ""}" type="button" data-reply="unclear">Says morning</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderThread() {
+      const assistant = publicAssistantName();
+      $("threadIntro").textContent = `Taylor cc'd ${assistant}. The thread is the product surface.`;
+      const parts = [
+        message(
+          `Taylor to Daniel, cc ${assistant}`,
+          "Mon 8:42 AM",
+          `Daniel, I'd like to find 30 minutes next week for a product review.\n\n${assistant}, please coordinate with Daniel and book something that works.`,
+          "taylor",
+          "",
+          { id: "email.taylor-delegates", label: "Taylor delegates by cc", kind: "email" }
+        )
+      ];
+
+      if (hasReached("propose")) {
+        parts.push(message(
+          `${assistant} to Daniel, cc Taylor`,
+          "Mon 8:44 AM",
+          `Hi Daniel, I'm ${assistant}, Taylor's scheduling assistant.\n\nI can offer:\n- Tue Jun 24 at 1:30 PM ET\n- Wed Jun 25 at 12:00 PM ET\n- Thu Jun 26 at 2:00 PM ET\n\nIf none of these work, send a few times that do.`,
+          "calpal",
+          "",
+          { id: "email.calpal-proposes", label: "Assistant proposes held options", kind: "email" }
+        ));
+      }
+
+      parts.push(replyLab());
+
+      if (hasReached("reply")) {
+        if (replyMode === "accepted") {
+          parts.push(message(
+            `Daniel to ${assistant}, cc Taylor`,
+            "Mon 10:03 AM",
+            "Tue Jun 24 at 1:30 PM ET works for me.",
+            "daniel",
+            "",
+            { id: "email.daniel-accepts", label: "Daniel accepts proposed option", kind: "email" }
+          ));
+        }
+
+        if (replyMode === "alternate") {
+          parts.push(message(
+            `Daniel to ${assistant}, cc Taylor`,
+            "Mon 10:03 AM",
+            "None of those work. I can do Fri after 2 ET.",
+            "daniel",
+            "",
+            { id: "email.daniel-alternate", label: "Daniel proposes alternate time", kind: "email" }
+          ));
+          parts.push(message(
+            `${assistant} to Taylor`,
+            "Mon 10:04 AM",
+            "Daniel proposed Fri after 2 ET. Fri 11:30 AM PT is available and fits the meeting purpose.\n\nApprove booking it?",
+            "approval",
+            `<div class="approve-actions"><button class="approve-button primary" type="button">Approve Fri</button><button class="approve-button" type="button">Decline</button><button class="approve-button" type="button">Why?</button></div>`,
+            { id: "email.calpal-asks-taylor-approval", label: "Assistant asks Taylor for approval", kind: "email" }
+          ));
+        }
+
+        if (replyMode === "unclear") {
+          parts.push(message(
+            `Daniel to ${assistant}, cc Taylor`,
+            "Mon 10:03 AM",
+            "Morning could work.",
+            "daniel",
+            "",
+            { id: "email.daniel-ambiguous", label: "Daniel gives ambiguous reply", kind: "email" }
+          ));
+          parts.push(message(
+            `${assistant} to Daniel, cc Taylor`,
+            "Mon 10:04 AM",
+            "Could you send 2-3 specific times that work for you? I want to avoid guessing wrong.",
+            "calpal",
+            "",
+            { id: "email.calpal-clarifies", label: "Assistant asks Daniel to clarify", kind: "email" }
+          ));
+        }
+      }
+
+      if (hasReached("book") && replyMode === "accepted") {
+        parts.push(message(
+          `${assistant} to Daniel, cc Taylor`,
+          "Mon 10:04 AM",
+          "Confirmed for Tue Jun 24 at 1:30 PM ET / 10:30 AM PT. I sent the calendar invite.",
+          "calpal",
+          "",
+          { id: "email.calpal-confirms", label: "Assistant confirms booked meeting", kind: "email" }
+        ));
+        parts.push(`
+          <section class="receipt" ${feedbackAttrs("receipt.final", "Booking complete summary", "receipt")}>
+            <h2>Booking complete</h2>
+            <p>This summary is the artifact's done state: the calendar invite was sent, the email thread was confirmed, and the unused held times were released.</p>
+            <div class="pill-row">
+              <span class="pill done">invite sent</span>
+              <span class="pill done">thread confirmed</span>
+              <span class="pill done">holds released</span>
+            </div>
+          </section>
+        `);
+      }
+
+      $("thread").innerHTML = parts.join("");
+      document.querySelectorAll("[data-reply]").forEach((button) => {
+        button.addEventListener("click", () => setReply(button.dataset.reply));
+      });
+    }
+
+    function inspectorState() {
+      if (activeStep === "delegate") {
+        return {
+          title: "Behind the scenes",
+          copy: "CalPal is checking whether Taylor's email gives enough permission to help.",
+          read: "Taylor asked CalPal to coordinate a 30-minute product review with Daniel next week.",
+          status: "ready",
+          cards: [
+            ["Can use", "Thread details and Taylor's calendar availability", true],
+            ["Can do", "Find options and draft a scheduling email", false],
+            ["Must protect", "Private event names, attendees, and notes", false],
+            ["Next", "Offer a few available times to Daniel", false]
+          ]
+        };
+      }
+
+      if (activeStep === "propose") {
+        return {
+          title: "Behind the scenes",
+          copy: "CalPal used calendar availability to write a safe email. Daniel does not see why other times are blocked.",
+          read: "Three options are available and temporarily held while Daniel replies.",
+          status: "sent",
+          cards: [
+            ["Can use", "Private calendar conflicts to avoid bad times", true],
+            ["Can say", "Only the available times Daniel may choose", false],
+            ["Must protect", "Why unavailable times are unavailable", false],
+            ["Next", "Wait for Daniel while keeping the holds", false]
+          ]
+        };
+      }
+
+      if (replyMode === "alternate") {
+        return {
+          title: "Behind the scenes",
+          copy: "CalPal found a possible alternate, but cannot book it without Taylor approving that new option.",
+          read: "Fri after 2 ET could work. It was suggested by Daniel, not pre-approved by Taylor.",
+          status: "needs Taylor",
+          cards: [
+            ["Can use", "Taylor's calendar to find a viable Friday slot", true],
+            ["Can do", "Ask Taylor for one-tap approval", false],
+            ["Cannot do", "Book Daniel's new time without approval", false],
+            ["Next", "Wait for Taylor before sending an invite", false]
+          ]
+        };
+      }
+
+      if (replyMode === "unclear") {
+        return {
+          title: "Behind the scenes",
+          copy: "CalPal does not have enough detail to book. It asks Daniel one clear follow-up instead of bothering Taylor.",
+          read: "Daniel said morning, but did not give a date or exact time.",
+          status: "needs detail",
+          cards: [
+            ["Can use", "Daniel's reply and the original meeting request", true],
+            ["Can do", "Ask Daniel for 2-3 specific times", false],
+            ["Should avoid", "Guessing a time from vague language", false],
+            ["Next", "Clarify once in the email thread", false]
+          ]
+        };
+      }
+
+      if (activeStep === "book") {
+        return {
+          title: "Behind the scenes",
+          copy: "Before confirming, CalPal checks that the accepted option is still free and then cleans up unused holds.",
+          read: "Tue 10:30 AM PT is still available, so CalPal can book it.",
+          status: "booked",
+          cards: [
+            ["Can use", "The accepted option and live calendar state", true],
+            ["Can do", "Create the event and send confirmation", false],
+            ["Should clean up", "Release the unused held options", false],
+            ["Next", "Leave the email thread with a clear receipt", false]
+          ]
+        };
+      }
+
+      return {
+        title: "Behind the scenes",
+        copy: "Nothing new appears in the email thread while CalPal waits. The held options expire automatically.",
+        read: "No guest answer yet.",
+        status: "waiting",
+        cards: [
+          ["Can use", "The original held options", true],
+          ["Can do", "Keep waiting without sending extra mail", false],
+          ["Should avoid", "Letting calendar holds last forever", false],
+          ["Next", "Expire holds after 48 hours or when the window passes", false]
+        ]
+      };
+    }
+
+    function renderInspector() {
+      const state = inspectorState();
+      $("inspectorTitle").textContent = activeMobileTab === "calendar" ? "Calendar holds" : state.title;
+      $("inspectorCopy").textContent = activeMobileTab === "calendar"
+        ? "This shows the private calendar state CalPal uses. Daniel only sees available times."
+        : state.copy;
+      $("behindTitle").textContent = activeMobileTab === "calendar" ? "Taylor calendar" : "What CalPal knows";
+      $("agentRead").textContent = state.read;
+      $("confidence").textContent = state.status;
+      $("inspectorMeta").innerHTML = "";
+      $("behindGrid").innerHTML = state.cards.map(([label, detail, primary]) => `
+        <article class="behind-card ${primary ? "primary" : ""}">
+          <strong>${label}</strong>
+          <span>${detail}</span>
+        </article>
+      `).join("");
+    }
+
+    function renderTranslation() {
+      $("translation").innerHTML = `
+        <div class="translation-label">Private detail vs. email wording</div>
+        <div class="translation-block" ${feedbackAttrs("context.private-calendar-fact", "Private context CalPal can use", "agent-context")}>
+          <strong>Private context CalPal can use</strong>
+          <span>Board prep blocks 2:00 PM PT. Event title, attendees, and notes stay private.</span>
+        </div>
+        <div class="translation-arrow">to</div>
+        <div class="translation-block" ${feedbackAttrs("context.guest-safe-language", "What Daniel may see", "agent-context")}>
+          <strong>What Daniel may see</strong>
+          <span>"I can offer Tue, Wed, or Thu." No reason for unavailable time is exposed.</span>
+        </div>
+      `;
+    }
+
+    function calendarEvents() {
+      const proposed = hasReached("propose");
+      const booked = activeStep === "book" && replyMode === "accepted";
+      const alt = replyMode === "alternate";
+
+      return [
+        ["9:30", "Private event", "Hidden from Daniel", "private"],
+        ["10:30", "Tue option", booked ? "Booked final event" : proposed ? "Held for Daniel" : "No hold yet", booked ? "selected" : proposed ? "hold" : ""],
+        ["11:30", "Fri alternate", alt ? "Viable, needs Taylor" : "Open", alt ? "warn" : ""],
+        ["2:00", "Wed option", booked || alt ? "Released" : proposed ? "Held for Daniel" : "No hold yet", booked || alt ? "released" : proposed ? "hold" : ""],
+        ["3:00", "Thu option", booked || alt ? "Released" : proposed ? "Held for Daniel" : "No hold yet", booked || alt ? "released" : proposed ? "hold" : ""]
+      ];
+    }
+
+    function renderCalendar() {
+      $("calendar").innerHTML = calendarEvents().map(([time, title, detail, tone]) => `
+        <div class="calendar-block">
+          <span class="calendar-time">${time}</span>
+          <article class="calendar-event ${tone}" ${feedbackAttrs(`calendar.${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`, `${title} calendar slot`, "calendar")}>
+            <strong>${title}</strong>
+            <span>${detail}</span>
+          </article>
+        </div>
+      `).join("");
+    }
+
+    function renderApprovalPanel() {
+      if (replyMode === "alternate") {
+        $("approvalPanel").innerHTML = `
+          <section class="approval-note" ${feedbackAttrs("context.approval-boundary", "Approval boundary", "agent-context")}>
+            <div class="section-head">
+              <strong>Approval boundary</strong>
+              <span class="kicker">ask Taylor</span>
+            </div>
+            <p>CalPal can check the alternate, but cannot book it because Taylor approved only the original proposed options.</p>
+          </section>
+        `;
+        return;
+      }
+
+      if (replyMode === "unclear") {
+        $("approvalPanel").innerHTML = `
+          <section class="approval-note" ${feedbackAttrs("context.recovery-rule", "Recovery rule", "agent-context")}>
+            <div class="section-head">
+              <strong>Recovery rule</strong>
+              <span class="kicker">clarify once</span>
+            </div>
+            <p>CalPal asks Daniel one specific clarification before involving Taylor.</p>
+          </section>
+        `;
+        return;
+      }
+
+      $("approvalPanel").innerHTML = `
+        <section class="agent-section" ${feedbackAttrs("context.delegated-scope", "Delegated scope", "agent-context")}>
+          <div class="section-head">
+            <strong>Delegated scope</strong>
+            <span class="kicker">auto-book allowed</span>
+          </div>
+          <p>Accepted proposed options can be booked after final recheck because Taylor authorized this exact scheduling task.</p>
+        </section>
+      `;
+    }
+
+    function feedbackForTarget(targetId) {
+      return feedback.filter((item) => item.node_id === targetId);
+    }
+
+    function currentTargetComments() {
+      return selectedTarget ? feedbackForTarget(selectedTarget.id) : [];
+    }
+
+    function renderFeedbackMarkers() {
+      document.querySelectorAll("[data-feedback-target]").forEach((target) => {
+        const count = feedbackForTarget(target.dataset.feedbackTarget).length;
+        target.classList.toggle("has-feedback", count > 0);
+        if (count > 0) target.dataset.feedbackCount = String(count);
+        else delete target.dataset.feedbackCount;
+      });
+    }
+
+    function syncSelectedFeedbackTarget() {
+      document.querySelectorAll("[data-feedback-target]").forEach((target) => {
+        target.classList.toggle(
+          "selected-feedback",
+          Boolean(selectedTarget && target.dataset.feedbackTarget === selectedTarget.id)
+        );
+      });
+    }
+
+    function selectFeedbackTarget(target) {
+      selectedTarget = {
+        id: target.dataset.feedbackTarget,
+        label: target.dataset.feedbackLabel,
+        kind: target.dataset.feedbackKind
+      };
+      renderFeedbackTray();
+      syncSelectedFeedbackTarget();
+      $("feedbackText").focus();
+    }
+
+    function makeFeedbackBundle() {
+      return {
+        source_spec: "examples/calpal-scheduling/spec.md",
+        wireframe_artifact: "examples/calpal-scheduling/artifacts/agent-workbench/2026-06-19-calpal-scheduling/workbench.html",
+        selected_scenario_step: activeStep,
+        selected_reply_mode: replyMode,
+        artifact_version_id: activeFeedbackVersionId,
+        artifact_version_label: activeFeedbackVersion().label,
+        artifact_version_current: isCurrentFeedbackVersion(),
+        comments: feedback.map((item) => ({
+          id: item.id,
+          node_id: item.node_id,
+          node_label: item.node_label,
+          node_kind: item.node_kind,
+          artifact_version_id: item.artifact_version_id,
+          artifact_version_label: item.artifact_version_label,
+          tag: item.tag,
+          confidence: item.confidence,
+          status: item.status,
+          needs_clarification: item.needs_clarification,
+          clarifying_question: item.clarifying_question,
+          comment: item.comment,
+          created_at: item.created_at
+        }))
+      };
+    }
+
+    function feedbackMarkdown() {
+      const bundle = makeFeedbackBundle();
+      if (bundle.comments.length === 0) return `No CalPal artifact feedback for ${bundle.artifact_version_label} yet.`;
+      return [
+        "# CalPal Wired Artifact Feedback",
+        "",
+        `Source spec: \`${bundle.source_spec}\``,
+        `Artifact: \`${bundle.wireframe_artifact}\``,
+        `Version: \`${bundle.artifact_version_label}\``,
+        `Current version: \`${bundle.artifact_version_current}\``,
+        "",
+        ...bundle.comments.map((item) => [
+          `## ${item.node_label}`,
+          "",
+          `- Node: \`${item.node_id}\``,
+          `- Inferred type: \`${item.tag}\``,
+          `- Confidence: \`${item.confidence || "medium"}\``,
+          `- Status: \`${item.status}\``,
+          item.needs_clarification ? `- Clarifying question: ${item.clarifying_question}` : "",
+          `- Comment: ${item.comment}`
+        ].filter(Boolean).join("\n\n"))
+      ].join("\n");
+    }
+
+    function renderFeedbackTray() {
+      if (!selectedTarget) {
+        $("feedbackTray").hidden = true;
+        return;
+      }
+
+      $("feedbackTray").hidden = false;
+      $("feedbackTitle").textContent = selectedTarget.label;
+      $("feedbackMeta").textContent = isCurrentFeedbackVersion()
+        ? "Leave a note on this part of the experience."
+        : `Viewing saved comments from ${activeFeedbackVersion().label}. Switch to Current version to add notes.`;
+      $("feedbackText").disabled = !isCurrentFeedbackVersion();
+      $("saveFeedback").disabled = !isCurrentFeedbackVersion();
+      const comments = currentTargetComments();
+      $("feedbackList").innerHTML = comments.length
+        ? comments.map((item) => `
+          <article class="feedback-item">
+            <strong>Saved note</strong>
+            <span>${escapeHtml(item.comment)}</span>
+            ${item.needs_clarification ? `<em>Follow-up if needed: ${escapeHtml(item.clarifying_question)}</em>` : ""}
+          </article>
+        `).join("")
+        : "";
+      $("feedbackOutput").value = feedbackMarkdown();
+      $("feedbackStatus").textContent = !isCurrentFeedbackVersion()
+        ? `${feedback.length} saved note${feedback.length === 1 ? "" : "s"} on ${activeFeedbackVersion().label}.`
+        : feedback.length
+        ? `${feedback.length} saved note${feedback.length === 1 ? "" : "s"}. Copy all feedback when you want me to revise the artifact.`
+        : "Notes stay in this browser until copied.";
+    }
+
+    function saveFeedback() {
+      if (!selectedTarget) return;
+      if (!isCurrentFeedbackVersion()) {
+        $("feedbackStatus").textContent = "Switch to Current version before adding a new note.";
+        return;
+      }
+      const comment = $("feedbackText").value.trim();
+      if (!comment) {
+        $("feedbackStatus").textContent = "Write a comment before saving.";
+        return;
+      }
+
+      const analysis = analyzeFeedback(comment, selectedTarget);
+      feedback.push({
+        id: `cmt_${Date.now().toString(36)}`,
+        node_id: selectedTarget.id,
+        node_label: selectedTarget.label,
+        node_kind: selectedTarget.kind,
+        artifact_version_id: activeFeedbackVersionId,
+        artifact_version_label: activeFeedbackVersion().label,
+        tag: analysis.tag,
+        confidence: analysis.confidence,
+        status: analysis.needs_clarification ? "needs-clarification" : "proposed",
+        needs_clarification: analysis.needs_clarification,
+        clarifying_question: analysis.clarifying_question,
+        comment,
+        created_at: new Date().toISOString()
+      });
+      $("feedbackText").value = "";
+      persistFeedback();
+      renderFeedbackVersions();
+      renderFeedbackTray();
+      renderFeedbackMarkers();
+      syncSelectedFeedbackTarget();
+    }
+
+    function analyzeFeedback(comment, target) {
+      const tag = inferFeedbackTag(comment, target);
+      const text = comment.toLowerCase();
+      const wordCount = text.split(/\s+/).filter(Boolean).length;
+      const hasActionableSignal = /(cut|remove|hide|rename|label|copy|word|explain|move|show|differentiate|simplify|ask|book|approve|protect|private|calendar|email|thread|agent|behind|comment|mobile|type|flow|step|branch|spacing|color|visual)/.test(text);
+      const vagueQuestion = /\b(what is this|what are these|what does this mean|how do i decide|why is this here)\b/.test(text);
+      const vagueComplaint = /\b(confusing|unclear|weird|lost|don't get|do not get|hard to tell)\b/.test(text);
+      const needsClarification = vagueQuestion || (vagueComplaint && !hasActionableSignal) || (wordCount < 4 && !hasActionableSignal);
+
+      return {
+        tag,
+        confidence: needsClarification ? "low" : hasActionableSignal ? "high" : "medium",
+        needs_clarification: needsClarification,
+        clarifying_question: needsClarification ? clarifyingQuestionFor(target, tag) : ""
+      };
+    }
+
+    function inferFeedbackTag(comment, target) {
+      const text = comment.toLowerCase();
+      if (text.includes("cut") || text.includes("remove") || text.includes("too complex") || text.includes("simplify")) return "cut";
+      if (text.includes("approval") || text.includes("privacy") || text.includes("private") || text.includes("authority") || text.includes("permission")) return "requirement";
+      if (text.includes("word") || text.includes("copy") || text.includes("label") || text.includes("explain") || text.includes("rename")) return "copy";
+      if (text.includes("look") || text.includes("visual") || text.includes("color") || text.includes("spacing")) return "visual";
+      if (text.includes("confusing") || text.includes("flow") || text.includes("step")) return "workflow";
+      if (text.includes("?") || text.includes("why") || text.includes("how")) return "open-question";
+      if (target?.kind === "calendar" || target?.kind === "simulator-control") return "workflow";
+      if (target?.id?.includes("approval") || target?.id?.includes("delegated") || target?.id?.includes("private")) return "requirement";
+      return "workflow";
+    }
+
+    function clarifyingQuestionFor(target, tag) {
+      if (target?.kind === "agent-context") return "What agent decision should this behind-the-scenes view make easier to understand?";
+      if (target?.kind === "simulator-control") return "What real user moment should this simulator control help you evaluate?";
+      if (target?.kind === "calendar") return "What calendar state or privacy boundary should be clearer here?";
+      if (tag === "copy") return "Which wording should change, and what should it make clearer?";
+      return "What decision or behavior should change in this part of the experience?";
+    }
+
+    async function copyFeedback() {
+      const text = [
+        feedbackMarkdown(),
+        "",
+        "```json",
+        JSON.stringify(makeFeedbackBundle(), null, 2),
+        "```"
+      ].join("\n");
+      $("feedbackOutput").value = text;
+      $("feedbackOutput").select();
+      try {
+        await navigator.clipboard.writeText(text);
+        $("feedbackStatus").textContent = "Copied all feedback for Codex or Claude.";
+      } catch {
+        document.execCommand("copy");
+        $("feedbackStatus").textContent = "Feedback is ready to paste into Codex or Claude.";
+      }
+    }
+
+    function render() {
+      renderScrubber();
+      renderThread();
+      renderInspector();
+      renderTranslation();
+      renderCalendar();
+      renderApprovalPanel();
+      renderMobileTabs();
+      renderFeedbackVersions();
+      renderFeedbackMarkers();
+      syncSelectedFeedbackTarget();
+      renderFeedbackTray();
+    }
+
+    $("reset").addEventListener("click", () => {
+      activeStep = "delegate";
+      replyMode = "accepted";
+      activeMobileTab = "thread";
+      render();
+    });
+
+    $("assistantName").value = assistantName;
+    $("assistantName").addEventListener("input", (event) => {
+      setAssistantName(event.target.value);
+      $("assistantName").focus();
+    });
+    $("feedbackVersion").addEventListener("change", (event) => {
+      setFeedbackVersion(event.target.value);
+    });
+
+    $("jumpReply").addEventListener("click", () => {
+      activeStep = "reply";
+      activeMobileTab = "thread";
+      render();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (event.target.closest("#feedbackTray")) return;
+      if (event.target.closest("button, input, textarea, select, a")) return;
+      const target = event.target.closest("[data-feedback-target]");
+      if (target) selectFeedbackTarget(target);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (!["Enter", " "].includes(event.key)) return;
+      if (event.target.closest("button, input, textarea, select, a")) return;
+      const target = event.target.closest("[data-feedback-target]");
+      if (target) {
+        event.preventDefault();
+        selectFeedbackTarget(target);
+      }
+    });
+
+    $("saveFeedback").addEventListener("click", saveFeedback);
+    $("copyFeedback").addEventListener("click", copyFeedback);
+    $("closeFeedback").addEventListener("click", () => {
+      selectedTarget = null;
+      renderFeedbackTray();
+      syncSelectedFeedbackTarget();
+    });
+
+    document.querySelectorAll("[data-mobile-tab]").forEach((button) => {
+      button.addEventListener("click", () => setMobileTab(button.dataset.mobileTab));
+    });
+
+    render();
+  </script>
+</body>
+</html>

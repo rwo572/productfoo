@@ -1,0 +1,40 @@
+{
+  "schema_version": "bug-capsule-fault-corpus/0.1",
+  "scenario_id": "dedupe-same-signature-different-cause",
+  "cases": [
+    {
+      "case_id": "same-signature-permission-001",
+      "input": {
+        "foo_version": "0.1.25",
+        "error_class": "io_error",
+        "error_code": "E_IO",
+        "message": "read failed because permission was denied",
+        "stack": "Error: read failed\n    at readPacket (packet.js:72:9)",
+        "causal_field": "permission_denied"
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": [],
+      "expected_cluster_state": "distinct_occurrence",
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-007"]
+    },
+    {
+      "case_id": "same-signature-corrupt-001",
+      "input": {
+        "foo_version": "0.1.25",
+        "error_class": "io_error",
+        "error_code": "E_IO",
+        "message": "read failed because YAML was corrupt",
+        "stack": "Error: read failed\n    at readPacket (packet.js:72:9)",
+        "causal_field": "invalid_yaml"
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": [],
+      "expected_cluster_state": "distinct_occurrence",
+      "forbidden_outbound_substrings": [],
+      "validation_ids": ["V-007"]
+    }
+  ]
+}

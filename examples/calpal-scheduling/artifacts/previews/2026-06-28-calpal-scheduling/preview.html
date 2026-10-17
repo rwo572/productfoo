@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Build Preview · CalPal Agentic EA V0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f4efe6; --paper-2:#efe8db; --card:#fffdf8; --ink:#23201b; --ink-2:#5c554a;
+    --line:#ddd3c2; --line-2:#cabfa9;
+    --accent:#1f6f5c; --accent-soft:#e2efe9; --accent-ink:#124435;
+    --amber:#a8690f; --amber-soft:#f6ead3; --amber-ink:#6f450a;
+    --rose:#9c3b34; --rose-soft:#f4e0dd;
+    --sel:#1f6f5c; --sel-soft:#e6f1ec;
+    --shadow:0 1px 0 rgba(35,32,27,.04),0 8px 24px -14px rgba(35,32,27,.28);
+    --shadow-lg:0 24px 60px -28px rgba(35,32,27,.45);
+    --r:14px; --r-sm:9px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"IBM Plex Sans",system-ui,sans-serif; color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 88% -8%, #fbf6ec 0%, rgba(251,246,236,0) 60%),
+      radial-gradient(900px 500px at -6% 110%, var(--accent-soft) 0%, rgba(226,239,233,0) 55%),
+      var(--paper);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; opacity:.5; z-index:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/></svg>");
+  }
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.16em; font-size:11px; color:var(--ink-2)}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif; font-weight:600; letter-spacing:-.01em; margin:0}
+
+  /* ---------- top bar ---------- */
+  .top{position:sticky; top:0; z-index:30; backdrop-filter:blur(10px);
+    background:linear-gradient(var(--paper), rgba(244,239,230,.86)); border-bottom:1px solid var(--line)}
+  .top-in{max-width:1280px; margin:0 auto; padding:14px 22px; display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap}
+  .brand{display:flex; gap:11px; align-items:center; min-width:0}
+  .logo{width:34px;height:34px;border-radius:9px;flex:none;background:
+    linear-gradient(145deg,var(--accent),#2c8a72); color:#fff; display:grid; place-items:center;
+    font-family:"Fraunces",serif; font-weight:600; font-size:18px; box-shadow:var(--shadow)}
+  .ttl h1{font-size:18px; line-height:1.15}
+  .ttl .eyebrow{margin-bottom:3px}
+  .ttl p{margin:2px 0 0; font-size:12.5px; color:var(--ink-2); max-width:48ch}
+  .spacer{flex:1 1 40px}
+  .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+  button{font:inherit; cursor:pointer}
+  .btn{border:1px solid var(--line); background:var(--card); color:var(--ink); padding:8px 13px; border-radius:10px;
+    font-size:12.5px; font-weight:500; display:inline-flex; gap:7px; align-items:center; transition:.16s; box-shadow:var(--shadow)}
+  .btn:hover{border-color:var(--accent); color:var(--accent-ink); transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(145deg,var(--accent),#2c8a72); color:#fff; border-color:transparent}
+  .btn.primary:hover{color:#fff; filter:brightness(1.05)}
+  .btn.ghost{background:transparent; box-shadow:none}
+  .conv{font-size:11px; color:var(--ink-2)} .conv b{color:var(--ink)}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:1280px; margin:0 auto; padding:22px; position:relative; z-index:1}
+  .lede{display:grid; grid-template-columns:1.15fr; gap:6px; margin:6px 2px 20px}
+  .lede h2{font-size:clamp(24px,3.4vw,34px); line-height:1.05; max-width:20ch}
+  .lede p{margin:0; color:var(--ink-2); max-width:62ch; font-size:14.5px}
+
+  /* ---------- direction switcher ---------- */
+  .dirs{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px}
+  .dir{position:relative; text-align:left; border:1.5px solid var(--line); background:var(--card);
+    border-radius:var(--r); padding:14px 14px 13px; transition:.18s; box-shadow:var(--shadow); overflow:hidden}
+  .dir:hover{transform:translateY(-2px); border-color:var(--line-2)}
+  .dir .k{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+  .dir h3{font-size:17px; margin:6px 0 4px}
+  .dir p{margin:0; font-size:12.5px; color:var(--ink-2); min-height:34px}
+  .dir .spectrum{margin-top:10px; height:5px; border-radius:99px; background:linear-gradient(90deg,#cfe3db,var(--accent),var(--amber))}
+  .dir .pin{position:absolute; top:-3px; width:11px;height:11px;border-radius:99px;background:var(--ink); border:2px solid var(--card); transform:translate(-50%,0)}
+  .dir[aria-pressed="true"]{border-color:var(--sel); background:var(--sel-soft); box-shadow:0 0 0 3px rgba(31,111,92,.14),var(--shadow)}
+  .badge{display:inline-flex; align-items:center; gap:5px; font-family:"IBM Plex Mono",monospace; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em; padding:3px 7px; border-radius:99px; border:1px solid var(--accent);
+    color:var(--accent-ink); background:#fff}
+  .dir .rec{position:absolute; top:12px; right:12px}
+
+  /* ---------- workbench ---------- */
+  .bench{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:16px; align-items:start}
+  .canvas-wrap{min-width:0}
+  .steps{display:flex; gap:7px; margin-bottom:13px; flex-wrap:wrap; align-items:center}
+  .steps .lbl{font-size:11px; color:var(--ink-2); margin-right:3px}
+  .step{border:1px solid var(--line); background:var(--card); border-radius:99px; padding:6px 13px 6px 10px; font-size:12px;
+    display:inline-flex; gap:8px; align-items:center; color:var(--ink-2); transition:.15s; box-shadow:var(--shadow)}
+  .step .n{width:18px;height:18px;border-radius:99px;background:var(--paper-2); color:var(--ink-2); display:grid;place-items:center;
+    font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:600}
+  .step[aria-current="true"]{border-color:var(--sel); color:var(--ink); background:#fff}
+  .step[aria-current="true"] .n{background:var(--accent); color:#fff}
+
+  .canvas{background:var(--card); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow-lg); overflow:hidden}
+  .canvas-head{padding:13px 17px; border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:center;
+    background:linear-gradient(var(--card),#fbf7ef)}
+  .canvas-head .dot{width:9px;height:9px;border-radius:99px;background:#d9cdb8;box-shadow:14px 0 0 #d9cdb8,28px 0 0 #d9cdb8; margin-right:32px}
+  .canvas-head .where{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2)}
+  .canvas-head .where b{color:var(--ink)}
+  .canvas-body{padding:18px 18px 20px}
+  .stage{font-size:11px; color:var(--ink-2); margin:0 0 4px}
+  .stage b{color:var(--accent-ink)}
+  .step-title{font-size:20px; margin:0 0 3px}
+  .step-sub{margin:0 0 16px; color:var(--ink-2); font-size:13.5px; max-width:58ch}
+
+  /* email-native primitives (the CalPal product surface) */
+  .mail{border:1px solid var(--line); border-radius:var(--r-sm); overflow:hidden; background:#fff}
+  .mail+.mail{margin-top:11px}
+  .mh{display:flex; gap:10px; align-items:center; padding:11px 13px; border-bottom:1px solid var(--line); background:#fdfbf6}
+  .av{width:30px;height:30px;border-radius:8px;flex:none; display:grid;place-items:center; font-weight:600; font-size:12px; color:#fff; font-family:"IBM Plex Mono",monospace}
+  .av.r{background:#7a5cff} .av.c{background:var(--accent)} .av.d{background:#b5642b}
+  .mh .who{font-weight:600; font-size:13px} .mh .meta{font-size:11px; color:var(--ink-2)}
+  .mh .tag{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em;
+    padding:3px 7px; border-radius:99px; background:var(--accent-soft); color:var(--accent-ink); border:1px solid #cfe3db}
+  .mb{padding:13px 14px; font-size:13.5px; color:#33302a}
+  .mb p{margin:0 0 9px} .mb p:last-child{margin:0}
+
+  .opts{display:grid; gap:8px; margin:4px 0 2px}
+  .opt{display:flex; gap:12px; align-items:center; border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:#fff; transition:.15s}
+  .opt:hover{border-color:var(--accent)}
+  .opt .day{font-family:"Fraunces",serif; font-size:15px; min-width:74px}
+  .opt .tz{font-size:12px; color:var(--ink-2)} .opt .tz b{color:var(--ink); font-weight:600}
+  .opt .hold{margin-left:auto; display:inline-flex; gap:6px; align-items:center; font-family:"IBM Plex Mono",monospace;
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding:4px 9px; border-radius:99px}
+  .hold.held{background:var(--amber-soft); color:var(--amber-ink); border:1px solid #e8cf9f}
+  .hold.ok{background:var(--accent-soft); color:var(--accent-ink); border:1px solid #cfe3db}
+  .hold.gone{background:var(--paper-2); color:var(--ink-2); border:1px dashed var(--line-2); text-decoration:line-through}
+  .pulse{width:6px;height:6px;border-radius:99px;background:currentColor; animation:p 1.8s infinite}
+  @keyframes p{0%,100%{opacity:.35}50%{opacity:1}}
+
+  .privacy{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px}
+  .pcol{border:1px solid var(--line); border-radius:10px; overflow:hidden}
+  .pcol h4{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em;
+    margin:0; padding:8px 11px; border-bottom:1px solid var(--line)}
+  .pcol.guest h4{background:var(--accent-soft); color:var(--accent-ink)}
+  .pcol.host h4{background:#f1ece1; color:var(--ink-2)}
+  .prow{display:flex; gap:8px; align-items:center; padding:8px 11px; font-size:12.5px; border-top:1px solid #f0eadd}
+  .prow:first-of-type{border-top:0}
+  .lock{font-size:11px; color:var(--rose)} .reveal{color:var(--accent-ink)}
+  .redact{background:repeating-linear-gradient(90deg,#e9e1d2,#e9e1d2 6px,#efe9dc 6px,#efe9dc 12px); color:transparent; border-radius:4px; user-select:none; padding:0 4px}
+
+  .gate{border:1px solid #e8cf9f; background:linear-gradient(#fffaf0,#fdf3df); border-radius:11px; padding:13px 14px; margin-top:6px}
+  .gate .gh{display:flex; gap:9px; align-items:center; margin-bottom:7px}
+  .gate .gh .ic{width:24px;height:24px;border-radius:7px;background:var(--amber-soft); color:var(--amber-ink); display:grid;place-items:center; font-size:13px}
+  .gate .gh b{font-size:13px} .gate p{margin:0 0 11px; font-size:13px; color:#4a4339}
+  .gate .row{display:flex; gap:8px; flex-wrap:wrap}
+  .mini{border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 12px; font-size:12.5px; font-weight:500}
+  .mini.go{background:var(--amber-ink); color:#fff; border-color:transparent}
+
+  .confirm{display:flex; gap:12px; align-items:center; border:1px solid #cfe3db; background:linear-gradient(#f3faf6,#eaf4ef);
+    border-radius:11px; padding:13px 14px; margin-top:6px}
+  .confirm .ic{width:30px;height:30px;border-radius:8px;background:var(--accent); color:#fff; display:grid;place-items:center; font-size:15px}
+  .confirm .t{font-size:13.5px; font-weight:600} .confirm .s{font-size:12px; color:var(--ink-2)}
+
+  .promises{display:flex; gap:7px; flex-wrap:wrap; margin-top:15px; padding-top:13px; border-top:1px dashed var(--line)}
+  .promise{font-size:11.5px; color:var(--ink-2); background:var(--paper-2); border:1px solid var(--line); border-radius:99px; padding:4px 10px}
+  .promise b{color:var(--accent-ink); font-weight:600}
+
+  /* selectable nodes */
+  [data-node-id]{position:relative; cursor:default}
+  .seltarget{cursor:pointer}
+  .seltarget::after{content:"+"; position:absolute; top:6px; right:6px; width:18px;height:18px; border-radius:6px;
+    background:var(--card); border:1px solid var(--line); color:var(--ink-2); font-size:13px; line-height:16px; text-align:center;
+    opacity:0; transition:.14s; box-shadow:var(--shadow)}
+  .seltarget:hover::after{opacity:1}
+  .seltarget:hover{outline:1.5px dashed var(--accent); outline-offset:3px; border-radius:8px}
+  .seltarget.has-cmt::after{content:""; background:var(--accent); border-color:var(--accent); opacity:1}
+  .flash{animation:fl 1.4s ease}
+  @keyframes fl{0%,100%{box-shadow:0 0 0 0 rgba(31,111,92,0)}30%{box-shadow:0 0 0 4px rgba(31,111,92,.28)}}
+
+  /* ---------- right rail: loopframe ---------- */
+  .rail{position:sticky; top:78px; display:flex; flex-direction:column; gap:12px}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+  .panel>h4{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--ink-2); margin:0; padding:11px 14px 9px}
+  .loop{padding:0 14px 13px}
+  .loop .row{display:flex; gap:10px; padding:9px 0; border-top:1px solid #f0eadd}
+  .loop .row:first-child{border-top:0}
+  .loop .ic{width:22px;height:22px;border-radius:6px;flex:none;display:grid;place-items:center;font-size:12px;
+    background:var(--paper-2); color:var(--ink-2)}
+  .loop .lk{font-family:"IBM Plex Mono",monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-2)}
+  .loop .lv{font-size:12.5px; color:var(--ink); margin-top:1px}
+  .loop .row.boundary{background:var(--amber-soft); margin:6px -14px 0; padding:9px 14px; border-radius:0}
+  .loop .row.boundary .ic{background:#fff; color:var(--amber-ink)}
+  .loop .row.boundary .lk{color:var(--amber-ink)}
+  .conf{display:flex; gap:8px; align-items:center; padding:10px 14px; border-top:1px solid var(--line); font-size:11.5px; color:var(--ink-2)}
+  .meter{flex:1; height:6px; border-radius:99px; background:var(--paper-2); overflow:hidden}
+  .meter i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),#37a085)}
+
+  .addc{display:flex; gap:8px; padding:11px 14px; border-top:1px solid var(--line)}
+  .addc .btn{flex:1; justify-content:center}
+  .traces{padding:10px 14px 13px; border-top:1px solid var(--line)}
+  .traces .lk{font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2); margin-bottom:6px}
+  .chip{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-2); background:var(--paper-2);
+    border:1px solid var(--line); border-radius:6px; padding:2px 6px; margin:0 4px 4px 0}
+
+  /* comments list */
+  .clist{padding:6px 14px 13px; border-top:1px solid var(--line); display:none}
+  .clist.show{display:block}
+  .cmt{border:1px solid var(--line); border-radius:9px; padding:8px 10px; margin-top:8px; background:#fff; font-size:12px}
+  .cmt .ch{display:flex; gap:6px; align-items:center; margin-bottom:4px}
+  .cmt .ttag{font-family:"IBM Plex Mono",monospace; font-size:9px; text-transform:uppercase; letter-spacing:.06em; padding:2px 6px; border-radius:99px; border:1px solid var(--line); background:var(--paper-2); color:var(--ink-2)}
+  .cmt .st{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:9px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-2)}
+  .cmt .st.accepted{color:var(--accent-ink)} .cmt .st.rejected{color:var(--rose)} .cmt .st.proposed{color:var(--amber-ink)}
+  .cmt p{margin:0 0 6px; color:#33302a}
+  .cmt .ref{font-family:"IBM Plex Mono",monospace; font-size:9.5px; color:var(--ink-2); word-break:break-all}
+  .cmt .cact{display:flex; gap:5px; margin-top:6px}
+  .cmt .cact button{font-size:10px; padding:3px 7px; border-radius:6px; border:1px solid var(--line); background:#fff; color:var(--ink-2)}
+  .cmt .cact button:hover{border-color:var(--accent); color:var(--accent-ink)}
+
+  /* ---------- composer popover ---------- */
+  .scrim{position:fixed; inset:0; background:rgba(35,32,27,.28); backdrop-filter:blur(2px); z-index:40; display:none}
+  .scrim.show{display:block}
+  .composer{position:fixed; z-index:50; right:22px; bottom:22px; width:340px; max-width:calc(100vw - 28px);
+    background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); display:none; overflow:hidden}
+  .composer.show{display:block; animation:rise .18s ease}
+  @keyframes rise{from{transform:translateY(8px); opacity:0}to{transform:none; opacity:1}}
+  .composer h4{font-size:14px; padding:13px 14px 0} .composer .csub{font-size:11.5px; color:var(--ink-2); padding:2px 14px 10px}
+  .composer textarea{width:calc(100% - 28px); margin:0 14px; min-height:78px; resize:vertical; border:1px solid var(--line);
+    border-radius:9px; padding:9px 10px; font:inherit; font-size:13px; background:#fff}
+  .composer textarea:focus{outline:2px solid var(--accent-soft); border-color:var(--accent)}
+  .tags{display:flex; gap:5px; flex-wrap:wrap; padding:10px 14px 0}
+  .tagb{font-family:"IBM Plex Mono",monospace; font-size:10px; text-transform:uppercase; letter-spacing:.05em; padding:4px 8px; border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--ink-2)}
+  .tagb[aria-pressed="true"]{background:var(--accent); color:#fff; border-color:transparent}
+  .cfoot{display:flex; gap:8px; padding:12px 14px 14px; align-items:center}
+  .cfoot .btn{flex:1; justify-content:center}
+  .cclose{position:absolute; top:10px; right:11px; border:0; background:transparent; font-size:17px; color:var(--ink-2); line-height:1}
+
+  /* ---------- toast ---------- */
+  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); z-index:60;
+    background:var(--ink); color:#fbf7ef; padding:11px 17px; border-radius:11px; font-size:13px; box-shadow:var(--shadow-lg);
+    opacity:0; pointer-events:none; transition:.25s; display:flex; gap:9px; align-items:center}
+  .toast.show{opacity:1; transform:translateX(-50%)}
+  .toast .k{color:#7fd3bd}
+
+  details.detail{margin-top:14px; border-top:1px dashed var(--line); padding-top:11px}
+  details.detail summary{cursor:pointer; font-size:12px; color:var(--ink-2); font-family:"IBM Plex Mono",monospace; letter-spacing:.04em}
+  details.detail pre{background:#2a2620; color:#e8e0d2; border-radius:9px; padding:12px; overflow:auto; font-size:11px; margin-top:9px}
+
+  @media (max-width:980px){
+    .bench{grid-template-columns:1fr} .rail{position:static}
+    .dirs{grid-template-columns:1fr} .privacy{grid-template-columns:1fr}
+  }
+  .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body data-spec-id="calpal_scheduling_v0">
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">C</div>
+      <div class="ttl">
+        <div class="eyebrow">Build Preview · CalPal Agentic EA V0</div>
+        <h1>How hands-off should CalPal be when it schedules for you?</h1>
+        <p>Three ways to delegate the same email. Pick the trust posture before we build it.</p>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="actions">
+      <span class="conv">Direction: <b id="convName">Hybrid</b> · <b id="cmtCount">0</b> notes</span>
+      <button class="btn ghost" id="altBtn" title="Cycle directions">Show alternatives</button>
+      <button class="btn ghost" id="reviseBtn">Revise direction</button>
+      <button class="btn primary" id="buildBtn">Build this →</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="lede">
+    <h2>Taylor cc'd CalPal on a thread with Daniel. What happens next is a product bet.</h2>
+    <p>The instruction: <i>“CalPal, find 30 min with Daniel next week for a product review — mornings my time if possible.”</i> CalPal can run the whole thing and just tell Taylor, or stop at every judgment call. Each direction below makes a different bet about where the human stays in the loop. Click any element in the preview to comment; your notes compile into one paste-ready handoff for the build agent.</p>
+  </section>
+
+  <section class="dirs" role="radiogroup" aria-label="Product direction">
+    <button class="dir" role="radio" data-dir="trust" aria-pressed="false">
+      <div class="k">Direction A · cautious</div>
+      <h3>Trust-first</h3>
+      <p>CalPal shows its work and asks before every outward move. Privacy and approval are the main surface.</p>
+      <div class="spectrum"><span class="pin" style="left:14%"></span></div>
+    </button>
+    <button class="dir" role="radio" data-dir="flow" aria-pressed="false">
+      <div class="k">Direction B · fast</div>
+      <h3>Workflow-first</h3>
+      <p>CalPal runs the loop end-to-end and summarizes. Fewest interruptions; Taylor reviews after the fact.</p>
+      <div class="spectrum"><span class="pin" style="left:86%"></span></div>
+    </button>
+    <button class="dir" role="radio" data-dir="hybrid" aria-pressed="true">
+      <span class="badge rec">★ Recommended</span>
+      <div class="k">Direction C · balanced</div>
+      <h3>Hybrid</h3>
+      <p>Runs fast, but surfaces a gate only at the moments that need judgment: alternates, privacy, stale holds.</p>
+      <div class="spectrum"><span class="pin" style="left:50%"></span></div>
+    </button>
+  </section>
+
+  <div class="bench">
+    <div class="canvas-wrap">
+      <div class="steps" id="steps" role="tablist" aria-label="Scheduling steps"><span class="lbl">Flow</span></div>
+      <article class="canvas" id="canvas">
+        <div class="canvas-head">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="where">thread · <b id="whereTitle">Product review</b></span>
+        </div>
+        <div class="canvas-body" id="stage"><!-- rendered --></div>
+      </article>
+    </div>
+
+    <aside class="rail" aria-label="Agent loop for the selected step">
+      <div class="panel">
+        <h4>Loopframe · what CalPal believes here</h4>
+        <div class="loop" id="loop"><!-- rendered --></div>
+        <div class="conf">
+          <span class="mono" id="confLabel">confidence</span>
+          <span class="meter"><i id="confBar" style="width:70%"></i></span>
+        </div>
+        <div class="addc">
+          <button class="btn" id="addStepCmt">+ Comment on this step</button>
+        </div>
+        <div class="traces" id="traces"></div>
+        <div class="clist" id="clist"></div>
+      </div>
+    </aside>
+  </div>
+
+  <details class="detail">
+    <summary>Show technical detail — spec trace, feedback JSON, build target</summary>
+    <pre id="jsonOut">{}</pre>
+  </details>
+</main>
+
+<!-- composer -->
+<div class="scrim" id="scrim"></div>
+<div class="composer" id="composer" role="dialog" aria-label="Add comment">
+  <button class="cclose" id="cclose" aria-label="Close">×</button>
+  <h4 id="cTarget">Comment</h4>
+  <div class="csub" id="cTargetSub">on this element</div>
+  <div class="tags" id="tags" role="group" aria-label="Tag">
+    <button class="tagb" data-tag="visual" aria-pressed="false">visual</button>
+    <button class="tagb" data-tag="workflow" aria-pressed="true">workflow</button>
+    <button class="tagb" data-tag="copy" aria-pressed="false">copy</button>
+    <button class="tagb" data-tag="requirement" aria-pressed="false">requirement</button>
+    <button class="tagb" data-tag="open-question" aria-pressed="false">open-question</button>
+    <button class="tagb" data-tag="cut" aria-pressed="false">cut</button>
+  </div>
+  <textarea id="cText" placeholder="What's unclear, missing, or wrong here?"></textarea>
+  <div class="cfoot">
+    <button class="btn" id="cCancel">Cancel</button>
+    <button class="btn primary" id="cSave">Save &amp; send to chat</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var SPEC = document.body.dataset.specId;
+  var KEY = "foo-preview::" + SPEC;
+  var SOURCE = "examples/calpal-scheduling/spec.md";
+
+  /* ---- content model: three directions, each a navigable flow ---- */
+  function P(promises){ return promises; }
+  var DIRS = {
+    trust: { name:"Trust-first", conf:0.82, thesis:"Every outward move is previewed and approved. Taylor trades speed for zero surprise." },
+    flow:  { name:"Workflow-first", conf:0.6, thesis:"CalPal owns the loop and reports back. Taylor trades visibility for true hand-off." },
+    hybrid:{ name:"Hybrid", conf:0.78, thesis:"Default to action; raise a gate only where judgment, privacy, or risk actually change the outcome." }
+  };
+
+  var STEPS = {
+    trust: [
+      { id:"read", n:1, stage:"read → infer", title:"CalPal reads the thread, before touching anything",
+        sub:"Trust-first leads with what CalPal understood and what it will and won't reveal — nothing leaves the thread yet.",
+        promises:["I see <b>what CalPal understood</b>","Nothing is sent <b>without my ok</b>"], reqs:["R-001","R-007"],
+        body:function(){return ''+
+          mail("c","CalPal","drafting · not sent","disclosed assistant",
+            "<p>I read the thread. Goal: <b>30-min product review with Daniel</b>, next week, mornings your time (PT).</p>"+
+            "<p data-node-id=\"trust.read.infer\" class=\"seltarget\">I'll only offer times that are free on your calendar and never say <i>why</i> you're busy. Here's exactly what I plan to share before I send anything.</p>")+
+          privacy(
+            [["reveal","Tue 11:30a PT / 2:30p ET — open"],["reveal","Wed 9:30a PT / 12:30p ET — open"],["reveal","Fri 10:00a PT / 1:00p ET — open"]],
+            [["lock","Board prep (confidential) · Tue 9–11"],["lock","Therapist · Wed 8–9"],["lock","Offsite — all day Thu"]],
+            "trust.read.privacy"); },
+      },
+      { id:"approve-send", n:2, stage:"propose → approval boundary", title:"Approve the outreach before it leaves",
+        sub:"In Trust-first, even the first guest email is a gate. CalPal shows the exact draft and the holds it will place.",
+        promises:["I approve <b>the first send</b>","Holds are <b>visible + expiring</b>"], reqs:["R-003","R-004","R-006"],
+        body:function(){return ''+
+          '<div data-node-id="trust.send.draft" class="seltarget">'+
+          mail("c","CalPal → Daniel","queued for your approval","draft",
+            "<p>Hi Daniel — Taylor asked me to find 30 minutes for a product review. A few options that work on her side:</p>")+'</div>'+
+          opts([["Tue","11:30a PT","2:30p ET","held"],["Wed","9:30a PT","12:30p ET","held"],["Fri","10:00a PT","1:00p ET","held"]],"trust.send.opts")+
+          gate("Send this email & place 3 holds?","CalPal will place temporary holds (expire in 48h) and send the draft above as a disclosed assistant. Nothing is on your calendar yet.",["Approve & send","Edit draft"]); },
+      },
+      { id:"commit", n:3, stage:"recheck → commit", title:"Daniel picked Tuesday — confirm before writeback",
+        sub:"Final recheck passed. Trust-first still asks once more before the event is created and the other holds drop.",
+        promises:["Slot is <b>rechecked</b> first","Unused holds <b>released</b>"], reqs:["R-004","R-006"],
+        body:function(){return ''+
+          mail("d","Daniel","9:12a ET","reply","<p data-node-id=\"trust.commit.reply\" class=\"seltarget\">Tuesday 2:30 my time works great. Thanks!</p>")+
+          '<div data-node-id="trust.commit.recheck" class="seltarget" style="margin-top:10px">'+
+          opts([["Tue","11:30a PT","2:30p ET","ok"],["Wed","9:30a PT","—","gone"],["Fri","10:00a PT","—","gone"]],null)+'</div>'+
+          gate("Create the event on Google Calendar?","Tue 11:30a PT was just re-verified as free. Approving books it, adds Daniel as a guest, and releases the Wed/Fri holds.",["Confirm & book","Hold off"]); },
+      },
+    ],
+    flow: [
+      { id:"act", n:1, stage:"read → infer → act", title:"CalPal already sent the options",
+        sub:"Workflow-first acts on the cc as approval. By the time Taylor looks, the outreach is out and holds are placed.",
+        promises:["True <b>hand-off</b>","One <b>status line</b>, not a checklist"], reqs:["R-001","R-006"],
+        body:function(){return ''+
+          mail("c","CalPal","sent · 8:04a","done",
+            "<p data-node-id=\"flow.act.summary\" class=\"seltarget\">Done — I emailed Daniel 3 morning options and placed holds. I'll book the first he accepts after a recheck, and only ping you if something needs a call.</p>")+
+          opts([["Tue","11:30a PT","2:30p ET","held"],["Wed","9:30a PT","12:30p ET","held"],["Fri","10:00a PT","1:00p ET","held"]],"flow.act.opts")+
+          '<p class="stage" data-node-id="flow.act.quiet" style="margin-top:12px"><b>Quiet by default.</b> No approval requested — the cc was the go-ahead.</p>'; },
+      },
+      { id:"live", n:2, stage:"observe → negotiate", title:"Live status while Taylor does other things",
+        sub:"A single email-native status object updates itself. No dashboard, no app to open.",
+        promises:["Glanceable <b>state</b>","CalPal <b>self-heals</b> stale holds"], reqs:["R-004","R-008"],
+        body:function(){return ''+
+          '<div data-node-id="flow.live.status" class="seltarget">'+
+          opts([["Tue","11:30a PT","2:30p ET","held"],["Wed","9:30a PT","12:30p ET","gone"],["Fri","10:00a PT","1:00p ET","held"]],null)+'</div>'+
+          mail("c","CalPal","auto-update · 11:40a","waiting",
+            "<p data-node-id=\"flow.live.heal\" class=\"seltarget\">Heads up to myself: Wed slot got taken by a calendar change, so I quietly refreshed Daniel with Tue & Fri. Still no action needed from you.</p>")+
+          '<p class="stage" style="margin-top:10px">Waiting on Daniel · holds expire in <b>41h</b></p>'; },
+      },
+      { id:"report", n:3, stage:"commit → report", title:"Booked — here's the receipt",
+        sub:"CalPal commits the accepted slot and posts a compact audit trail. Taylor reviews after, not during.",
+        promises:["Booked <b>without me</b>","Full <b>audit trail</b> after"], reqs:["R-006","R-008"],
+        body:function(){return ''+
+          confirm("Booked: Product review w/ Daniel","Tue 11:30a PT · 2:30p ET · Google Calendar · Daniel invited")+
+          '<div data-node-id="flow.report.audit" class="seltarget" style="margin-top:11px">'+
+          mail("c","CalPal","audit · 9:48a","report",
+            "<p>For your records: sent 3 options (8:04a) → held → refreshed once → Daniel accepted Tue (9:12a) → rechecked free → booked (9:13a) → released 2 holds.</p>")+'</div>'; },
+      },
+    ],
+    hybrid: [
+      { id:"read", n:1, stage:"read → infer", title:"CalPal reads, decides what's safe to auto-do",
+        sub:"Hybrid states its belief and its plan up front — and which parts it will do without asking vs. stop for.",
+        promises:["I see the <b>plan + the gates</b>","Auto-do the <b>safe parts</b>"], reqs:["R-001","R-002","R-006"],
+        body:function(){return ''+
+          mail("c","CalPal","reading · 8:02a","disclosed assistant",
+            "<p>Goal: <b>30-min product review with Daniel</b> next week, mornings PT. I'll send 3 safe options now (cc = go-ahead) and <b>stop to ask</b> only if Daniel proposes a new time, a hold goes stale, or privacy is at risk.</p>"+
+            "<p data-node-id=\"hybrid.read.belief\" class=\"seltarget\">My read: this is routine and reversible, so I'll act — but Thursday looks tempting and it's your offsite, so I'll keep it off the table.</p>")+
+          privacy(
+            [["reveal","Tue 11:30a PT — offered"],["reveal","Wed 9:30a PT — offered"],["reveal","Fri 10:00a PT — offered"]],
+            [["lock","Why Thu is blocked (offsite)"],["lock","Board prep, therapist titles"]],
+            "hybrid.read.privacy"); },
+      },
+      { id:"propose", n:2, stage:"propose → hold", title:"Options sent, holds placed — running",
+        sub:"No gate here: this is the safe, reversible part. CalPal shows what's live so Taylor can intervene if she wants.",
+        promises:["Fast by <b>default</b>","I <b>can</b> step in, not <b>must</b>"], reqs:["R-003","R-004"],
+        body:function(){return ''+
+          '<div data-node-id="hybrid.propose.sent" class="seltarget">'+
+          mail("c","CalPal → Daniel","sent · 8:03a","sent",
+            "<p>Hi Daniel — on Taylor's behalf, a few 30-min morning options for the product review:</p>")+'</div>'+
+          opts([["Tue","11:30a PT","2:30p ET","held"],["Wed","9:30a PT","12:30p ET","held"],["Fri","10:00a PT","1:00p ET","held"]],"hybrid.propose.opts")+
+          '<p class="stage" style="margin-top:11px"><b>Running.</b> Holds expire in 48h. CalPal will book the first accepted slot after recheck — unless a gate trips.</p>'; },
+      },
+      { id:"gate", n:3, stage:"negotiate → approval boundary", title:"Daniel proposed a new time — the one moment to ask",
+        sub:"This is exactly where Hybrid earns its keep: a guest-proposed alternate needs Taylor's judgment, so CalPal stops here and only here.",
+        promises:["Gate <b>only</b> when it matters","Alternate needs <b>my ok</b>"], reqs:["R-004","R-006","R-007"],
+        body:function(){return ''+
+          mail("d","Daniel","9:20a ET","reply",
+            "<p data-node-id=\"hybrid.gate.alt\" class=\"seltarget\">Those mornings are tight for me — any chance of <b>Thursday afternoon</b> instead?</p>")+
+          "<p class=\"stage seltarget\" style=\"margin-top:10px\" data-node-id=\"hybrid.gate.read\"><b>CalPal:</b> Thursday is your offsite, so I won't offer it. Daniel's ask is a new time outside what you delegated — your call.</p>"+
+          gate("Daniel wants Thursday PM — how should I respond?","Thu is unavailable (offsite). I can hold the line on Tue/Fri, or you can approve a specific Thursday window if the offsite is flexible. I won't book a guest-proposed time without your ok (R-006).",["Re-offer Tue / Fri","Approve a Thu window","Let me reply myself"]); },
+      },
+    ],
+  };
+
+  /* ---- html builders ---- */
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+  function mail(who,name,meta,tag,bodyHtml){
+    var cls = who==="r"?"r":who==="d"?"d":"c";
+    var initial = who==="d"?"DR":who==="c"?"C":"RW";
+    return '<div class="mail"><div class="mh"><div class="av '+cls+'">'+initial+'</div>'+
+      '<div><div class="who">'+esc(name)+'</div><div class="meta">'+esc(meta)+'</div></div>'+
+      (tag?'<div class="tag">'+esc(tag)+'</div>':'')+'</div><div class="mb">'+bodyHtml+'</div></div>';
+  }
+  function opts(rows,nodeId){
+    var inner = rows.map(function(r){
+      var st = r[3];
+      var label = st==="held"?'<span class="pulse"></span>holding':st==="ok"?"✓ still free":st==="gone"?"released":"";
+      var cls = st==="held"?"held":st==="ok"?"ok":"gone";
+      var tz = r[2]==="—"?'<span class="tz">expired</span>':'<span class="tz"><b>'+r[1]+'</b> · '+r[2]+'</span>';
+      return '<div class="opt"><span class="day">'+r[0]+'</span>'+tz+
+        (st?'<span class="hold '+cls+'">'+label+'</span>':'')+'</div>';
+    }).join("");
+    return '<div class="opts'+(nodeId?' seltarget':'')+'"'+(nodeId?' data-node-id="'+nodeId+'"':'')+'>'+inner+'</div>';
+  }
+  function privacy(guest,host,nodeId){
+    function rows(arr){return arr.map(function(x){
+      var ic = x[0]==="reveal"?'<span class="reveal">↗</span>':'<span class="lock">🔒</span>';
+      var txt = x[0]==="reveal"?esc(x[1]):'<span class="redact">'+esc(x[1])+'</span>';
+      return '<div class="prow">'+ic+'<span>'+txt+'</span></div>';
+    }).join("");}
+    return '<div class="privacy'+(nodeId?' seltarget':'')+'"'+(nodeId?' data-node-id="'+nodeId+'"':'')+'>'+
+      '<div class="pcol guest"><h4>Daniel sees</h4>'+rows(guest)+'</div>'+
+      '<div class="pcol host"><h4>Stays private</h4>'+rows(host)+'</div></div>';
+  }
+  function gate(title,body,btns){
+    var b = btns.map(function(t,i){return '<button class="mini'+(i===0?' go':'')+'">'+esc(t)+'</button>';}).join("");
+    return '<div class="gate"><div class="gh"><span class="ic">✋</span><b>'+esc(title)+'</b></div>'+
+      '<p>'+esc(body)+'</p><div class="row">'+b+'</div></div>';
+  }
+  function confirm(t,s){
+    return '<div class="confirm"><span class="ic">✓</span><div><div class="t">'+esc(t)+'</div><div class="s">'+esc(s)+'</div></div></div>';
+  }
+
+  /* ---- loopframe per step ---- */
+  var LOOP = {
+    "trust.read":{belief:"Routine review; mornings PT are the real constraint.",evidence:"Thread + Taylor's calendar (3 free AM slots next wk).",action:"Draft outreach; place nothing until approved.",boundary:"Won't send or hold without an explicit ok.",regen:"If too cautious, fold step 1+2 together."},
+    "trust.approve-send":{belief:"These 3 options are safe to offer.",evidence:"All free now; 48h hold policy (R-004).",action:"Send draft, place 3 temporary holds.",boundary:"First guest email requires Taylor's approval.",regen:"Show the literal email Daniel receives."},
+    "trust.commit":{belief:"Tue 2:30p ET is the chosen, still-valid slot.",evidence:"Just-now recheck = free; Daniel accepted in-thread.",action:"Create event, invite Daniel, drop other holds.",boundary:"Writeback gated even after acceptance.",regen:"Auto-book if recheck passes, notify only."},
+    "flow.act":{belief:"The cc is sufficient authority to start.",evidence:"Instruction had participant, purpose, window (R-001).",action:"Already sent options + placed holds.",boundary:"Will only interrupt for a real judgment call.",regen:"Add an undo window before first send."},
+    "flow.live":{belief:"One stale hold; remaining options still cover the goal.",evidence:"Calendar delta on Wed; Tue/Fri intact.",action:"Refresh guest with valid options silently.",boundary:"Self-heals; no approval for safe refresh.",regen:"Let Taylor opt into a digest cadence."},
+    "flow.report":{belief:"Meeting is booked and correct.",evidence:"Recheck passed; event created; holds released.",action:"Post compact audit trail to the thread.",boundary:"None — reversible, already disclosed.",regen:"Surface audit as a timeline, not prose."},
+    "hybrid.read":{belief:"Mostly auto; Thursday is a privacy landmine.",evidence:"Offsite all Thu; therapist/board titles private (R-007).",action:"Send safe options now; pre-arm the gates.",boundary:"Cc approves send; alternates/privacy will stop.",regen:"Name the gate conditions to Taylor up front."},
+    "hybrid.propose":{belief:"Safe, reversible — no need to ask.",evidence:"Standard outreach within delegated scope.",action:"Sent + held; keep Taylor able to intervene.",boundary:"None here by design; gate comes later.",regen:"Add a one-tap 'pause CalPal' affordance."},
+    "hybrid.gate":{belief:"Daniel's Thursday ask exceeds what was delegated.",evidence:"Thu unavailable; guest-proposed alt (R-006/D-011).",action:"Hold the line on Tue/Fri unless Taylor overrides.",boundary:"Won't book a guest-proposed time without ok.",regen:"Offer a 1-click 'approve Thu 3–5pm' shortcut."},
+  };
+
+  /* ---- state ---- */
+  var cur = { dir:"hybrid", step:0 };
+  var comments = load();
+
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))||[];}catch(e){return [];} }
+  function persist(){ try{localStorage.setItem(KEY,JSON.stringify(comments));}catch(e){} }
+
+  /* ---- render ---- */
+  var stage=document.getElementById("stage"), stepsEl=document.getElementById("steps"),
+      loopEl=document.getElementById("loop"), tracesEl=document.getElementById("traces"),
+      clistEl=document.getElementById("clist");
+
+  function curStep(){return STEPS[cur.dir][cur.step];}
+  function stepKey(){return cur.dir+"."+curStep().id;}
+
+  function renderSteps(){
+    var arr=STEPS[cur.dir];
+    stepsEl.innerHTML='<span class="lbl">Flow</span>'+arr.map(function(s,i){
+      return '<button class="step" role="tab" data-i="'+i+'" aria-current="'+(i===cur.step)+'">'+
+        '<span class="n">'+s.n+'</span>'+esc(s.title.split(",")[0].split("—")[0].slice(0,22))+(s.title.length>22?'…':'')+'</button>';
+    }).join("");
+  }
+  function renderStage(){
+    var s=curStep();
+    document.getElementById("whereTitle").textContent="Product review · "+DIRS[cur.dir].name;
+    stage.innerHTML=''+
+      '<p class="stage">Step '+s.n+' / '+STEPS[cur.dir].length+' · <b>'+esc(s.stage)+'</b></p>'+
+      '<h3 class="step-title">'+esc(s.title)+'</h3>'+
+      '<p class="step-sub">'+esc(s.sub)+'</p>'+
+      s.body()+
+      '<div class="promises">'+s.promises.map(function(p){return '<span class="promise">'+p+'</span>';}).join("")+'</div>';
+    decorate();
+  }
+  function renderLoop(){
+    var L=LOOP[stepKey()]||{};
+    var rows=[
+      ["◎","belief",L.belief],["❝","evidence",L.evidence],["→","proposed action",L.action]
+    ].map(function(r){return '<div class="row"><span class="ic">'+r[0]+'</span><div><div class="lk">'+r[1]+'</div><div class="lv">'+esc(r[2]||"—")+'</div></div></div>';}).join("");
+    rows+='<div class="row boundary"><span class="ic">✋</span><div><div class="lk">approval boundary</div><div class="lv">'+esc(L.boundary||"—")+'</div></div></div>';
+    rows+='<div class="row"><span class="ic">↻</span><div><div class="lk">if you disagree</div><div class="lv">'+esc(L.regen||"—")+'</div></div></div>';
+    loopEl.innerHTML=rows;
+    var c=DIRS[cur.dir].conf;
+    document.getElementById("confBar").style.width=Math.round(c*100)+"%";
+    document.getElementById("confLabel").textContent="confidence · "+DIRS[cur.dir].name.toLowerCase();
+    // traces
+    tracesEl.innerHTML='<div class="lk">covers</div>'+curStep().reqs.map(function(r){return '<span class="chip">'+r+'</span>';}).join("")+
+      '<span class="chip">'+SPEC+'#'+stepKey()+'</span>';
+  }
+  function renderComments(){
+    var here=comments.filter(function(c){return c.node && c.node.indexOf(cur.dir+".")===0;});
+    document.getElementById("cmtCount").textContent=comments.length;
+    if(!here.length){clistEl.classList.remove("show"); clistEl.innerHTML=""; updateJSON(); return;}
+    clistEl.classList.add("show");
+    clistEl.innerHTML='<div class="traces" style="border:0;padding:0 0 4px"><div class="lk">notes on this direction</div></div>'+
+      here.map(function(c){
+        return '<div class="cmt" data-id="'+c.id+'"><div class="ch"><span class="ttag">'+c.tag+'</span>'+
+          '<span class="st '+c.status+'">'+c.status+'</span></div><p>'+esc(c.text)+'</p>'+
+          '<div class="ref">'+SPEC+'#'+c.node+'  ·  <a href="#node='+c.node+'">#'+c.node+'</a></div>'+
+          '<div class="cact"><button data-act="accept">accept</button><button data-act="reject">reject</button><button data-act="del">delete</button></div></div>';
+      }).join("");
+    updateJSON();
+    decorate();
+  }
+  function decorate(){
+    // mark commented nodes
+    document.querySelectorAll("[data-node-id]").forEach(function(el){
+      var has=comments.some(function(c){return c.node===el.dataset.nodeId;});
+      el.classList.toggle("has-cmt",has);
+    });
+  }
+
+  function renderAll(){ renderSteps(); renderStage(); renderLoop(); renderComments(); }
+
+  /* ---- comment flow ---- */
+  var composer=document.getElementById("composer"), scrim=document.getElementById("scrim"),
+      cText=document.getElementById("cText"), pendingNode=null, pendingTag="workflow";
+  function openComposer(node,label){
+    pendingNode=node;
+    document.getElementById("cTarget").textContent="Comment";
+    document.getElementById("cTargetSub").textContent=label||(SPEC+"#"+node);
+    cText.value="";
+    composer.classList.add("show"); scrim.classList.add("show"); setTimeout(function(){cText.focus();},60);
+  }
+  function closeComposer(){composer.classList.remove("show"); scrim.classList.remove("show"); pendingNode=null;}
+
+  document.getElementById("tags").addEventListener("click",function(e){
+    var b=e.target.closest(".tagb"); if(!b)return;
+    [].forEach.call(this.querySelectorAll(".tagb"),function(x){x.setAttribute("aria-pressed","false");});
+    b.setAttribute("aria-pressed","true"); pendingTag=b.dataset.tag;
+  });
+  document.getElementById("cSave").addEventListener("click",function(){
+    var t=cText.value.trim(); if(!t){cText.focus();return;}
+    var node=pendingNode||stepKey();
+    comments.push({id:"c"+Date.now().toString(36),node:node,tag:pendingTag,status:"proposed",text:t});
+    persist(); closeComposer(); renderComments();
+    sendToChat(true);
+  });
+  document.getElementById("cCancel").addEventListener("click",closeComposer);
+  document.getElementById("cclose").addEventListener("click",closeComposer);
+  scrim.addEventListener("click",closeComposer);
+  document.getElementById("addStepCmt").addEventListener("click",function(){openComposer(stepKey(),"on step: "+curStep().title);});
+
+  // click-to-select any node
+  stage.addEventListener("click",function(e){
+    var el=e.target.closest("[data-node-id]"); if(!el)return;
+    openComposer(el.dataset.nodeId,"on: "+el.dataset.nodeId);
+  });
+  // comment actions
+  clistEl.addEventListener("click",function(e){
+    var b=e.target.closest("button[data-act]"); if(!b)return;
+    var id=b.closest(".cmt").dataset.id, c=comments.find(function(x){return x.id===id;}); if(!c)return;
+    if(b.dataset.act==="del"){comments=comments.filter(function(x){return x.id!==id;});}
+    else{c.status=b.dataset.act==="accept"?"accepted":"rejected";}
+    persist(); renderComments();
+  });
+
+  /* ---- handoff ---- */
+  function markdown(){
+    var lines=["Please apply this Build Preview feedback for **CalPal Agentic EA V0**.",
+      "Treat `proposed` notes as review input; ask before changing spec requirements.","",
+      "Source: "+SOURCE,"Selected direction: "+DIRS[cur.dir].name+" ("+cur.dir+")","","## Comments"];
+    if(!comments.length)lines.push("- (none yet)");
+    comments.forEach(function(c){
+      lines.push("- ["+c.tag+" · "+c.status+"] "+c.text+" ("+SPEC+"#"+c.node+", #node="+c.node+")");
+    });
+    return lines.join("\n");
+  }
+  function bundle(){
+    return {source_spec:SOURCE, build_preview_artifact:"preview.html", selected_direction:cur.dir,
+      comments:comments.map(function(c){return {id:c.id,node_id:c.node,ref:SPEC+"#"+c.node,link:"#node="+c.node,tag:c.tag,status:c.status,comment:c.text};})};
+  }
+  function updateJSON(){document.getElementById("jsonOut").textContent=JSON.stringify(bundle(),null,2);}
+  function sendToChat(silent){
+    var md=markdown();
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(md).catch(function(){});}
+    try{window.parent&&window.parent.postMessage({type:"foo.preview.feedback",format:"markdown",text:md},"*");}catch(e){}
+    toast(silent?"Saved · copied for chat":"All notes copied — paste into your agent chat");
+  }
+
+  /* ---- top controls ---- */
+  function setDir(d){
+    cur.dir=d; cur.step=0;
+    [].forEach.call(document.querySelectorAll(".dir"),function(b){b.setAttribute("aria-pressed",String(b.dataset.dir===d));});
+    document.getElementById("convName").textContent=DIRS[d].name;
+    renderAll();
+  }
+  document.querySelectorAll(".dir").forEach(function(b){b.addEventListener("click",function(){setDir(b.dataset.dir);});});
+  stepsEl.addEventListener("click",function(e){var b=e.target.closest(".step");if(!b)return;cur.step=+b.dataset.i;renderAll();});
+  var order=["trust","flow","hybrid"];
+  document.getElementById("altBtn").addEventListener("click",function(){setDir(order[(order.indexOf(cur.dir)+1)%3]);});
+  document.getElementById("reviseBtn").addEventListener("click",function(){openComposer(cur.dir+".direction","Revise direction: "+DIRS[cur.dir].name);});
+  document.getElementById("buildBtn").addEventListener("click",function(){
+    sendToChat(false);
+    toast("Direction “"+DIRS[cur.dir].name+"” + "+comments.length+" notes sent to build");
+  });
+
+  /* ---- toast ---- */
+  var toastEl=document.getElementById("toast"),tt;
+  function toast(msg){toastEl.innerHTML='<span class="k">✓</span>'+esc(msg);toastEl.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove("show");},2600);}
+
+  /* ---- deep link round-trip ---- */
+  function handleHash(){
+    var m=/#node=(.+)/.exec(location.hash); if(!m)return;
+    var node=decodeURIComponent(m[1]);
+    var d=node.split(".")[0]; if(STEPS[d]){var idx=STEPS[d].findIndex(function(s){return node.indexOf(d+"."+s.id)===0;}); if(idx>=0){cur.dir=d;cur.step=idx;setDir(d);cur.step=idx;renderAll();}}
+    setTimeout(function(){var el=document.querySelector('[data-node-id="'+node+'"]');if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash");setTimeout(function(){el.classList.remove("flash");},1500);}},120);
+  }
+  window.addEventListener("hashchange",handleHash);
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeComposer();});
+
+  /* ---- boot ---- */
+  setDir("hybrid");
+  if(location.hash)handleHash();
+})();
+</script>
+</body>
+</html>

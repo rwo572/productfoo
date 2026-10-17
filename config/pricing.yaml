@@ -1,0 +1,198 @@
+# foo model table — the dated, committed source for token<->dollar conversion
+# AND the model roster (identity, roles, detection) (model-roster-data-v0 R-001).
+#
+# Loop budget estimates convert tokens to dollars against this table and record
+# `priced_with: pricing.yaml@<date>`. productfoo surfaces a staleness signal when the
+# table is older than `stale_after_days` so a dollar estimate is never silently
+# priced on stale rates (loop-budget-contract-v0 R-002, R-008).
+#
+# Prices are USD per million tokens (MTok), per model, split input/output.
+# The model set here is the committed seed roster; runtime roster discovery
+# (e.g. an aggregator like OpenRouter) and task->model allocation are deferred
+# (R-009; model-roster-data-v0 D-002 keeps that deferral).
+#
+# Roster/detection fields (model-roster-data-v0 R-001) — a model rename or a new
+# provider is a data-only change here, never a src/ edit:
+#   roster.native_*        the defaults when nothing is routed (which provider,
+#                          family, and base URL foo assumes natively)
+#   providers.native_hosts a base URL on these hosts is native, not "routed"
+#   providers.multi_model_hosts
+#                          hosts serving many models: a route here names the
+#                          provider but never identifies a family by itself
+#   models.<id>.family     coarse family key (pricing-key canonicalization,
+#                          family-level signals like the GLM autonomy gate)
+#   models.<id>.roles      which default roster slots the model fills
+#                          (worker acts, verifier checks)
+#   models.<id>.detect.model_markers
+#                          substrings that identify this family in a declared or
+#                          harness-reported model id (case-insensitive)
+#   models.<id>.detect.host_markers
+#                          hosts that serve this family specifically, so a base
+#                          URL alone identifies it
+#   models.<id>.detect.provider
+#                          friendly provider label for those hosts
+schema_version: "0.1"
+date: "2026-07-06"
+currency: usd
+stale_after_days: 30
+roster:
+  # Native defaults when nothing is routed: an Anthropic-native harness running
+  # its own model family. Two-tier mix by roles below (Opus acts, Haiku
+  # verifies). Source: moved verbatim from src/activeModel.ts constants
+  # (NATIVE_PROVIDER / NATIVE_*_MODEL / ANTHROPIC_BASE_DEFAULT), 2026-07-06,
+  # model-roster-data-v0 T-001.
+  native_provider: anthropic
+  native_family: claude
+  native_base_url: https://api.anthropic.com
+providers:
+  # A base URL on these hosts is native, not "routed". Source: moved verbatim
+  # from src/activeModel.ts NATIVE_HOSTS, 2026-07-06 (model-roster-data-v0 T-001).
+  native_hosts:
+    - api.anthropic.com
+    - anthropic.com
+    - api.openai.com
+    - openai.com
+  # Hosts that serve many models: a route here gets a friendly provider name but
+  # never implies a family — only the model id can say so. Source: the Fireworks
+  # special case in src/activeModel.ts, 2026-07-06 (glm-model-awareness-v0 D-003,
+  # carried into model-roster-data-v0 T-001).
+  multi_model_hosts:
+    - marker: fireworks
+      provider: fireworks
+#   models.<id>.tokens_per_sec
+#                          ASSUMED effective end-to-end agent throughput
+#                          (tokens/sec incl. tool turns and thinking) used to
+#                          derive AGENT RUNTIME for `foo estimate`. This is a
+#                          labeled assumption, not a benchmark — the same status
+#                          as build_passes. It exists to make RELATIVE time
+#                          comparisons honest (Haiku vs Opus), not to promise a
+#                          wall-clock. spec-budget-v0 R-008.
+#   models.<id>.wire       which hand-rolled wire format reaches this model
+#                          (anthropic = messages API shape, openai = chat
+#                          completions shape; multi-model-research-panel-v0
+#                          R-005 pins exactly these two)
+#   models.<id>.roles may also include panel slots (multi-model-research-panel-v0
+#   R-005/R-008): `panelist` = eligible for the research panel fan-out,
+#   `synthesizer` = the held-out dissent judge (never a panelist in the same run).
+#   models.<id>.routing.tier
+#                          which routing tier this model serves — the tier names
+#                          are defined in routing-policy.yaml, and tier
+#                          MEMBERSHIP is this field, so moving a model between
+#                          tiers is a one-line data change (model-orchestrator-v0
+#                          R-001). A model with no marker resolves to the
+#                          conservative tier with a worded finding, never a
+#                          silent guess (R-013).
+#   models.<id>.routing.task_types
+#                          optional per-model override of the tier's task-type
+#                          set, for a model that deviates from its tier.
+#   models.<id>.routing.evidence
+#                          where the tier placement comes from. A placement with
+#                          no evidence is a guess, and productfoo does not ship guesses
+#                          as data.
+#
+# Deliberately unmarked: claude-haiku-4-5, gpt-5.2, gemini-3-pro, and glm-5.2
+# carry no `routing` block because the committed evidence does not place them.
+# The research paper's tier table names GPT-5.5 and Gemini 3.1 Pro, which are not
+# the ids in this roster, and names neither Haiku nor GLM at all. Their absence
+# is a real gap for the L-001 refresh routine (R-010) to close with evidence —
+# it is not an oversight, and it is why the cheap tier is currently empty.
+models:
+  # Anthropic Claude roster. Rates: loop-budget-contract-v0 seed table, carried
+  # forward 2026-07-06. Roles/detection: moved from src/activeModel.ts constants
+  # (native worker/verifier mix), 2026-07-06, model-roster-data-v0 T-001.
+  claude-opus-4-8:
+    input_per_mtok: 5.00
+    output_per_mtok: 25.00
+    tokens_per_sec: 45
+    family: claude
+    roles: [worker, panelist]
+    wire: anthropic
+    routing:
+      tier: frontier
+      evidence: "research/2026-07-12-model-routing-orchestration.md §6 (frontier reasoning tier, named model)"
+    detect:
+      model_markers: [claude]
+      provider: anthropic
+  # Rates: loop-budget-contract-v0 seed table, carried forward 2026-07-06. No
+  # default roster role — Sonnet is priced when declared, not assumed.
+  # Synthesizer role (multi-model-research-panel-v0 R-008): the held-out judge
+  # that adjudicates panel dissent — deliberately NOT a panelist. Family overlap
+  # with claude-opus-4-8 is a recorded caveat (same family, different model);
+  # the run record always logs the synthesizer identity.
+  claude-sonnet-4-6:
+    input_per_mtok: 3.00
+    output_per_mtok: 15.00
+    tokens_per_sec: 75
+    family: claude
+    roles: [synthesizer]
+    wire: anthropic
+    routing:
+      tier: generalist
+      evidence: "research/2026-07-12-model-routing-orchestration.md §6 (strong generalist tier, named model)"
+    detect:
+      model_markers: [claude]
+      provider: anthropic
+  # Rates: loop-budget-contract-v0 seed table, carried forward 2026-07-06.
+  # Verifier role: the native two-tier mix (Opus acts, Haiku verifies), moved
+  # from src/activeModel.ts, 2026-07-06.
+  claude-haiku-4-5:
+    input_per_mtok: 1.00
+    output_per_mtok: 5.00
+    tokens_per_sec: 140
+    family: claude
+    roles: [verifier]
+    detect:
+      model_markers: [claude]
+  # GLM 5.2 (Zhipu, open-weights) served via a compatible endpoint — z.ai
+  # (Anthropic-shaped) or Fireworks (OpenAI-shaped). Both publish the same rate.
+  # Source: Fireworks model page + z.ai pricing, both verified 2026-06-28.
+  # glm-model-awareness-v0 R-002 / C-004 / D-004; detection hints moved from
+  # src/activeModel.ts GLM_HOST_MARKERS, 2026-07-06 (model-roster-data-v0 T-001,
+  # superseding glm-model-awareness-v0's hardcoded detection).
+  # OpenAI GPT roster seed (multi-model-research-panel-v0 T-003, D-004: majors-
+  # only v0 panel). Rates are SEED values carried from OpenAI's published GPT-5
+  # API pricing (2026-07-11) — verify against the provider pricing page before
+  # any billed run (V-003 invoice reconciliation is the packet's check).
+  gpt-5.2:
+    input_per_mtok: 1.25
+    output_per_mtok: 10.00
+    tokens_per_sec: 70
+    family: gpt
+    roles: [panelist]
+    wire: openai
+    detect:
+      model_markers: [gpt]
+      host_markers: [openai.com]
+      provider: openai
+  # Google Gemini roster seed (multi-model-research-panel-v0 T-003, D-004).
+  # Reached via Google's OpenAI-compatible chat completions endpoint, so the
+  # panel needs exactly two wire formats (R-005). Rates are SEED values from
+  # Google's published Gemini API pricing (2026-07-11) — verify before billing.
+  gemini-3-pro:
+    input_per_mtok: 2.00
+    output_per_mtok: 12.00
+    tokens_per_sec: 85
+    family: gemini
+    roles: [panelist]
+    wire: openai
+    detect:
+      model_markers: [gemini]
+      host_markers: [googleapis.com, gemini.google]
+      provider: google
+  glm-5.2:
+    input_per_mtok: 1.40
+    output_per_mtok: 4.40
+    tokens_per_sec: 55
+    cached_input_per_mtok: 0.26
+    family: glm
+    # No cheaper sibling tier to split roles across, so the one model fills both
+    # (was the GLM_MODEL canonical key in src/activeModel.ts).
+    roles: [worker, verifier]
+    detect:
+      model_markers: [glm]
+      # z.ai / zhipu / bigmodel serve GLM specifically — a base URL alone
+      # identifies the family. Fireworks is deliberately NOT here (multi-model
+      # host, see providers.multi_model_hosts). Source: glm-model-awareness-v0
+      # detection, verified 2026-06-28.
+      host_markers: [z.ai, zhipu, bigmodel]
+      provider: z.ai

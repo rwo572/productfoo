@@ -1,0 +1,36 @@
+# Local settings and credentials
+.DS_Store
+.env
+.env.*
+
+# Dependencies and generated builds
+node_modules/
+dist/
+dist-public/
+dist-src-maps/
+tsconfig.public.generated.json
+__pycache__/
+*.pyc
+*.tgz
+
+# Local agent state, worktrees, and unreviewed artifacts
+.foo/
+.firecrawl/
+.tmp*/
+.tmp-*
+/outputs/
+integration-events.jsonl
+.worktrees/
+worktrees/
+.claude/worktrees/
+docs/pitch/
+docs/playbooks/
+docs/research/
+
+# Local media and preview build outputs
+studio/**/*.mp4
+studio/**/*.gif
+studio/**/*.mp3
+studio/**/node_modules/
+studio/**/out/
+web/foo-site/demo/

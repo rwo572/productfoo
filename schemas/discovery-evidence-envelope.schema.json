@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foo://specs/nango-discovery-connector-v0/discovery-evidence-envelope.schema.json",
+  "title": "productfoo discovery evidence envelope (closed)",
+  "description": "The sanitized evidence envelope produced by hosted processing. Mirrors src/discoveryEvidence.ts: closed key sets, no raw content, no PII, no injection patterns (nango-discovery-connector-v0 V-015). The source_fingerprint grammar is validated by the receiving apply path (T-005's versioned grammar) and is only required non-empty here.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "kind": { "const": "discovery_evidence" },
+    "study_id": { "type": "string", "minLength": 1 },
+    "lane": { "enum": ["study_linked", "unassigned_call_evidence"] },
+    "source": {
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "stable_url": { "type": "string", "minLength": 1 },
+        "source_fingerprint": { "type": "string", "minLength": 1 },
+        "completed_at": { "type": "string", "minLength": 1 },
+        "locator_capability": { "enum": ["timestamp", "section", "none"] }
+      },
+      "required": ["provider", "source_fingerprint", "completed_at", "locator_capability"],
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "finding_id": { "type": "string", "minLength": 1 },
+          "headline": { "type": "string", "minLength": 1 },
+          "paraphrase": { "type": "string", "minLength": 1 },
+          "evidence_type": { "enum": ["stated", "observed", "inferred"] },
+          "locator": { "type": "string", "minLength": 1 },
+          "confidence": { "enum": ["low", "medium", "high"] },
+          "dissent": { "type": "string" },
+          "hypothesis_id": { "type": "string", "minLength": 1 },
+          "explicit_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "relationship_hint": { "enum": ["supports", "contradicts", "new"] }
+        },
+        "required": ["finding_id", "headline", "paraphrase", "evidence_type", "confidence", "dissent"],
+        "additionalProperties": false
+      }
+    },
+    "contact_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "company": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "transcript_complete": { "type": "boolean" },
+        "caveats": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["transcript_complete", "caveats"],
+      "additionalProperties": false
+    },
+    "privacy_attestation": {
+      "type": "object",
+      "properties": {
+        "pii_redacted": { "const": true },
+        "direct_quotes": { "const": false }
+      },
+      "required": ["pii_redacted", "direct_quotes"],
+      "additionalProperties": false
+    },
+    "raw_content_present": { "const": false }
+  },
+  "required": ["schema_version", "kind", "study_id", "lane", "source", "findings", "coverage", "privacy_attestation", "raw_content_present"],
+  "additionalProperties": false
+}

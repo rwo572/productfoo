@@ -1,0 +1,7 @@
+# pasted .env from a debugging session — all values synthetic
+STRIPE=sk_live_%%0123456789abcdefghijkl
+STRIPE_TEST=sk_test_%%0123456789abcdefghijkl
+GCP=AIza%%BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+OPENAI=sk-%%T3BlbkFJT3BlbkFJT3BlbkFJ
+ANTHROPIC=sk-ant-%%api03-Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9Zx9AA
+SLACK=xoxb-%%123456789012-ABCDEFGHIJ

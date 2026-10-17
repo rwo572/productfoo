@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Analytics Eng"
+  short_description: "Ask instrumentation and semantic-layer questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-analytics-engineering to ask the 2-3 analytics engineering questions this spec needs."

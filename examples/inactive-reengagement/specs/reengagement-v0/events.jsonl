@@ -1,0 +1,1 @@
+{"specversion":"1.0","id":"01KXGHXNT41HANPW6QKSGAZBBB","source":"foo-cli","type":"com.adaptivespec.packet.created","subject":"packet:reengagement_v0","time":"2026-07-14T14:53:58.980Z","actor":{"type":"human","id":"human"},"data":{"summary":"Packet scaffolded by foo asp init.","spec_ref":"specs/reengagement-v0/spec.md"}}

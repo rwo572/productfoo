@@ -1,0 +1,4 @@
+interface:
+  display_name: "Positioning Messaging"
+  short_description: "Use when someone is launching a product, differentiating from competitors, writing marketing copy, struggling to explain"
+  default_prompt: "Use $positioning-messaging for the relevant workflow."

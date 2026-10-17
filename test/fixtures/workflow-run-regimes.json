@@ -1,0 +1,20 @@
+[
+  {
+    "name": "multiplicity-and-assignment",
+    "phases": [
+      { "phase": "review", "model": "model-a", "call_count": 2 },
+      { "phase": "build", "model": "model-b", "call_count": 1 },
+      { "phase": "build", "model": "model-a", "call_count": 1 }
+    ],
+    "expected": "[[\"build\",\"model-a\",1],[\"build\",\"model-b\",1],[\"review\",\"model-a\",2]]"
+  },
+  {
+    "name": "same-models-different-phase-assignment",
+    "phases": [
+      { "phase": "review", "model": "model-b", "call_count": 2 },
+      { "phase": "build", "model": "model-a", "call_count": 1 },
+      { "phase": "build", "model": "model-a", "call_count": 1 }
+    ],
+    "expected": "[[\"build\",\"model-a\",1],[\"build\",\"model-a\",1],[\"review\",\"model-b\",2]]"
+  }
+]

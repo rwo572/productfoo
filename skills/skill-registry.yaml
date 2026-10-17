@@ -1,0 +1,810 @@
+version: 1
+updated: "2026-07-20"
+canonical_skill_root: "skills"
+schema:
+  id: "Skill folder name and frontmatter name"
+  surface: "primitive_tool | domain_tool | workflow_agent | scheduled_agent | advisor_agent | router_agent | output_transformer"
+  domain: "Capability family used for routing and UI grouping"
+  callers: "Which caller types may invoke the capability"
+  connectors: "External systems the capability may read or write"
+  side_effects: "Operational effects callers should consider before invocation"
+skills:
+  - id: "interview-me"
+    path: "skills/interview-me/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use before writing or modifying an Adaptive Spec Packet, PRD-like spec, RFC-derived spec, implementation plan, or prototype spec when product intent needs a one-question-at-a-time interview, especially for rewrites, pivots, agentic reframes, delegation, identity, approval, or outbound communication boundaries."
+  - id: "spec-swarm"
+    path: "skills/spec-swarm/SKILL.md"
+    domain: "product-planning"
+    surface: "router_agent"
+    status: "active"
+    aliases:
+      - "cross-functional spec swarm"
+      - "spec swarm"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when the user wants cross-functional expert lenses to sharpen an approved intake summary or reviewable spec and make agent judgment legible before implementation; route product-shape rewrites without approved intake back to interview-me."
+  - id: "spec-cleanup"
+    path: "skills/spec-cleanup/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "packet finalizer"
+      - "spec finalizer"
+      - "packet cleanup"
+      - "finalization gate"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when a draft Adaptive Spec Packet, PRD-like spec, or spec-swarm output needs cleanup before implementation, commit, validation, or handoff; especially when requirement order, release tiers, JSON contracts, task mapping, reconciliation, privacy boundaries, or implementation readiness may drift."
+  - id: "preview-swarm"
+    path: "skills/preview-swarm/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "Build Preview swarm"
+      - "divergent Build Previews"
+      - "HTML Build Preview mini app"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when a spec should produce a primitive-HTML build preview before implementation, especially when selectable/commentable preview elements, unresolved product-shape alternatives, convergence controls, Impeccable review, or exportable feedback are needed."
+  - id: "build-preview-spec"
+    path: "skills/build-preview-spec/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "control preview"
+      - "build preview"
+      - "Build Preview spec"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+    description: "Use when an app-building agent needs a fast visual checkpoint before implementation because product shape, workflow, states, assumptions, or human approval boundaries are not yet obvious."
+  - id: "product-shape-interview"
+    path: "skills/product-shape-interview/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "shape artifact"
+      - "shape brief"
+      - "scenario shaping"
+      - "pre-generation shaping"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use before generating an HTML artifact, scenario prototype, workbench, Build Preview, or visual app exploration when a spec needs one packet-local Shape Brief and exact generator prompt instead of multiple divergent directions."
+  - id: "ideate"
+    path: "skills/ideate/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "brainstorm"
+      - "storm"
+      - "storming mode"
+      - "idea storm"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+  - id: "pitch"
+    path: "skills/pitch/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "pr-faq"
+      - "prfaq"
+      - "opportunity assessment"
+      - "make the case"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when a human or agent needs an early executive read on WHY to pursue an opportunity before building — a ~2-page Working Backwards PR/FAQ fused with a staged (0→1 / 1→n / n^x) opportunity assessment, pulling from research and RFCs, with typed evidence and a truth-seeking GO / NOT-NOW / NO-GO verdict; precedes shape and the deeper OK2Build doc."
+  - id: "foo-roast"
+    path: "skills/foo-roast/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    aliases:
+      - "roast"
+      - "spec roast"
+      - "prototype roast"
+      - "vibe-code roast"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+    description: "Use to quickly roast a vibe-coded spec, prototype, feature idea, or generated artifact through a compact expert panel that identifies what to remove, what to preserve, likely next-generation drift, candidate evals, dissent, and the next coding-agent prompt."
+  - id: "spec-swarm-cpo"
+    path: "skills/spec-swarm-cpo/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when CPO-style executive product judgment should sharpen outcomes, strategy, scope, lifecycle, trust, revenue, and readiness."
+  - id: "spec-swarm-principal-product-designer"
+    path: "skills/spec-swarm-principal-product-designer/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when principal product design judgment should sharpen workflow, hierarchy, trust, states, and design-system fit."
+  - id: "spec-swarm-technical-architect"
+    path: "skills/spec-swarm-technical-architect/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when technical architect judgment should sharpen system boundaries, data contracts, source authority, integrations, and failure modes."
+  - id: "spec-swarm-technical-lead"
+    path: "skills/spec-swarm-technical-lead/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when technical lead judgment should sharpen buildability, sequencing, tests, operational risk, and implementation slices."
+  - id: "spec-swarm-pmm"
+    path: "skills/spec-swarm-pmm/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when PMM/GTM judgment should sharpen audience, positioning, adoption, enablement, launch claims, and market readiness."
+  - id: "spec-swarm-data-science"
+    path: "skills/spec-swarm-data-science/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when data science judgment should sharpen measurement, source quality, decision metrics, segmentation, causality, confidence, and fake precision."
+  - id: "spec-swarm-user-research"
+    path: "skills/spec-swarm-user-research/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when user research judgment should sharpen customer evidence, missing interviews, evidence quality, user segments, and research risk."
+  - id: "spec-swarm-security-privacy-legal"
+    path: "skills/spec-swarm-security-privacy-legal/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when security, privacy, and legal judgment should sharpen data handling, AI/legal review triggers, source boundaries, consent, and risk controls."
+  - id: "spec-swarm-analytics-engineering"
+    path: "skills/spec-swarm-analytics-engineering/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when analytics engineering judgment should sharpen event names, source ownership, semantic layers, freshness, and instrumentation feasibility."
+  - id: "spec-swarm-field"
+    path: "skills/spec-swarm-field/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when field, sales, customer success, and support judgment should sharpen objections, proof, support load, enablement, and customer risk."
+  - id: "spec-swarm-qa-release"
+    path: "skills/spec-swarm-qa-release/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when QA and release judgment should sharpen acceptance coverage, rollout, rollback, beta/GA blockers, regression risk, and release readiness."
+  - id: "spec-swarm-content-design"
+    path: "skills/spec-swarm-content-design/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when content design judgment should sharpen labels, product language, trust copy, states, AI explanations, and fake certainty."
+  - id: "spec-swarm-strategy-competitive"
+    path: "skills/spec-swarm-strategy-competitive/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when strategy and competitive judgment should sharpen why now, why us, alternatives, differentiation, alignment, and strategic drift."
+  - id: "spec-swarm-product-ops-program"
+    path: "skills/spec-swarm-product-ops-program/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when product operations and program judgment should sharpen dependencies, ownership, cadence, signoffs, stale decisions, and coordination."
+  - id: "spec-swarm-finance-cfo"
+    path: "skills/spec-swarm-finance-cfo/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when finance and CFO judgment should sharpen cost model, budget owner, ROI quality, capital allocation, spend limits, and what not to fund."
+  - id: "spec-swarm-accessibility-inclusion"
+    path: "skills/spec-swarm-accessibility-inclusion/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when accessibility and inclusion judgment should sharpen keyboard access, assistive technology, readability, inclusive states, and enterprise risk."
+  - id: "spec-swarm-dx-product"
+    path: "skills/spec-swarm-dx-product/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when developer-experience product-management judgment should sharpen the builder's journey, activation and time-to-first-value, onboarding as a funnel, education-as-product, brand presence as a DX signal, the north-star developer metric, and adoption, retention, and expansion."
+  - id: "spec-swarm-applied-ai-eval"
+    path: "skills/spec-swarm-applied-ai-eval/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when applied-AI eval and agent-reliability judgment should sharpen eval design for non-deterministic output, LLM-as-judge calibration, error analysis, golden sets, regression harnesses, and loop reliability."
+  - id: "spec-swarm-responsible-ai-safety"
+    path: "skills/spec-swarm-responsible-ai-safety/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when responsible-AI and agent trust & safety judgment should sharpen prompt injection, the lethal trifecta, excessive agency, irreversible or outbound actions, exfiltration channels, and goal-hijack of a delegated agent."
+  - id: "spec-swarm-developer-experience"
+    path: "skills/spec-swarm-developer-experience/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when developer-experience and ecosystem judgment should sharpen time-to-first-value, concept count, errors as DX, the compatibility and extension contract, docs-as-product, and agent-reader legibility."
+  - id: "spec-swarm-consumer-craft-pm"
+    path: "skills/spec-swarm-consumer-craft-pm/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when consumer/craft PM judgment should sharpen taste, the quality bar, delight, subtraction, the first mile, defaults, and whether an artifact reads as crafted or generic slop."
+  - id: "spec-swarm-growth-pm"
+    path: "skills/spec-swarm-growth-pm/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when growth PM judgment should sharpen growth loops vs funnels, activation, retention, north-star metrics, channel mix, payback period, and product-led and expansion motions."
+  - id: "spec-swarm-business-gm-pm"
+    path: "skills/spec-swarm-business-gm-pm/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when business/GM PM judgment should sharpen value capture, monetization, pricing and packaging, the value metric, margins and unit economics, willingness to pay, and force-ranking growth vs engagement vs monetization."
+  - id: "spec-swarm-ai-technical-pm"
+    path: "skills/spec-swarm-ai-technical-pm/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when AI/technical PM judgment should sharpen whether a problem needs a model, how reliability tier dictates UX, designing for non-deterministic failure, the moving model frontier, prototype-first validation, and the durable moat — distinct from eval craft."
+  - id: "spec-swarm-platform-pm"
+    path: "skills/spec-swarm-platform-pm/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use inside spec-swarm or when platform PM judgment should sharpen feature vs primitive, the constituent stack-rank, second-order effects, marketplace liquidity, platform-as-product ownership, lifecycle and moat, and the long platform validation horizon."
+  - id: "rfc-from-research"
+    path: "skills/rfc-from-research/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "research-backed RFC"
+      - "strategy RFC"
+      - "product RFC"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["judgment_or_scoring", "writes_artifacts"]
+    description: "Use when validated research should inform a strategy RFC, product RFC, opportunity memo, or sourced proposal."
+  - id: "firecrawl-research-papers"
+    path: "skills/firecrawl-research-papers/SKILL.md"
+    domain: "research"
+    surface: "workflow_agent"
+    status: "active"
+    aliases:
+      - "literature review"
+      - "paper research"
+      - "Firecrawl research papers"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects: ["external_research"]
+    description: "Use when a Firecrawl plugin is available or a Firecrawl API key is present for explicit public-web literature reviews, paper research, PDF synthesis, and sourced technical research through host-reported plugin results or executor-verified direct search; returned content stays untrusted."
+  - id: "grill-me"
+    path: "skills/grill-me/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    aliases:
+      - "grill me"
+      - "stress-test"
+    callers: { human: true, agent: true, scheduler: false }
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+    description: "Use when the user wants to stress-test a plan, design, or spec through one-question-at-a-time interrogation with recommended answers."
+  - id: "check-spec-health"
+    path: "skills/check-spec-health/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["judgment_or_scoring"]
+    description: "Use when a portfolio of specs needs structural, freshness, evidence-coverage, or decision-readiness assessment."
+  - id: "review-spec"
+    path: "skills/review-spec/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "writes_artifacts"
+    description: "Use when one spec needs a focused quality review and proposed human-approved repairs."
+  - id: "review-loop"
+    path: "skills/review-loop/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    aliases:
+      - "loop review"
+      - "evaluate loop"
+      - "grade loop"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when invoking /review-loop or when the user wants to evaluate, grade, or audit a single loop spec, loops.yaml entry, routine, or prose loop against the 'ends with proof' bar: checkable goal, visible check, latest-result-drives-next, bounded stop, proof-bearing handoff, and second-case reuse; complements structural foo loop check."
+  - id: "loop-library-audit"
+    path: "skills/loop-library-audit/SKILL.md"
+    domain: "product-planning"
+    surface: "advisor_agent"
+    status: "active"
+    aliases:
+      - "loop library review"
+      - "loop registry audit"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+    description: "Use when invoking /loop-library-audit or when the user wants to evaluate a whole loop library, registry, or every loop in a packet against the loop-library trust standard: proof coverage, second-case evidence, visible checks, bounded stops, and template completeness across many loops."
+  - id: "cpo-lens"
+    path: "skills/cpo-lens/SKILL.md"
+    domain: "executive-work-os"
+    surface: "advisor_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when invoking /cpo-lens or when the user wants to review readiness before executive review. Surfaces gaps in reasoning, missing connections, and unstated assumptions."
+  - id: "design-system"
+    path: "skills/design-system/SKILL.md"
+    domain: "design-system"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "writes_artifacts"
+    description: "Use when designing or generating ThisProduct-branded interfaces, visual assets, prototypes, mocks, UI kits, or production UI with the ThisProduct design system."
+  - id: "product-copywriting"
+    path: "skills/product-copywriting/SKILL.md"
+    domain: "comms-positioning"
+    surface: "output_transformer"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "writes_artifacts"
+    description: "Use when working on ThisProduct copy, reducing jargon, explaining the product, editing the static prototype under design system/thisproduct, or deciding whether terms like Spec, Cross-functional Spec, drift, evidence, provenance, source packets, tokens, routing, or agents should appear in user-facing language."
+  - id: "strategy-check"
+    path: "skills/strategy-check/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: 
+      - "writes_artifacts"
+    description: "Use when the the user says \"check strategy alignment\", \"strategy drift\", \"coverage map\", or invokes /strategy-check."
+  - id: "competitive-positioning"
+    path: "skills/competitive-positioning/SKILL.md"
+    domain: "comms-positioning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["judgment_or_scoring", "writes_artifacts"]
+    description: "Use when alternatives need evidence-backed positioning, strategic win/loss analysis, a battlecard, or decision-relevant battlecard upkeep."
+  - id: "ready-for-release"
+    path: "skills/ready-for-release/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["judgment_or_scoring", "writes_artifacts"]
+    description: "Use when a product change needs an evidence-backed Build, Beta, GA, or release-note readiness decision."
+  - id: "generate-gtm-brief"
+    path: "skills/generate-gtm-brief/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["writes_artifacts"]
+    description: "Use when an approved product change needs a launch brief, audience and messaging plan, rollout assumptions, or go-to-market decision record."
+  - id: "pmm-release-briefing"
+    path: "skills/pmm-release-briefing/SKILL.md"
+    domain: "comms-positioning"
+    surface: "workflow_agent"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when a release needs a PMM briefing outline but external delivery, scheduling, or publishing would be required."
+  - id: "bug"
+    path: "skills/bug/SKILL.md"
+    domain: "product-intelligence"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "writes_artifacts"
+    description: "Use when a user wants to report something in foo that broke, failed, or behaved differently from what they expected."
+  - id: "voc-researcher"
+    path: "skills/voc-researcher/SKILL.md"
+    domain: "product-intelligence"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["judgment_or_scoring", "writes_artifacts"]
+    description: "Use when approved customer evidence needs voice-of-customer synthesis, pain analysis, workaround mapping, or evidence-backed product triage."
+  - id: "gong-quotes"
+    path: "skills/gong-quotes/SKILL.md"
+    domain: "product-intelligence"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["writes_artifacts"]
+    description: "Use when approved customer-call evidence needs traceable quotations, paraphrases, themes, or quote-gap analysis."
+  - id: "discussion-guide"
+    path: "skills/discussion-guide/SKILL.md"
+    domain: "research-ops"
+    surface: "workflow_agent"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when a research conversation needs a neutral, live-usable question guide from explicit study intent and approved sanitized context."
+  - id: "research-brief"
+    path: "skills/research-brief/SKILL.md"
+    domain: "research-ops"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["writes_artifacts"]
+    description: "Use when a product question needs a scoped research plan, study brief, hypotheses, participant criteria, or evidence plan before research begins."
+  - id: "research-refresh"
+    path: "skills/research-refresh/SKILL.md"
+    domain: "research-ops"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["judgment_or_scoring", "writes_artifacts"]
+    description: "Use when new approved evidence should refresh an existing research brief, digest, or strategic analysis through decision-relevant amendments or an explicit no-change result."
+  - id: "study-digest"
+    path: "skills/study-digest/SKILL.md"
+    domain: "research-ops"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: ["judgment_or_scoring", "writes_artifacts"]
+    description: "Use when approved sanitized study evidence needs a traceable synthesis, theme map, hypothesis update, or decision handoff."
+  - id: "synthetic-customer"
+    path: "skills/synthetic-customer/SKILL.md"
+    domain: "research-ops"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "judgment_or_scoring"
+    description: "Use to draft a synthetic customer persona, generate testable hypotheses, or rehearse/lint an interview guide before talking to real people. A rehearsal and hypothesis layer only: all output is agent-inference and must be validated with real customers before it informs a decision. Composed by customer-discovery as the human-gated draft step; never an evidence source."
+  - id: "customer-discovery"
+    path: "skills/customer-discovery/SKILL.md"
+    domain: "research-ops"
+    surface: "workflow_agent"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: true
+    connectors:
+      # Discovery providers across the evidence classes (calls, support, email,
+      # chat, docs). Work-system sources (jira, linear) are substrate sources
+      # read through the source ledger, never discovery connectors — issue
+      # state is not customer voice (jira-source-connector-v0 D-001).
+      - "granola"
+      - "gong"
+      - "zendesk"
+      - "zoom"
+      - "microsoft-teams"
+      - "fireflies"
+      - "gmail"
+      - "outlook"
+      - "slack"
+      - "notion"
+    side_effects:
+      - "judgment_or_scoring"
+      - "writes_artifacts"
+    description: "Use when a customer interview, completed call, transcript link, discovery study, or unassigned customer-call insight should inform product work."
+  - id: "interop-review"
+    path: "skills/interop-review/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when an interoperability decision needs a local review outline but copying results to an external system would be required."
+  - id: "redact-transcripts"
+    path: "skills/redact-transcripts/SKILL.md"
+    domain: "data-safety"
+    surface: "domain_tool"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when transcript redaction would read or rewrite an untrusted file; this capability is unavailable while its file-ingress trust boundary is rebuilt."
+  - id: "initiative-tracker"
+    path: "skills/initiative-tracker/SKILL.md"
+    domain: "product-intelligence"
+    surface: "workflow_agent"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when product initiatives need a status-digest outline but recurring collection or delivery would be required."
+  - id: "positioning-messaging"
+    path: "skills/positioning-messaging/SKILL.md"
+    domain: "comms-positioning"
+    surface: "output_transformer"
+    status: "active"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "writes_artifacts"
+    description: "Use when someone is launching a product, differentiating from competitors, writing marketing copy, struggling to explain what their product does, or working on value propositions and taglines."
+  - id: "capture-external-artifact"
+    path: "skills/capture-external-artifact/SKILL.md"
+    domain: "product-intelligence"
+    surface: "domain_tool"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when an external artifact needs a local capture outline but fetching or publishing it would require external transfer."
+  - id: "create-prd"
+    path: "skills/create-prd/SKILL.md"
+    domain: "product-planning"
+    surface: "workflow_agent"
+    status: "draft"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects: []
+    description: "Use when a product idea needs a PRD outline but reading private files or publishing to an external document system would be required."
+  - id: "update-cli-spec"
+    path: "skills/update-cli-spec/SKILL.md"
+    domain: "product-planning"
+    surface: "domain_tool"
+    status: "active"
+    aliases:
+      - "sync CLI docs"
+      - "update CLI contract"
+      - "record CLI change"
+    callers:
+      human: true
+      agent: true
+      scheduler: false
+    connectors: []
+    side_effects:
+      - "writes_artifacts"
+    description: "Use after changing foo CLI commands, flags, runtime skill installation behavior, packet validation behavior, or command output so tracked docs and Adaptive Spec Packet artifacts stay aligned."

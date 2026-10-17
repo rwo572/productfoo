@@ -1,0 +1,26 @@
+{
+  "schema_version": "bug-capsule-fault-corpus/0.1",
+  "scenario_id": "seeded-private-values",
+  "cases": [
+    {
+      "case_id": "private-values-001",
+      "input": {
+        "message": "request failed with Bearer fake_capsule_secret_1111111111111111 while opening /Users/example/private/foo/spec.md; retry log /tmp/foo-private/run.log",
+        "stack": "Error: request failed\n    at upload (/root/foo-private/relay.js:9:3)",
+        "private_repository_url": "https://private.example.test/acme/foo-private"
+      },
+      "expected_detector_count": 1,
+      "expected_prompt_count": 1,
+      "expected_candidate_ids": [],
+      "expected_diagnostic_substrings": ["request failed", "spec.md", "relay.js"],
+      "forbidden_outbound_substrings": [
+        "fake_capsule_secret_1111111111111111",
+        "/Users/example/private",
+        "/tmp/foo-private",
+        "/root/foo-private",
+        "private.example.test"
+      ],
+      "validation_ids": ["V-004", "V-008", "V-013"]
+    }
+  ]
+}

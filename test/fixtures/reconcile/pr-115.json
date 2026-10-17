@@ -1,0 +1,93 @@
+{
+  "_note": "Synthetic reconciliation fixture. The numeric ID and packet-shaped paths are parser inputs, not a record of a real pull request.",
+  "number": 115,
+  "external_id": "pr/115",
+  "title": "Example verdict gate: policy checks and signed attestations",
+  "body": "Synthetic implementation summary: add policy checks, attestations and an append-only verification ledger. Tasks T-001 through T-009 are complete; T-010 is deferred.\n\nValidation: illustrative fixture checks passed.\n\nFoo-Spec: specs/garden-method-verdict-gate-v0 (gvg_v0)\n",
+  "state": "merged",
+  "merged": true,
+  "branch": "example/verdict-gate",
+  "files": [
+    {
+      "path": "dist/src/cli.js",
+      "additions": 105,
+      "deletions": 0
+    },
+    {
+      "path": "dist/src/verdictGate.js",
+      "additions": 288,
+      "deletions": 0
+    },
+    {
+      "path": "examples/verdict-gate/README.md",
+      "additions": 20,
+      "deletions": 0
+    },
+    {
+      "path": "examples/verdict-gate/policy.yaml",
+      "additions": 18,
+      "deletions": 0
+    },
+    {
+      "path": "examples/verdict-gate/verdict-gate.yml",
+      "additions": 20,
+      "deletions": 0
+    },
+    {
+      "path": "specs/garden-method-verdict-gate-v0/artifacts/eval-report.md",
+      "additions": 19,
+      "deletions": 0
+    },
+    {
+      "path": "specs/garden-method-verdict-gate-v0/events.jsonl",
+      "additions": 9,
+      "deletions": 0
+    },
+    {
+      "path": "specs/garden-method-verdict-gate-v0/tasks.yaml",
+      "additions": 76,
+      "deletions": 49
+    },
+    {
+      "path": "src/cli.ts",
+      "additions": 113,
+      "deletions": 0
+    },
+    {
+      "path": "src/verdictGate.ts",
+      "additions": 385,
+      "deletions": 0
+    },
+    {
+      "path": "test/verdictGate.test.ts",
+      "additions": 214,
+      "deletions": 0
+    }
+  ],
+  "checks": [
+    {
+      "name": "test",
+      "conclusion": "failure"
+    },
+    {
+      "name": "test",
+      "conclusion": "failure"
+    },
+    {
+      "name": "gitleaks (git history) \u2014 blocking",
+      "conclusion": "success"
+    },
+    {
+      "name": "gitleaks (git history) \u2014 blocking",
+      "conclusion": "success"
+    },
+    {
+      "name": "foo scan (working tree) \u2014 advisory",
+      "conclusion": "success"
+    },
+    {
+      "name": "foo scan (working tree) \u2014 advisory",
+      "conclusion": "success"
+    }
+  ]
+}

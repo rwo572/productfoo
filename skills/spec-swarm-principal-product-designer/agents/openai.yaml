@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Designer"
+  short_description: "Ask principal product design questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-principal-product-designer to ask the 2-3 design questions this spec needs."

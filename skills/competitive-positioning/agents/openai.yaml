@@ -1,0 +1,4 @@
+interface:
+  display_name: "Competitive Positioning"
+  short_description: "Build evidence-backed competitive positioning without invented claims."
+  default_prompt: "Use $competitive-positioning for the relevant workflow."

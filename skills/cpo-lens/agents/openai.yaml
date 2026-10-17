@@ -1,0 +1,4 @@
+interface:
+  display_name: "CPO Lens"
+  short_description: "Use when invoking /cpo-lens or when the user wants to review readiness before executive review. Surfaces gaps in reasoni"
+  default_prompt: "Use $cpo-lens for the relevant workflow."

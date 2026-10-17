@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Strategy"
+  short_description: "Ask strategy and competitive questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-strategy-competitive to ask the 2-3 strategy/competitive questions this spec needs."

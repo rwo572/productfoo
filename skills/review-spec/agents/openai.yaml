@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Spec"
+  short_description: "Use when one spec needs a focused quality review and proposed human-approved repairs."
+  default_prompt: "Use $review-spec for the relevant workflow."

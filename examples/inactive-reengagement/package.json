@@ -1,0 +1,2 @@
+{ "name": "acme-saas", "version": "1.0.0", "type": "module",
+  "dependencies": { "express": "^4.19.0", "pg": "^8.11.0", "resend": "^3.2.0" } }

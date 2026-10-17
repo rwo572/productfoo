@@ -1,0 +1,166 @@
+schema_version: "0.1"
+spec_id: reengagement_v0
+spec_ref: specs/reengagement-v0/spec.md
+updated: "2026-07-14T14:53:58.980Z"
+
+defaults:
+  autonomy: human-in-loop
+  stale_after_days:
+    suggested: 7
+    discovered: 7
+
+ledger:
+  segment_order:
+    - events.jsonl
+
+tasks:
+  - id: T-001
+    title: Give the database a per-user signal of real activity
+    status: todo
+    agreement: agreed
+    stage: building
+    refs:
+      - R-001
+      - schema.sql
+    depends_on: []
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: founder
+    touches:
+      - schema.sql
+      - src/activity.js
+    do:
+      - Add created_at to documents and comments so authorship can be dated per user.
+      - Derive an activity view that unions API traffic on the user's team with anything they authored.
+      - Leave last_login_at in place; it stays a signal, it stops being the definition.
+    done_when:
+      - id: C-001
+        text: An account with API traffic and a null last_login_at reads as active.
+        done: false
+        proof: null
+      - id: C-002
+        text: An account with no signal at all reads as unknown, never as inactive.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: founder
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-002
+    title: Select recipients from activity, and carry the reason
+    status: todo
+    agreement: agreed
+    stage: building
+    refs:
+      - R-001
+      - R-005
+    depends_on:
+      - T-001
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: founder
+    touches:
+      - src/selectInactive.js
+      - test/inactive.test.ts
+    do:
+      - Select accounts with no activity in the window, per R-001.
+      - Attach to every selected row the signals checked and when each last fired.
+      - Exclude on unknown, per D-004 — absence of evidence is not evidence of inactivity.
+    done_when:
+      - id: C-003
+        text: Every selected recipient carries a non-empty reason naming the signals checked.
+        done: false
+        proof: null
+      - id: C-004
+        text: An account with unknown activity is excluded, and the exclusion is counted and reported.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: founder
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-003
+    title: Prove the heaviest accounts can never be on the list
+    status: todo
+    agreement: agreed
+    stage: building
+    refs:
+      - R-004
+      - D-003
+    depends_on:
+      - T-002
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: founder
+    touches:
+      - test/inactive.test.ts
+    do:
+      - Seed the ten accounts with the most API traffic in the window.
+      - Run the selector and assert none of them appear in the batch.
+      - Make this assertion fail the build, not print a warning — per D-003, a habit is not a mitigation.
+    done_when:
+      - id: C-005
+        text: The top ten accounts by API volume appear in zero recipient lists, asserted mechanically.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: founder
+      due: null
+      stale_after_days: null
+    extensions: {}
+
+  - id: T-004
+    title: Draft the batch; make sending require a human
+    status: todo
+    agreement: agreed
+    stage: building
+    refs:
+      - R-002
+      - R-003
+      - D-002
+    depends_on:
+      - T-002
+    owner: agent:any
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: founder
+    touches:
+      - src/jobs/emailInactive.js
+      - test/release.test.ts
+    do:
+      - Emit a dry run listing every recipient and why it was picked — a count is not a dry run.
+      - Gate the mailer behind an explicit release call.
+      - Do not add a scheduled entrypoint. An unattended sender is a loop and needs a budget first (B4).
+    done_when:
+      - id: C-006
+        text: The dry run names every recipient with its reason and sends nothing.
+        done: false
+        proof: null
+      - id: C-007
+        text: No code path reaches src/mailer.js without an explicit human release call.
+        done: false
+        proof: null
+    completed: null
+    blocked: null
+    review:
+      owner: founder
+      due: null
+      stale_after_days: null
+    extensions: {}

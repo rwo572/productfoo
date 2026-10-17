@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foo://specs/nango-discovery-connector-v0/discovery-processing-receipt.schema.json",
+  "title": "productfoo discovery processing receipt (signed, payload-free)",
+  "description": "The signed trust envelope that attests one discovery processing attempt: its authorization bindings, source identity, and the envelope hash it covers. Carries no evidence payload and no provider content (nango-discovery-connector-v0 R-007, V-015). Payload closure mirrors the DiscoveryProcessingReceiptPayload type in src/discoveryProcess.ts.",
+  "type": "object",
+  "properties": {
+    "namespace": { "const": "foo" },
+    "artifact_kind": { "const": "discovery-processing-receipt" },
+    "artifact_id": { "type": "string", "pattern": "^att:[a-f0-9]{16,64}$" },
+    "key_id": { "type": "string", "minLength": 1 },
+    "issued_at": { "type": "string", "minLength": 1 },
+    "not_before": { "type": "string", "minLength": 1 },
+    "expires_at": { "type": "string", "minLength": 1 },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "previous_hash": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+    "payload": { "$ref": "#/$defs/receiptPayload" },
+    "signature": { "type": "string", "minLength": 1 }
+  },
+  "required": ["namespace", "artifact_kind", "artifact_id", "key_id", "issued_at", "not_before", "expires_at", "sequence", "previous_hash", "payload", "signature"],
+  "additionalProperties": false,
+  "$defs": {
+    "receiptPayload": {
+      "type": "object",
+      "properties": {
+        "kind": { "const": "discovery_processing_receipt" },
+        "receipt_version": { "const": "v1" },
+        "subject_ref": { "type": "string", "minLength": 1 },
+        "workspace_ref": { "type": "string", "minLength": 1 },
+        "connection_ref": { "type": "string", "pattern": "^conn:[a-z0-9][a-z0-9.-]*$" },
+        "target_ref": { "type": "string", "pattern": "^dtarget:[a-z0-9][a-z0-9.-]*$" },
+        "target_id": { "type": "string", "minLength": 1 },
+        "lane": { "enum": ["study", "inbox"] },
+        "source_fingerprint": { "type": "string", "minLength": 1 },
+        "approval_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "grant_digest": { "type": "string", "minLength": 1 },
+        "revocation_epoch": { "type": "integer", "minimum": 0 },
+        "envelope_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "attempt_id": { "type": "string", "pattern": "^att:[a-f0-9]{16,64}$" },
+        "processing": {
+          "type": "object",
+          "properties": {
+            "processing_version": { "type": "string", "minLength": 1 },
+            "prompt_version": { "type": "string", "minLength": 1 },
+            "policy_version": { "type": "string", "minLength": 1 },
+            "synthesizer_model": { "type": "string", "minLength": 1 },
+            "envelope_schema_version": { "const": "0.1" }
+          },
+          "required": ["processing_version", "prompt_version", "policy_version", "synthesizer_model", "envelope_schema_version"],
+          "additionalProperties": false
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "max_response_bytes": { "type": "integer", "minimum": 1 },
+            "fetch_timeout_ms": { "type": "integer", "minimum": 1 },
+            "max_model_input_tokens": { "type": "integer", "minimum": 1 }
+          },
+          "required": ["max_response_bytes", "fetch_timeout_ms", "max_model_input_tokens"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "kind", "receipt_version", "subject_ref", "workspace_ref", "connection_ref", "target_ref", "target_id",
+        "lane", "source_fingerprint", "approval_digest", "grant_digest", "revocation_epoch", "envelope_hash",
+        "attempt_id", "processing", "limits"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

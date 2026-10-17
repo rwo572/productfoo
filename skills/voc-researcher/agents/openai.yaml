@@ -1,0 +1,4 @@
+interface:
+  display_name: "VoC Researcher"
+  short_description: "Synthesize approved customer evidence without false recommendations."
+  default_prompt: "Use $voc-researcher for the relevant workflow."

@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- Generated from docs/CHEATSHEET.md by scripts/gen-cheatsheet.mjs. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>productfoo quick reference</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#fff;color:#202124;font:17px/1.6 system-ui,sans-serif}main{max-width:900px;margin:auto;padding:40px 24px 64px}h1{font-size:2rem;line-height:1.2}h2{font-size:1.3rem;margin-top:2.4em}a{color:#164d8d;text-underline-offset:3px}a:focus-visible{outline:3px solid #164d8d;outline-offset:3px}code{font:0.9em ui-monospace,monospace;overflow-wrap:anywhere}pre{padding:16px;background:#f3f4f5;overflow:auto;border:1px solid #d9dcdf;border-radius:4px}pre code{overflow-wrap:normal}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.95rem}th,td{border-bottom:1px solid #d9dcdf;text-align:left;vertical-align:top;padding:10px 12px}th{background:#f3f4f5}footer{overflow-wrap:anywhere;border-top:1px solid #d9dcdf;margin-top:40px;padding-top:16px;font-size:.85rem}@media(max-width:600px){main{padding:24px 16px}body{font-size:16px}th,td{padding:8px}}@media print{main{padding:0;max-width:none}body{font-size:10pt}h2{break-after:avoid}pre,table{break-inside:avoid}pre{white-space:pre-wrap}a{color:inherit}.table-wrap{overflow:visible}}
+</style></head><body><main>
+<h1>productfoo quick reference</h1>
+<p>Install with <code>npm install -g productfoo</code>; see <a href="getting-started.md#install-productfoo">getting started</a> for setup. In a built source checkout, substitute <code>bin/foo</code> for <code>foo</code> below. These commands help inspect work; they do not sandbox an agent or guarantee correctness. See <a href="getting-started.md">getting started</a> and the <a href="security-model.md">security model</a>.</p>
+<h2>Set up an agent</h2>
+<pre><code>foo doctor
+foo agent setup --agent all --scope project --dry-run
+foo agent setup --agent all --scope project --yes</code></pre>
+<p>Codex uses global scope and requires the Codex CLI on <code>PATH</code>:</p>
+<pre><code>foo agent setup --agent codex --scope global --dry-run
+foo agent setup --agent codex --scope global --yes</code></pre>
+<p>After updating productfoo, repeat the Codex setup and start a new Codex task. Review setup output before applying it. See <a href="agent-adapters.md">agent adapters</a> for runtime-specific paths and ownership rules.</p>
+<h2>Choose the next workflow</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">Command</th></tr></thead><tbody><tr><td>Read the project and find a starting point</td><td><code>foo init</code></td></tr><tr><td>Shape a clear request</td><td><code>foo spec &quot;add saved filters&quot;</code></td></tr><tr><td>Start deeper shaping</td><td><code>foo spec start &quot;add saved filters&quot; --request &quot;customers repeat this work&quot;</code></td></tr><tr><td>Plan public research</td><td><code>foo research &quot;how teams evaluate coding agents&quot;</code></td></tr><tr><td>Plan customer discovery</td><td><code>foo discovery plan --study customer-onboarding</code></td></tr><tr><td>Compare ideas</td><td><code>foo ideate &quot;ways to reduce setup time&quot;</code></td></tr><tr><td>Assess whether to build</td><td><code>foo pitch &quot;help teams preserve product intent&quot;</code></td></tr><tr><td>Review a spec</td><td><code>foo roast specs/my-feature</code></td></tr><tr><td>Prepare a preview</td><td><code>foo preview specs/my-feature</code></td></tr><tr><td>Inspect a PR against recovered intent</td><td><code>foo reconcile --source github:&lt;pr-url&gt;</code></td></tr></tbody></table></div>
+<p>Commands that emit a plan still need the agent to carry it out. Source approval, research validation, and human decisions remain separate steps. See <a href="workflows.md">product workflows</a> for context.</p>
+<h2>Maintain a spec</h2>
+<p>Use an existing packet and its actual task IDs in these examples:</p>
+<pre><code>foo asp validate specs/my-feature
+foo asp task specs/my-feature T-001 --status done --proof &quot;test or review link&quot;
+foo asp status specs/my-feature
+foo asp reconcile specs/my-feature --git-diff
+foo asp verify specs/my-feature
+foo commit-trailer my-feature</code></pre>
+<p>A task marked done can still have proof pending. Validation checks structure; reconciliation reports alignment and gaps; verification inspects supporting proof. None substitutes for reviewing the implementation. See <a href="foo-spec.md">the spec guide</a>.</p>
+<h2>Review safety and autonomy</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">Command</th></tr></thead><tbody><tr><td>Inspect repository boundaries</td><td><code>foo self check</code></td></tr><tr><td>Inspect staged content before committing</td><td><code>foo self gate</code></td></tr><tr><td>Scan a file</td><td><code>foo scan input.txt --exit-code</code></td></tr><tr><td>Produce redacted text for manual review</td><td><code>foo redact input.txt</code></td></tr><tr><td>Classify proposed work</td><td><code>foo classify &quot;describe the work&quot;</code></td></tr><tr><td>Check a loop contract</td><td><code>foo loop check specs/my-feature</code></td></tr><tr><td>Inspect a budget estimate</td><td><code>foo loop estimate specs/my-feature</code></td></tr><tr><td>Record an agreed budget</td><td><code>foo loop estimate specs/my-feature --agree --limit 2.00</code></td></tr></tbody></table></div>
+<p>Only agree a budget after reviewing the estimate and intended actions. An armed loop requires its contract and agreed budget; a declared cap is not a provider spending limit. Scans can miss private information. This repository does not ship Git hooks: run checks explicitly or configure your own integration.</p>
+<h2>Approve a connected source</h2>
+<pre><code>foo source discover specs/my-feature --surface &lt;surface.json&gt;
+foo source approve specs/my-feature --provider &lt;provider&gt; --connection &lt;id&gt; --scope &lt;scope&gt; --by &lt;person&gt;
+foo source receipt specs/my-feature
+foo source revoke specs/my-feature --provider &lt;provider&gt; --connection &lt;id&gt; --by &lt;person&gt;</code></pre>
+<p>Approval is scoped to the spec. It does not replace provider permissions or permit committing raw private material.</p>
+<h2>Report a problem locally</h2>
+<pre><code>foo report add --expected &quot;what should happen&quot; --actual &quot;what happened&quot; --reproduction &quot;steps to reproduce&quot; --json
+foo report show &lt;capsule-id&gt;
+foo report delete &lt;capsule-id&gt; --approve &lt;payload-digest&gt;</code></pre>
+<p>Reports stay local in the public build. Review the exact bytes before sharing through another tool; prefer synthetic reproductions. The public package needs no productfoo account or service token.</p>
+<h2>Full syntax and contributor checks</h2>
+<p>Run <code>foo help --all</code> or read the generated <a href="cli-reference.md">CLI reference</a>. Contributor commands and generated-file checks live in <a href="contributing/verification.md">verification</a>. This Markdown file is the source for the <a href="cheatsheet.html">printable cheatsheet</a>; regenerate it with <code>node scripts/gen-cheatsheet.mjs</code> and check drift with <code>--check</code>.</p>
+<footer>productfoo 1.0.0 · Generated from the <a href="CHEATSHEET.md">Markdown quick reference</a>.<br>Current reference: <a href="https://github.com/rwo572/productfoo/blob/main/docs/CHEATSHEET.md">github.com/rwo572/productfoo/blob/main/docs/CHEATSHEET.md</a><br>Use your browser’s print command for a paper copy.</footer>
+</main></body></html>

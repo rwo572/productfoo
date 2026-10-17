@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "capsule_id": "018f05d4-54fb-72aa-aa2a-2a2a2a2a2a2a",
+  "occurred_at": "2026-07-19T00:00:00.000Z",
+  "producer": { "name": "foo", "version": "0.1.25" },
+  "product": { "name": "Foo", "component": "cli", "version": "0.1.25" },
+  "invocation": {
+    "command": "foo asp status",
+    "runtime": { "node": "22.0.0", "platform": "darwin", "arch": "arm64" }
+  },
+  "failure": {
+    "class": "io_error",
+    "code": "E_IO",
+    "classifier_version": "0.1",
+    "classification": "known",
+    "message": { "state": "collected", "value": "EACCES: permission denied" },
+    "stack": { "state": "collected", "value": "Error: EACCES\\n    at status (cli.js:1:1)" }
+  },
+  "report": {
+    "expected": { "state": "not_collected", "reason": "automatic failure capture" },
+    "actual": { "state": "not_collected", "reason": "automatic failure capture" },
+    "reproduction": { "state": "not_collected", "reason": "automatic failure capture" }
+  },
+  "evidence": [{ "kind": "diagnostic", "state": "collected", "content_type": "text/plain" }],
+  "similarity": { "version": "0.1", "signals": [{ "kind": "error_fingerprint", "value": "a1b2c3d4e5f6" }] },
+  "links": [],
+  "extensions": {
+    "foo": {
+      "spec_context": {
+        "spec_id": "bug_capsule_v0",
+        "packet_path": "specs/bug-capsule-v0",
+        "revision": "2026-07-19",
+        "requirement_ids": ["R-001"],
+        "task_ids": ["T-001"],
+        "provenance": "reporter_observed"
+      }
+    }
+  }
+}

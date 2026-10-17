@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interop Review"
+  short_description: "Draft a local interoperability review; external transfer stays blocked."
+  default_prompt: "Use $interop-review for the relevant workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Preview Swarm"
+  short_description: "Generate primitive-HTML build previews with comments and convergence export."
+  default_prompt: "Use $preview-swarm on this spec to generate the smallest useful build preview; use divergent variants only if the product shape is unresolved, then run the Impeccable collaboration contract."

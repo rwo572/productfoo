@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+// Source-checkout convenience entrypoint; the npm executable uses foo.mjs.
+import "./foo.mjs";

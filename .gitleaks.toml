@@ -1,0 +1,29 @@
+# gitleaks config — security-review-remediation-v0, R-001 / T-002.
+#
+# Keep gitleaks' full default ruleset, and add ONE allowlist: honor foo's own
+# human-curated `foo-redact: allow` pragma. This is deliberately LINE-SCOPED, not
+# a path-wide ignore — a real secret added on a line WITHOUT the pragma still
+# blocks, so this does not re-open the bypass the packet is closing (swarm).
+# It also dogfoods foo's own convention: the same marker foo's engine honors,
+# gitleaks now honors too.
+#
+# Why a config (not inline `gitleaks:allow` markers): gitleaks scans git HISTORY,
+# so an inline marker on the current line would not cover the commit that first
+# introduced a synthetic fixture. A config allowlist applies across all commits.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Honor foo's human-curated 'foo-redact: allow' pragma (line-scoped; a secret without the pragma still blocks)."
+regexTarget = "line"
+regexes = [
+  '''foo-redact:\s*allow''',
+  # The gong link-sanitizer fixture (test/discoveryGong.test.ts) uses the
+  # canonical jwt.io EXAMPLE token ({"sub":"1234567890"}) as a deliberately
+  # refusable URL payload. The commit that introduced it is already merged,
+  # so a pragma on the current line cannot cover it (gitleaks scans history
+  # — see the note above); this line-scoped allowlist matches exactly that
+  # example token and nothing wider.
+  '''eyJhbGciOiJIUzI1NiJ9\.eyJzdWIiOiIxMjM0NTY3ODkwIn0\.''',
+]

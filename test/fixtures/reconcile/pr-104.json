@@ -1,0 +1,53 @@
+{
+  "_note": "Synthetic reconciliation fixture. The numeric ID and packet-shaped paths are parser inputs, not a record of a real pull request.",
+  "number": 104,
+  "external_id": "pr/104",
+  "title": "Example doctor build-freshness signal",
+  "body": "Synthetic change: report fresh, stale and missing build states as advisory diagnostics. Package installs omit source-only checks.\n\nFoo-Spec: none (synthetic advisory fixture)\n",
+  "state": "merged",
+  "merged": true,
+  "branch": "example/build-freshness",
+  "files": [
+    {
+      "path": "src/cli.ts",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "src/commands/setup.ts",
+      "additions": 59,
+      "deletions": 1
+    },
+    {
+      "path": "test/foo_cli.test.ts",
+      "additions": 47,
+      "deletions": 2
+    }
+  ],
+  "checks": [
+    {
+      "name": "test",
+      "conclusion": "success"
+    },
+    {
+      "name": "test",
+      "conclusion": "success"
+    },
+    {
+      "name": "gitleaks (git history) \u2014 blocking",
+      "conclusion": "success"
+    },
+    {
+      "name": "gitleaks (git history) \u2014 blocking",
+      "conclusion": "success"
+    },
+    {
+      "name": "foo scan (working tree) \u2014 advisory",
+      "conclusion": "success"
+    },
+    {
+      "name": "foo scan (working tree) \u2014 advisory",
+      "conclusion": "success"
+    }
+  ]
+}

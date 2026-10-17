@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check Spec Health"
+  short_description: "Assess spec structure, evidence coverage, freshness, and readiness."
+  default_prompt: "Use $check-spec-health for the relevant workflow."

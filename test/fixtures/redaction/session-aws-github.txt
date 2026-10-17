@@ -1,0 +1,12 @@
+user: can you check why the deploy is failing? here's my env
+
+assistant: I see the issue — your credentials are in the log. The access key
+AKIA%%IOSFODNN7EXAMPLE appeared right in the build output, along with:
+
+  export AWS_SEC%%RET_ACC%%ESS_KEY=wJalrXUtn%%FEMIK7MDENGbPxRfiCYEXAMPLEKEY
+
+user: oh no. also my github tokens might be in there
+  ghp_%%abcdefghijklmnopqrstuvwxyz0123456789
+  pat=github_pat_%%11ABCDEFG0abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopq
+
+assistant: rotate both of those immediately.

@@ -1,0 +1,78 @@
+schema_version: "0.1"
+spec_id: supported_coding_agents
+spec_ref: specs/supported-coding-agents/spec.md
+updated: "2026-10-17T17:44:11.382Z"
+
+defaults:
+  autonomy: human-in-loop
+  stale_after_days:
+    suggested: 7
+    discovered: 7
+
+ledger:
+  segment_order:
+    - events.jsonl
+
+tasks:
+  - id: T-001
+    title: Align supported coding-agent integrations and prove the boundary
+    status: done
+    agreement: agreed
+    stage: building
+    refs:
+      - R-001
+      - R-002
+      - R-003
+    depends_on: []
+    owner: "agent:any"
+    autonomy: human-in-loop
+    created_by:
+      type: human
+      id: product
+    touches:
+      - README.md
+      - config/public-source-files.json
+      - docs/agent-adapters.md
+      - examples/README.md
+      - examples/mcp-widget-probe/README.md
+      - examples/mcp-widget-probe/server.mjs
+      - examples/outside-in-audit/render.mjs
+      - specs/supported-coding-agents/events.jsonl
+      - specs/supported-coding-agents/expert-review.md
+      - specs/supported-coding-agents/spec.md
+      - specs/supported-coding-agents/tasks.yaml
+      - specs/supported-coding-agents/verification.md
+      - src/agentAdapters.ts
+      - src/cli.ts
+      - src/commandContract.ts
+      - src/commands/agent.ts
+      - src/commands/setup.ts
+      - src/harnessGates.ts
+      - src/research.ts
+      - src/researchGate.ts
+      - test/doctorResearchGate.test.ts
+      - test/documentedJourney.test.ts
+      - test/fixtures/packet-grammar/colon-form.spec.md
+      - test/harnessCommandDirs.test.ts
+      - test/initSurvey.test.ts
+      - test/probeSmoke.test.ts
+      - test/researchGate.test.ts
+    do:
+      - Remove obsolete integrations and align docs and examples.
+      - Verify supported setup output, safety behavior, and public packaging.
+    done_when:
+      - id: C-001
+        text: Only selected agents are exposed and all required checks pass.
+        done: true
+        proof: specs/supported-coding-agents/verification.md
+    completed:
+      at: "2026-10-17T17:50:41.834Z"
+      by: human
+      summary: Five-agent integration boundary verified by setup tests, full suite, and installed-package smoke checks.
+      event: "01M55FSH5CJ8V0G5T50X2PSA01"
+    blocked: null
+    review:
+      owner: product
+      due: null
+      stale_after_days: null
+    extensions: {}

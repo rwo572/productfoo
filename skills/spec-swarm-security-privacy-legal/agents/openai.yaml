@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Sec/Privacy/Legal"
+  short_description: "Ask security, privacy, and legal questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-security-privacy-legal to ask the 2-3 security/privacy/legal questions this spec needs."

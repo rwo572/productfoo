@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "foo-marketplace",
+  "owner": {
+    "name": "productfoo",
+    "url": "https://github.com/rwo572/productfoo"
+  },
+  "description": "productfoo plugin marketplace for Claude Code, enabling spec-first product development with agent-native workflows",
+  "plugins": [
+    {
+      "name": "foo",
+      "displayName": "productfoo",
+      "source": "./plugins/foo-anthropic",
+      "description": "productfoo: Spec-first product development toolkit with adaptive spec packets, expert swarms, and governed loop controls",
+      "version": "0.1.0",
+      "author": {
+        "name": "productfoo",
+        "url": "https://github.com/rwo572/productfoo"
+      },
+      "category": "Coding",
+      "keywords": [
+        "spec",
+        "product",
+        "development",
+        "workflow",
+        "governance",
+        "research",
+        "testing"
+      ]
+    }
+  ]
+}

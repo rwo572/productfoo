@@ -1,0 +1,138 @@
+{
+  "schema_version": "bug-capsule-fixture-manifest/0.1",
+  "canonicalization": "recursive-json-key-sort-v1",
+  "append_only_case_ids": true,
+  "files": [
+    {
+      "path": "capsule.valid.json",
+      "sha256": "sha256:defac21a1751a02986cc455be278f9abe1bf09a0e8874c6ccd51aad40b72ee26"
+    },
+    {
+      "path": "capsule.valid.canonical.json",
+      "sha256": "sha256:defac21a1751a02986cc455be278f9abe1bf09a0e8874c6ccd51aad40b72ee26"
+    },
+    {
+      "path": "receipt.accepted.json",
+      "sha256": "sha256:9c088cf68d01df6022c2795a81a3a4e2a0d54fee9225f682e134e60759756468"
+    },
+    {
+      "path": "cases.json",
+      "sha256": "sha256:6410dc3ebbd454269653a42cf47af83bb91656dfa60bfb2a83a17240b73fe5a8",
+      "cases": [
+        { "case_id": "detect-success-001", "sha256": "98cbcd7605d278073e7852db15832fd0f9eedc0419d5cb9495ec5699024dfce6" },
+        { "case_id": "detect-usage-001", "sha256": "7338cde248d806d10d327967255394615e664179689c5031ccfafb94cd861a12" },
+        { "case_id": "detect-gate-001", "sha256": "f5eea9de61d09f2252a64de104513d2a287ae7244cc5aff78bc689e8186fbd27" },
+        { "case_id": "detect-not-found-001", "sha256": "f2304cf663943cd66b07bfd1b61c2d110b6f540bafd06d77568b173e75d460b3" },
+        { "case_id": "detect-io-001", "sha256": "98afbee5decbbe4f0613f04e440a1a6ff7526e2ef2059cee3ca898b44007df0b" },
+        { "case_id": "detect-command-001", "sha256": "b67476430d126a43aa1cc1cc9fd776384dd578ce006b54b56f2b94e14057c374" },
+        { "case_id": "detect-test-traffic-001", "sha256": "87122f1fb03a627245c126cdb24ed3b7ae7a2c020be6dc290cf89b3d7acbf4fe" },
+        { "case_id": "detect-fallback-001", "sha256": "1db7dcd350bef9371cbf540322bb92b86beaa06731895929fd89c3c8eccddeea" }
+      ]
+    },
+    {
+      "path": "duplicate-across-versions.json",
+      "sha256": "sha256:07ad6fb1f8c45b49dc445147bbad5f06203898be165aad5c7a81f30a483663fa",
+      "cases": [
+        { "case_id": "duplicate-v0124-001", "sha256": "503d79557739f28efe202cf6673069047de84b9b86ba90e23040af5be8e99159" },
+        { "case_id": "duplicate-v0125-001", "sha256": "89f2f47e4fb367f6aaf8ee447dbbf598fb52863af5a34f0d2dabd662e3b6b8b2" }
+      ]
+    },
+    {
+      "path": "same-signature-different-cause.json",
+      "sha256": "sha256:0ade7f285a377c1f9132b80cf4fd9f826ab04bfe7273822ed887c5e8cced3998",
+      "cases": [
+        { "case_id": "same-signature-permission-001", "sha256": "c86bea1c13c35257ba17b8432d80df40f8b0da4a9227c5e6e1c33446cf1fe2c5" },
+        { "case_id": "same-signature-corrupt-001", "sha256": "5709097341e52a05943ffd071ff1aecac82f5e8e64e93864bba788b5007e37d0" }
+      ]
+    },
+    {
+      "path": "behavioral-no-stack.json",
+      "sha256": "sha256:fa680c78315926eee2d25b132afaa8da183a223b49a890e17abbaa2b8ca3509d",
+      "cases": [
+        { "case_id": "behavioral-no-stack-001", "sha256": "d5c82e1c929024c6caeaf94452da8e082e68291ef0399c6ee0346a96a68f014f" }
+      ]
+    },
+    {
+      "path": "hostile-rich-text.json",
+      "sha256": "sha256:18943f14a0ec618050b6dd8eedffb858d96a0d5e4f308a55fc7e8f6d5673f4db",
+      "cases": [
+        { "case_id": "hostile-rich-text-001", "sha256": "37e099a49fd013b015f3bf1b80e9035ad1215f218d8f2ea0287b027bb27cc2cf" },
+        { "case_id": "hostile-rich-text-complete-002", "sha256": "84ed0cee9bb667d5e0f4aded2ae5396661e590567a66a806a6727f7cac7c4095" }
+      ]
+    },
+    {
+      "path": "seeded-private-values.json",
+      "sha256": "sha256:735fc472c99bb21af6052a7e7d9defe4e65b3375cfa62ce3f0faf5827a46e35c",
+      "cases": [
+        { "case_id": "private-values-001", "sha256": "6c7f792011bc97095586a5b48eecc5d1053c3bb0961a3bfcb18525f62f075f3e" }
+      ]
+    },
+    {
+      "path": "cli-golden.json",
+      "sha256": "sha256:b3bd10b4102396f7d6e8428b81a30066dc544867e4815270c5caf4ece884a4db",
+      "cases": [
+        { "case_id": "cli-empty-list-001", "sha256": "c0b46ff1309b6a7a10e06aecab06f9aee291f91e874e8747c8f756ac20044701" },
+        { "case_id": "cli-add-complete-001", "sha256": "4238fd5339c3130b3094f95a936b6ad93d7d5135199bd89ba43ae410147f45f4" },
+        { "case_id": "cli-add-incomplete-001", "sha256": "95e6d2606f9fa160402479ecaf4e026b10069178f091b293752a616f1f392b44" },
+        { "case_id": "cli-show-selection-001", "sha256": "2136544957dece72b4d1c8a5716a3df7c9ead3c00e82d06c1768aa97395022e6" },
+        { "case_id": "cli-show-corrupt-001", "sha256": "b3f4d7b35709b58db013288f0209347d6c5f26109ae9e51c1beb7cd7e6614b4b" },
+        { "case_id": "cli-send-needs-preview-001", "sha256": "7d42906e1fb70f1aa01ed731b5f24ddf867c9bef5efbd7ac2a8036a1d76ad2c5" },
+        { "case_id": "cli-send-consent-handoff-001", "sha256": "1c9e68d2d86e6f0c6d26cc736259f72dcd801c988c8a63976c6a17d9327315ff" },
+        { "case_id": "cli-delete-idempotent-001", "sha256": "6404e300b6c6d8d1df10763a483ffd37d9f52acaf48c090d6c5956b85e2e6fb5" },
+        { "case_id": "cli-link-unconfirmed-001", "sha256": "71026cd8d0367af73a4a20aa9d981e880d6ca48ebacc73e47079c69ce038762f" },
+        { "case_id": "cli-unlink-confirmed-001", "sha256": "391a7226d9d48ad46d95ad4189621f058ab7483362f255287d706084fd3f9548" },
+        { "case_id": "cli-empty-list-human-002", "sha256": "8995bf81559272936313686972822dd58f6c070d959665943499ca5eb246e6dc" },
+        { "case_id": "cli-add-complete-human-002", "sha256": "be496de7e3e070ab06f29671cde8da49db9458b51dec7ea19009c42c52186eae" },
+        { "case_id": "cli-show-selection-human-002", "sha256": "98cfb9ea6911fde78b28ddb917d486bcffa36d43babcf24a0db0b6be7fe05d48" },
+        { "case_id": "cli-send-silence-human-002", "sha256": "cddeb78350a35ee0399264a2466e593778402ea614df713aeda18d48a15177b7" }
+      ]
+    },
+    {
+      "path": "delivery-scenarios.json",
+      "sha256": "sha256:199e3298d3f15c1fb94ab9976e5db9e1e84f8fad7be30ed3caca3a12f7ee4ead",
+      "scenarios": [
+        { "case_id": "preview-bytes-digest-transmit-001", "sha256": "3ecde5ecd0bd34ccb4cbf3856e36585e68bdaae5deff4b36379e9aaeec0889f9" },
+        { "case_id": "preview-edit-invalidates-consent-001", "sha256": "cb2fec7aaa79fc819e8fad45421801e499c78104f42f94e3a800fa7b6d9ce491" },
+        { "case_id": "receipt-replay-original-001", "sha256": "13707ab55e67de496be68d4ea4f4caeb7ce44b762b04bdece69104b2c55c1083" },
+        { "case_id": "receipt-digest-conflict-001", "sha256": "f84fb4b3808103ac5c5da9622a964c30eb73a971c60f415e463fcfe3802e15f6" },
+        { "case_id": "receipt-malformed-001", "sha256": "1d48f2e89c64e1fe65c178b609cdce26465fec8fd8f7285b301715519d715d00" },
+        { "case_id": "receipt-partial-001", "sha256": "5791784fa23172fdd84a5c04df4cda709ec046333002349df7d14f7972507104" },
+        { "case_id": "receipt-response-loss-001", "sha256": "ae126aaf20cad70c4371838091acb06ffbdfc9f7e0285ebb02a135dbd476b16c" },
+        { "case_id": "receipt-uncertainty-retains-local-001", "sha256": "2151dbcea0c780c5fb2b57ee8654ac3b382ae40f474bf370836b591c84a1723e" },
+        { "case_id": "receipt-mismatch-never-archives-001", "sha256": "c877e018ec2c3b7ce8ee717e1305d0bf3a8bfd572ff130692a775f790beba3c7" },
+        { "case_id": "receipt-match-archives-001", "sha256": "aee13c1670ecf52c8b3f62e6ec6808ab7d807c7500fcf846c1d6401c898ee75a" }
+      ]
+    },
+    {
+      "path": "dogfood-25.json",
+      "sha256": "sha256:f29f3e5cc5c2c5d1f835c7c1e348440aad3e22e746ab823b6aaea52b82e3b762",
+      "attempts": [
+        { "case_id": "dogfood-attempt-001", "sha256": "daa75652a2a0c1f3bc073e4de29219cbd720ddbe5412062f3b6e66996ab52969" },
+        { "case_id": "dogfood-attempt-002", "sha256": "4805893c9f925a7b7a9da802e400634f6f71ee7427003843cde16c0ea7bdabf8" },
+        { "case_id": "dogfood-attempt-003", "sha256": "10feb29837e9b090fe76b5171495bdb088884a92d1e9685e9585589ffdab9549" },
+        { "case_id": "dogfood-attempt-004", "sha256": "9ab4c3bccfaae599b36c933b588bf51898dd6d3e880d027906fb5a40b292a9bd" },
+        { "case_id": "dogfood-attempt-005", "sha256": "b0b8547b8c942746ca9e1e64e4db91e442d1999f67525fcddacf3d950490cbc2" },
+        { "case_id": "dogfood-attempt-006", "sha256": "0402a7e6faa4fefd360c27a9acf29fb7a1eb1c2ddd575f823cc9bb381f1ca77a" },
+        { "case_id": "dogfood-attempt-007", "sha256": "965875104802178ed6c104fdd49bb890a111ca7ef764c8a36aa3cb52b131fd3f" },
+        { "case_id": "dogfood-attempt-008", "sha256": "7797a53bb13bdf74bdb58e8b249047ff4e95d9ffcf77622bb461b23e0e0fb628" },
+        { "case_id": "dogfood-attempt-009", "sha256": "3e9652d59f0fc4e52ec72395dd398b1afc5d6d754a43cd5cab36a6a281cf5b50" },
+        { "case_id": "dogfood-attempt-010", "sha256": "af5067ca75205888cb352cb961dbb9be9f74e0a99f277afb9493ba5d4d9c876f" },
+        { "case_id": "dogfood-attempt-011", "sha256": "e9035c6573b57a3f3f4e39d2e002d9662928c024ce579a341a10758a787b9f12" },
+        { "case_id": "dogfood-attempt-012", "sha256": "6450d32ddd5e1b4f584011b30d2acd9255a6d842b7c6c086a62b76de7038ec17" },
+        { "case_id": "dogfood-attempt-013", "sha256": "19b4c88f9989b0f35d4f3f963f10b359ef6a3605e2dd0dff16c18eaebb707c1d" },
+        { "case_id": "dogfood-attempt-014", "sha256": "155dd83a03625e65fc3df5ccaf1a8da852f69167fc7916e22a177d52ada95f4d" },
+        { "case_id": "dogfood-attempt-015", "sha256": "3be334352c7d8d30278ee224b7d29bb7a0447cd8d45d6ad76e1b4e2e642f8fe8" },
+        { "case_id": "dogfood-attempt-016", "sha256": "8b3116ef525b76e9ebb228e92180baecbd849e00749185d9bed5924a136bcae9" },
+        { "case_id": "dogfood-attempt-017", "sha256": "1628efbbcd8f66f391cab6b5e838c06d0858942dac5cbe5d32ce6ff83d48dcd0" },
+        { "case_id": "dogfood-attempt-018", "sha256": "3c1358a0fc017d18e3039bf1c49b955a1b0d25c45c9bbba37fb1eb4ba73a76bc" },
+        { "case_id": "dogfood-attempt-019", "sha256": "a72364142b90e48f5623a225c8d45676b7d196e37e4883244318f7423ef169c0" },
+        { "case_id": "dogfood-attempt-020", "sha256": "94601cf59b5de9aba5654ec5019c601e37855b457eeaacafce87a3c1615cebce" },
+        { "case_id": "dogfood-attempt-021", "sha256": "9a98da49b335edd05c197d5c8726a4c47d986738af22a1fc3ceb6bc2e8fabefa" },
+        { "case_id": "dogfood-attempt-022", "sha256": "60d566d2464c9f5f577d2c094039c13f06ecb1385ce0e7c3421527cc8f635880" },
+        { "case_id": "dogfood-attempt-023", "sha256": "6a1fabdc0c1083d4cea7816d545df6bb1b9ff153dd9c89688a1e45d5b41ef38e" },
+        { "case_id": "dogfood-attempt-024", "sha256": "ebd401a9675093a50118a5a5080bd48d7963662ee84adfc7066c47ced5a163b4" },
+        { "case_id": "dogfood-attempt-025", "sha256": "e6581771887142ccc0fc95d2b1a461e0497c0286447c0accbb529bdae6f88b9a" }
+      ]
+    }
+  ]
+}

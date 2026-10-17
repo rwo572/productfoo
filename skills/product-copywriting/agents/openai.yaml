@@ -1,0 +1,4 @@
+interface:
+  display_name: "ThisProduct Copywriting"
+  short_description: "Plain-language copy rules for ThisProduct"
+  default_prompt: "Use $product-copywriting to rewrite the current ThisProduct prototype page in product-facing language."

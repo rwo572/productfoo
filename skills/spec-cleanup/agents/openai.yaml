@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Cleanup"
+  short_description: "Finalize specs before implementation so requirements, tasks, contracts, privacy boundaries, and validation are build-ready."
+  default_prompt: "Use $spec-cleanup on this spec or packet before implementation."

@@ -1,0 +1,13 @@
+# Historical sample intentionally disabled. `foo gate` remains quarantined and
+# command-kind has no supported OS isolation implementation.
+name: verdict-gate-unavailable
+on:
+  workflow_dispatch:
+jobs:
+  unavailable:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "foo gate remains quarantined; do not make this a required check"
+          exit 1

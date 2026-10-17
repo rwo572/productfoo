@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.1",
+  "receipt_id": "018f05d4-54fc-72ab-aa2a-2a2a2a2a2a2a",
+  "capsule_id": "018f05d4-54fb-72aa-aa2a-2a2a2a2a2a2a",
+  "payload_digest": "sha256:defac21a1751a02986cc455be278f9abe1bf09a0e8874c6ccd51aad40b72ee26",
+  "accepted_at": "2026-07-19T00:00:01.000Z",
+  "destination": "foo-private-relay",
+  "status": "accepted",
+  "error": null
+}

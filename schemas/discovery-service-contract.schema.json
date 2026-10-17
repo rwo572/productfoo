@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foo://specs/nango-discovery-connector-v0/discovery-service-contract.schema.json",
+  "title": "productfoo discovery service result (closed union)",
+  "description": "The complete result surface a productfoo host can receive from the discovery service (readiness, listing, processing). additionalProperties is false at every level; the fields an operation/status cannot carry are forbidden explicitly (nango-discovery-connector-v0 V-015). A discovery_process_session result in the needs_local_apply state (T-006) is the one non-success variant that carries the signed sanitized pair: envelope plus processing_receipt behind a portable_bundle handoff with requires_human true — productfoo retains no copy of that bundle. Coverage for the processing operation is closed; readiness and listing coverage stays the open record shipped by T-003.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "operation": { "enum": ["discovery_connection_ready", "discovery_list_sessions", "discovery_process_session"] },
+    "status": {
+      "description": "The packet's 22 stable states — flow (ready, processed, clean_no_op, needs_local_apply, needs_review), blocked/handoff (not_connected, needs_source_approval, needs_service_grant, needs_provider_access, needs_provider_connector, awaiting_match, ambiguous_match, needs_research_proof, needs_service_verification, revocation_pending), and failure (auth_expired, result_lost, transcript_too_large, provider_timeout, revoked, budget_exhausted, invalid).",
+      "enum": [
+        "ready", "processed", "clean_no_op", "needs_local_apply", "needs_review",
+        "not_connected", "needs_source_approval", "needs_service_grant", "needs_provider_access", "needs_provider_connector",
+        "awaiting_match", "ambiguous_match", "needs_research_proof", "needs_service_verification", "revocation_pending",
+        "auth_expired", "result_lost", "transcript_too_large", "provider_timeout", "revoked",
+        "budget_exhausted", "invalid"
+      ]
+    },
+    "errors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/serviceError" }
+    },
+    "handoff": {
+      "anyOf": [{ "$ref": "#/$defs/handoff" }, { "type": "null" }]
+    },
+    "next_actions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "coverage": { "type": "object" },
+    "capabilities": { "$ref": "#/$defs/capabilities" },
+    "connection_ref": { "type": "string", "pattern": "^conn:[a-z0-9][a-z0-9.-]*$" },
+    "target_ref": { "type": "string", "pattern": "^dtarget:[a-z0-9][a-z0-9.-]*$" },
+    "stable_url": { "type": "string", "minLength": 1 },
+    "sessions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/listedSession" }
+    },
+    "envelope": { "$ref": "foo://specs/nango-discovery-connector-v0/discovery-evidence-envelope.schema.json" },
+    "processing_receipt": { "$ref": "foo://specs/nango-discovery-connector-v0/discovery-processing-receipt.schema.json" }
+  },
+  "required": ["schema_version", "operation", "status", "errors", "handoff", "next_actions", "coverage"],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "operation": { "const": "discovery_connection_ready" } }, "required": ["operation"] },
+      "then": {
+        "properties": {
+          "sessions": false,
+          "stable_url": false,
+          "envelope": false,
+          "processing_receipt": false
+        }
+      }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "discovery_list_sessions" } }, "required": ["operation"] },
+      "then": {
+        "properties": { "stable_url": false, "envelope": false, "processing_receipt": false },
+        "required": ["sessions"]
+      }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "discovery_process_session" } }, "required": ["operation"] },
+      "then": {
+        "properties": { "capabilities": false, "sessions": false },
+        "required": ["connection_ref", "target_ref"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "operation": { "const": "discovery_process_session" }, "status": { "const": "processed" } },
+        "required": ["operation", "status"]
+      },
+      "then": {
+        "required": ["envelope", "processing_receipt", "connection_ref", "target_ref"],
+        "properties": {
+          "coverage": { "$ref": "#/$defs/processingCoverage" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "operation": { "const": "discovery_process_session" }, "status": { "const": "needs_local_apply" } },
+        "required": ["operation", "status"]
+      },
+      "then": {
+        "required": ["envelope", "processing_receipt", "connection_ref", "target_ref", "handoff"],
+        "properties": {
+          "handoff": { "$ref": "#/$defs/portableBundleHandoff" },
+          "coverage": { "$ref": "#/$defs/processingCoverage" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "operation": { "const": "discovery_process_session" }, "status": { "not": { "anyOf": [{ "const": "processed" }, { "const": "needs_local_apply" }] } } },
+        "required": ["operation", "status"]
+      },
+      "then": {
+        "properties": { "envelope": false, "processing_receipt": false, "stable_url": false }
+      }
+    }
+  ],
+  "$defs": {
+    "serviceError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "enum": [
+            "adapter_stale", "not_connected", "auth_expired", "capability_missing", "approval_missing",
+            "access_denied", "network", "provider_failure", "service_bug"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "trace_id": { "type": "string", "minLength": 1 }
+      },
+      "required": ["code", "message"],
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "minLength": 1 },
+        "resume_command": { "type": "string", "minLength": 1 },
+        "requires_human": { "type": "boolean" }
+      },
+      "required": ["kind", "requires_human"],
+      "additionalProperties": false
+    },
+    "portableBundleHandoff": {
+      "description": "The T-006 needs_local_apply handoff: the signed sanitized bundle must be carried by a person or an explicit host handoff to a local runtime; productfoo never applies it remotely or retains a copy.",
+      "type": "object",
+      "properties": {
+        "kind": { "const": "portable_bundle" },
+        "url": { "type": "string", "minLength": 1 },
+        "resume_command": { "type": "string", "minLength": 1 },
+        "requires_human": { "const": true }
+      },
+      "required": ["kind", "requires_human"],
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "list_sessions": { "type": "boolean" },
+        "open_transcript": { "type": "boolean" },
+        "stable_link": { "type": "boolean" },
+        "timestamps": { "type": "boolean" }
+      },
+      "required": ["list_sessions", "open_transcript", "stable_link", "timestamps"],
+      "additionalProperties": false
+    },
+    "listedSession": {
+      "type": "object",
+      "properties": {
+        "schema_version": { "const": "0.1" },
+        "provider": { "type": "string", "minLength": 1 },
+        "connection_alias": { "type": "string", "minLength": 1 },
+        "completed_at": { "type": "string", "minLength": 1 },
+        "completion_state": { "const": "completed" },
+        "title": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "stable_url": { "type": "string", "minLength": 1 },
+        "capabilities": { "$ref": "#/$defs/capabilities" },
+        "access": { "enum": ["available", "denied"] },
+        "session_ref": { "type": "string", "minLength": 1 }
+      },
+      "required": ["schema_version", "provider", "connection_alias", "completed_at", "completion_state", "title", "participants", "capabilities", "access", "session_ref"],
+      "additionalProperties": false
+    },
+    "processingCoverage": {
+      "type": "object",
+      "properties": {
+        "provider_metadata_probes": { "type": "integer", "minimum": 0 },
+        "transcript_body_calls": { "type": "integer", "minimum": 0 },
+        "synthesis_requests": { "type": "integer", "minimum": 0 },
+        "receipts_issued": { "type": "integer", "minimum": 0 },
+        "raw_content_retained": { "const": false },
+        "attempt_id": { "type": "string", "pattern": "^att:[a-f0-9]{16,64}$" },
+        "recorded_attempt_state": { "enum": ["claimed", "receipt_issued", "lost"] }
+      },
+      "required": ["provider_metadata_probes", "transcript_body_calls", "synthesis_requests", "receipts_issued", "raw_content_retained"],
+      "additionalProperties": false
+    }
+  }
+}

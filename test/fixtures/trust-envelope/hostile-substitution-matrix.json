@@ -1,0 +1,54 @@
+[
+  {
+    "id": "same-shaped-nested-mutation",
+    "expected_reason": "signature_invalid"
+  },
+  {
+    "id": "security-metadata-mutation",
+    "expected_reason": "signature_invalid"
+  },
+  {
+    "id": "cross-namespace-substitution",
+    "expected_reason": "wrong_namespace"
+  },
+  {
+    "id": "cross-artifact-substitution",
+    "expected_reason": "wrong_artifact_kind"
+  },
+  {
+    "id": "unknown-key",
+    "expected_reason": "unknown_key"
+  },
+  {
+    "id": "revoked-key",
+    "expected_reason": "revoked_key"
+  },
+  {
+    "id": "expired-key",
+    "expected_reason": "key_expired"
+  },
+  {
+    "id": "expired-envelope",
+    "expected_reason": "envelope_expired"
+  },
+  {
+    "id": "retired-key-advance",
+    "expected_reason": "retired_key_for_new_acceptance"
+  },
+  {
+    "id": "replay",
+    "expected_reason": "replay"
+  },
+  {
+    "id": "rollback",
+    "expected_reason": "rollback"
+  },
+  {
+    "id": "wrong-predecessor",
+    "expected_reason": "previous_hash_mismatch"
+  },
+  {
+    "id": "embedded-public-key",
+    "expected_reason": "malformed_envelope"
+  }
+]

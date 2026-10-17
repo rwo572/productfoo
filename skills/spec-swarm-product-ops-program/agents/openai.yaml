@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: Product Ops"
+  short_description: "Ask operating and dependency questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-product-ops-program to ask the 2-3 product ops/program questions this spec needs."

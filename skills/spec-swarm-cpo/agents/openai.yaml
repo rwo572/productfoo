@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: CPO"
+  short_description: "Ask executive product questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-cpo to ask the 2-3 CPO questions this spec needs."

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foo.example/schemas/bug-capsule-receipt.schema.json",
+  "title": "DeliveryReceipt 0.1",
+  "type": "object",
+  "required": ["schema_version", "receipt_id", "capsule_id", "payload_digest", "accepted_at", "destination", "status", "error"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "receipt_id": { "$ref": "#/$defs/uuidV7" },
+    "capsule_id": { "$ref": "#/$defs/uuidV7" },
+    "payload_digest": {
+      "type": "string",
+      "maxLength": 4096,
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "accepted_at": { "$ref": "#/$defs/rfc3339Utc" },
+    "destination": { "$ref": "#/$defs/string" },
+    "status": { "enum": ["accepted", "rejected", "retryable"] },
+    "error": { "type": ["null", "object"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] },
+      "then": { "properties": { "error": { "const": null } } },
+      "else": { "properties": { "error": { "$ref": "#/$defs/error" } } }
+    }
+  ],
+  "$defs": {
+    "string": { "type": "string", "maxLength": 4096 },
+    "uuidV7": {
+      "type": "string",
+      "maxLength": 4096,
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "rfc3339Utc": {
+      "type": "string",
+      "maxLength": 4096,
+      "format": "date-time",
+      "pattern": "^(?:\\d{4})-(?:\\d{2})-(?:\\d{2})T(?:\\d{2}):(?:\\d{2}):(?:\\d{2})(?:\\.\\d+)?Z$"
+    },
+    "error": {
+      "type": "object",
+      "required": ["code", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "$ref": "#/$defs/string" },
+        "message": { "$ref": "#/$defs/string" },
+        "retry_after": { "$ref": "#/$defs/rfc3339Utc" }
+      }
+    }
+  }
+}

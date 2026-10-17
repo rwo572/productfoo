@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "status": "verified",
+  "publication_authorized": true,
+  "visibility_change_authorized": true,
+  "package": "productfoo",
+  "version": "1.0.0",
+  "source_snapshot": {
+    "repository": "rwo572/productfoo",
+    "repository_id": 1423525451,
+    "commit": "4d3827b8b9272c5c5d6d6d6f6e89047ce55ddc44",
+    "tree": "4af52c8182353e0b73d505507560876f845ee498",
+    "history_root": "2626b968f17edd87890cbb8d983cc56e67539517",
+    "history": "Fresh independent root plus reviewed productfoo pull requests; no archive history imported.",
+    "archive_commit_probe": "Archived source SHA is not resolvable in this repository (GitHub HTTP 422)."
+  },
+  "proposed_candidate": {
+    "payload_root": "2626b968f17edd87890cbb8d983cc56e67539517",
+    "payload_commit": "4d3827b8b9272c5c5d6d6d6f6e89047ce55ddc44",
+    "tarball_name": "productfoo-1.0.0.tgz",
+    "tarball_sha256": "d118a8de7ec33833f52bc6de67eca5ecc04579cd265f5b1c50a9501f765e609f"
+  },
+  "toolchain": {
+    "node": "v26.5.0",
+    "npm": "11.17.0",
+    "platform": "linux",
+    "arch": "amd64"
+  },
+  "checks": {
+    "unit_tests": {
+      "status": "pass",
+      "count": 1329
+    },
+    "release_guard_tests": {
+      "status": "pass",
+      "count": 7
+    },
+    "generated_files": "pass",
+    "public_source_inventory": {
+      "status": "pass",
+      "files": 657
+    },
+    "public_package_inventory": {
+      "status": "pass",
+      "files": 498
+    },
+    "installed_package_smoke": "pass",
+    "network_denied_workflows": {
+      "status": "pass",
+      "count": 19
+    },
+    "self_check": "pass",
+    "commands_validate": "pass",
+    "history_secret_scan": {
+      "status": "pass",
+      "url": "https://github.com/rwo572/productfoo/actions/runs/39057042037"
+    },
+    "codeql": {
+      "status": "completed-and-triaged",
+      "url": "https://github.com/rwo572/productfoo/actions/runs/39057042055",
+      "review": ".github/release-security-review.md",
+      "fixed": "Reproduced findings repaired in PR #10; no new CodeQL findings on the PR.",
+      "limitation": "Example localStorage rendering remains a documented hardening follow-up; remaining original patterns were reviewed in context."
+    },
+    "regression_tests": {
+      "status": "pass",
+      "count": 5,
+      "before_fix": "Two timeouts, incorrect evidence match, and missing attribute escaping reproduced.",
+      "compatibility": "20,000 deterministic email matching comparisons passed."
+    },
+    "package_reproducibility": {
+      "status": "pass",
+      "ci_run": "https://github.com/rwo572/productfoo/actions/runs/39057402619",
+      "linux_tarball_sha256": "d118a8de7ec33833f52bc6de67eca5ecc04579cd265f5b1c50a9501f765e609f",
+      "mac_tarball_sha256": "97dd6089ccbe864a94817d933dc5bbf0285c935150d103f1c9149eed9efda41a",
+      "uncompressed_tar_sha256": "1efb97baf4f75d3113491842ee60a23100d5397579b577220d1893d6babb339f",
+      "result": "All 498 files, metadata, and complete uncompressed tar bytes match; gzip encoding differs. Linux artifact reproduced independently and passed all 19 offline workflows."
+    }
+  },
+  "release_controls": {
+    "sole_collaborator": "rwo572",
+    "npm_maintainer": "rwolan572",
+    "trusted_publisher": {
+      "repository": "rwo572/productfoo",
+      "workflow": "release.yml",
+      "environment": "npm-release",
+      "permission": "npm publish",
+      "status": "configured; npm validates the binding on first publication"
+    },
+    "protections": {
+      "status": "configured",
+      "main": "PR, public-product and full-history secret scan required; no force push or deletion; applies to admins.",
+      "tags": "v* updates and deletions blocked by active ruleset 25312025.",
+      "environment": "npm-release requires rwo572 approval and permits only tag v1.0.0.",
+      "contributions": "All users may open PRs; rwo572 is the sole collaborator.",
+      "vulnerability_reporting": "enabled"
+    },
+    "tag_replacement_authorized": true
+  },
+  "remaining_before_publication": [
+    "Merge the Linux artifact digest record and align the protected release tag under the approved tag-replacement procedure.",
+    "Dispatch the guarded workflow, approve the environment, and verify registry metadata, provenance, digest, and fresh installation."
+  ],
+  "invalidation": "Any change outside .github invalidates this payload approval and requires fresh verification. No prior archive release record certifies this artifact."
+}

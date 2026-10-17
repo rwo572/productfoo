@@ -1,0 +1,5 @@
+node_modules/
+dist/
+
+# foo writes run telemetry here; it is not part of the example
+.foo/

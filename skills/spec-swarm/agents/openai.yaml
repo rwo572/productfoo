@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm"
+  short_description: "Run cross-functional role lenses over a spec."
+  default_prompt: "Use $spec-swarm to sharpen this spec across Product, Design, Engineering, Data Science, and GTM."

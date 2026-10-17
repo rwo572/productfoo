@@ -1,0 +1,65 @@
+name: Security
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+# One run per ref: a new push cancels the superseded run, and PR branches
+# run once via pull_request instead of push+pull_request double-billing.
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  secret-scan-history:
+    name: gitleaks (git history) — blocking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install gitleaks (pinned + checksum-verified)
+        run: |
+          set -euo pipefail
+          GITLEAKS_VERSION=8.30.1
+          GITLEAKS_SHA256=551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o gitleaks.tar.gz
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Scan git history for secrets (blocking)
+        run: |
+          # --redact: secret values are never printed (B1 / R-007).
+          # --config: keep gitleaks' default rules and honor foo's 'foo-redact: allow'
+          #   pragma (see .gitleaks.toml). Default exit code on a leak is non-zero.
+          if ! gitleaks git --no-banner --redact --config .gitleaks.toml .; then
+            echo "::error::foo: gitleaks reported a secret in git history and this check is BLOCKING. If it is a real secret, redact it — run 'foo redact <file>' or replace it with a non-secret placeholder, then rewrite the offending commit. If it is a known synthetic fixture, mark its line with a 'foo-redact: allow' pragma. Secret values are never printed (R-007)."
+            exit 1
+          fi
+          echo "foo: gitleaks found no secrets in git history."
+
+      - name: Prove the gate blocks a fresh secret (T-007 expect-fail)
+        run: |
+          # Construct a FRESH synthetic AWS key at run time from split parts, so the
+          # literal never lives in any committed file (B1) and never reds the real
+          # scan. It is fake — not a real credential. The real gate config MUST flag
+          # it; if gitleaks passes, the gate is not enforcing and we fail the job.
+          set -u
+          work="$(mktemp -d)"
+          prefix="AKIA"; body="Z3MID7XK2QJ9WB5N"
+          printf 'aws_key = "%s%s"\n' "$prefix" "$body" > "$work/planted-secret.txt"
+          if gitleaks dir --no-banner --redact --config .gitleaks.toml "$work" >/dev/null 2>&1; then
+            echo "::error::foo: the secret gate did NOT flag a planted AWS key — enforcement is broken (gitleaks should have failed)."
+            exit 1
+          fi
+          echo "foo: gate correctly blocked a planted synthetic secret (enforcement verified)."

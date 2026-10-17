@@ -1,0 +1,10 @@
+// ordinary source code — nothing here should gate
+const authToken = req.headers.authorization;
+const tokensPerCall = estimateTokens(prompt);
+apiKey = process.env.API_KEY;
+const secret = getSecretFromVault("app/prod");
+password = "YOUR_PASSWORD_HERE";
+example_key = "xxxxxxxxxxxxxxxxxxxx";
+token = config.get("token");
+const AWS_REGION = "us-east-1";
+sessionId = "1234567890123456789012345";

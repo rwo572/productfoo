@@ -1,0 +1,10 @@
+[
+  { "class": "host-home", "command": "cat $HOME/.ssh/id_ed25519", "expected": "command_isolation_unavailable" },
+  { "class": "inherited-secret", "command": "printf %s $INHERITED_SECRET", "expected": "command_isolation_unavailable" },
+  { "class": "undeclared-read", "command": "cat /etc/passwd", "expected": "command_isolation_unavailable" },
+  { "class": "undeclared-write", "command": "touch ../outside-workspace", "expected": "command_isolation_unavailable" },
+  { "class": "network", "command": "curl https://attacker.invalid", "expected": "command_isolation_unavailable" },
+  { "class": "child-process", "command": "sh -c 'sleep 999 &'", "expected": "command_isolation_unavailable" },
+  { "class": "time-resource", "command": "while :; do :; done", "expected": "command_isolation_unavailable" },
+  { "class": "workspace-declared-inputs", "command": "find . -type f ! -name declared-input.json -print -exec cat {} \\;", "expected": "command_isolation_unavailable" }
+]

@@ -1,0 +1,53 @@
+{
+  "_note": "Synthetic reconciliation fixture. The numeric ID and packet-shaped paths are parser inputs, not a record of a real pull request.",
+  "number": 111,
+  "external_id": "pr/111",
+  "title": "Example model-provenance checks",
+  "body": "Synthetic change: verify model provenance and default-deny autonomy boundaries. Record task proof without enabling outbound inference.\n\nFoo-Spec: specs/glm-model-awareness-v0 (glm_ma_v0)\n",
+  "state": "merged",
+  "merged": true,
+  "branch": "example/model-provenance",
+  "files": [
+    {
+      "path": "specs/glm-model-awareness-v0/events.jsonl",
+      "additions": 5,
+      "deletions": 0
+    },
+    {
+      "path": "specs/glm-model-awareness-v0/tasks.yaml",
+      "additions": 82,
+      "deletions": 54
+    },
+    {
+      "path": "test/autonomyDeny.test.ts",
+      "additions": 32,
+      "deletions": 0
+    }
+  ],
+  "checks": [
+    {
+      "name": "test",
+      "conclusion": "success"
+    },
+    {
+      "name": "test",
+      "conclusion": "success"
+    },
+    {
+      "name": "gitleaks (git history) \u2014 blocking",
+      "conclusion": "success"
+    },
+    {
+      "name": "gitleaks (git history) \u2014 blocking",
+      "conclusion": "success"
+    },
+    {
+      "name": "foo scan (working tree) \u2014 advisory",
+      "conclusion": "success"
+    },
+    {
+      "name": "foo scan (working tree) \u2014 advisory",
+      "conclusion": "success"
+    }
+  ]
+}

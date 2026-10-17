@@ -1,0 +1,31 @@
+{
+  "schema_version": "bug-capsule-dogfood-ledger/0.1",
+  "scenario_id": "first-25-consecutive-genuine-attempts",
+  "attempts": [
+    { "case_id": "dogfood-attempt-001", "attempt": 1, "outcome": "sent", "owner_label": "new", "spec_relationship": "unmapped", "actionability": "actionable", "next_step": "inspect cluster" },
+    { "case_id": "dogfood-attempt-002", "attempt": 2, "outcome": "sent", "owner_label": "duplicate", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "attach occurrence" },
+    { "case_id": "dogfood-attempt-003", "attempt": 3, "outcome": "edited", "owner_label": "new", "spec_relationship": "unmapped", "actionability": "actionable", "next_step": "review edited capsule" },
+    { "case_id": "dogfood-attempt-004", "attempt": 4, "outcome": "declined", "decline_reason": "optional-not-provided" },
+    { "case_id": "dogfood-attempt-005", "attempt": 5, "outcome": "transport_failed", "next_step": "retry retained capsule" },
+    { "case_id": "dogfood-attempt-006", "attempt": 6, "outcome": "sent", "owner_label": "insufficient_evidence", "spec_relationship": "unmapped", "actionability": "follow_up_needed", "next_step": "request bounded reproduction" },
+    { "case_id": "dogfood-attempt-007", "attempt": 7, "outcome": "sent", "owner_label": "new", "spec_relationship": "rejected", "actionability": "actionable", "next_step": "repair classifier" },
+    { "case_id": "dogfood-attempt-008", "attempt": 8, "outcome": "edited", "owner_label": "duplicate", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "remove false candidate" },
+    { "case_id": "dogfood-attempt-009", "attempt": 9, "outcome": "sent", "owner_label": "duplicate", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "attach occurrence" },
+    { "case_id": "dogfood-attempt-010", "attempt": 10, "outcome": "declined", "decline_reason": "optional-not-provided" },
+    { "case_id": "dogfood-attempt-011", "attempt": 11, "outcome": "sent", "owner_label": "new", "spec_relationship": "unmapped", "actionability": "actionable", "next_step": "inspect cluster" },
+    { "case_id": "dogfood-attempt-012", "attempt": 12, "outcome": "transport_failed", "next_step": "retry retained capsule" },
+    { "case_id": "dogfood-attempt-013", "attempt": 13, "outcome": "sent", "owner_label": "insufficient_evidence", "spec_relationship": "unmapped", "actionability": "follow_up_needed", "next_step": "request bounded reproduction" },
+    { "case_id": "dogfood-attempt-014", "attempt": 14, "outcome": "edited", "owner_label": "new", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "review edited capsule" },
+    { "case_id": "dogfood-attempt-015", "attempt": 15, "outcome": "sent", "owner_label": "duplicate", "spec_relationship": "rejected", "actionability": "actionable", "next_step": "remove false candidate" },
+    { "case_id": "dogfood-attempt-016", "attempt": 16, "outcome": "sent", "owner_label": "new", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "inspect cluster" },
+    { "case_id": "dogfood-attempt-017", "attempt": 17, "outcome": "declined", "decline_reason": "optional-not-provided" },
+    { "case_id": "dogfood-attempt-018", "attempt": 18, "outcome": "sent", "owner_label": "duplicate", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "attach occurrence" },
+    { "case_id": "dogfood-attempt-019", "attempt": 19, "outcome": "transport_failed", "next_step": "retry retained capsule" },
+    { "case_id": "dogfood-attempt-020", "attempt": 20, "outcome": "sent", "owner_label": "new", "spec_relationship": "unmapped", "actionability": "actionable", "next_step": "inspect cluster" },
+    { "case_id": "dogfood-attempt-021", "attempt": 21, "outcome": "edited", "owner_label": "insufficient_evidence", "spec_relationship": "unmapped", "actionability": "follow_up_needed", "next_step": "request bounded reproduction" },
+    { "case_id": "dogfood-attempt-022", "attempt": 22, "outcome": "sent", "owner_label": "duplicate", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "attach occurrence" },
+    { "case_id": "dogfood-attempt-023", "attempt": 23, "outcome": "sent", "owner_label": "new", "spec_relationship": "rejected", "actionability": "actionable", "next_step": "repair spec suggestion" },
+    { "case_id": "dogfood-attempt-024", "attempt": 24, "outcome": "sent", "owner_label": "new", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "inspect cluster" },
+    { "case_id": "dogfood-attempt-025", "attempt": 25, "outcome": "sent", "owner_label": "duplicate", "spec_relationship": "confirmed", "actionability": "actionable", "next_step": "attach occurrence" }
+  ]
+}

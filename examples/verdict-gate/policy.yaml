@@ -1,0 +1,19 @@
+# Schema-1 policy payload for issuePolicyEnvelope. This file is not trusted by
+# itself, and the quarantined public CLI does not sign or run it.
+schema_version: "1"
+name: garden-default
+version: 1.0.0
+checks:
+  - id: CHK-tests
+    title: Command execution requires a proven supported OS sandbox
+    kind: command
+    run: npm test
+    min_changed_line_coverage: null
+    required: false
+  - id: CHK-coverage
+    title: Changed source lines are covered
+    kind: coverage-delta
+    run: null
+    min_changed_line_coverage: 0.8
+    required: true
+judged_conformance: null

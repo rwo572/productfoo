@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate GTM Brief"
+  short_description: "Draft a sourced GTM brief while keeping missing facts explicit."
+  default_prompt: "Use $generate-gtm-brief for the relevant workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Swarm: PMM"
+  short_description: "Ask GTM and positioning questions that sharpen a spec."
+  default_prompt: "Use $spec-swarm-pmm to ask the 2-3 PMM questions this spec needs."

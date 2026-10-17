@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discussion Guide"
+  short_description: "Draft a guide without opening private files."
+  default_prompt: "Use $discussion-guide for the relevant workflow."
