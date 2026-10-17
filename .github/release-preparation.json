@@ -1,6 +1,6 @@
 {
   "version": "1.0.1",
-  "status": "verified",
+  "status": "published-and-verified",
   "scope": "Non-breaking patch from a fresh public repository; only package version and packaged README/changelog differ from 1.0.0.",
   "root_commit": "8ce924e5ce0740c2b03c07f4215786b927c77f0a",
   "verification": {
@@ -43,9 +43,31 @@
     "The initial source-import commit intentionally has no Foo-Spec trailer: it is a byte-identical snapshot import, not new product behavior."
   ],
   "approval": "User authorized fresh public repository, replacement npm release, compatibility preservation, and unpublishing 1.0.0 after its replacement.",
-  "pending": [
-    "Publishing and installed-registry verification"
-  ],
+  "pending": [],
   "payload_commit": "cb025c28f6b882154e6dbde5a9e7742aae848700",
-  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16"
+  "tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16",
+  "publication": {
+    "status": "verified",
+    "version": "1.0.1",
+    "tag": "v1.0.1",
+    "commit": "e3ea2d02e6ca298cfc1b59eaa3c71da11e413c26",
+    "repository_id": 1423662336,
+    "workflow_run": "https://github.com/rwo572/productfoo/actions/runs/39062393069",
+    "release": "https://github.com/rwo572/productfoo/releases/tag/v1.0.1",
+    "registry": "https://www.npmjs.com/package/productfoo/v/1.0.1",
+    "registry_tarball_sha256": "aa4a3a09858eb3332336aca8f8a7b7882af92a11f80f46fecb7963f254b1fa16",
+    "registry_signatures": "verified",
+    "provenance": "verified against the fresh repository ID and release commit",
+    "installed_network_denied_workflows": {
+      "passed": 19,
+      "failed": 0
+    },
+    "latest": "1.0.1"
+  },
+  "superseded_release": {
+    "version": "1.0.0",
+    "status": "unpublished",
+    "registry_metadata_http_status": 404,
+    "registry_tarball_http_status": 404
+  }
 }
