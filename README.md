@@ -1,4 +1,4 @@
-# productfoo: FSD for your coding agent
+# productfoo: Full self-driving for your coding agent
 
 productfoo is an agentic product management harness you don’t have to micromanage. productfoo shapes the plan, checks the work, and brings you the decisions that matter. productfoo systematizes the art and science of product management.
 
